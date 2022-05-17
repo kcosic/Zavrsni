@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f12d1e5b137345758fb654773a5f6f07" Name="Diagram1">
+        <EntityTypeShape EntityType="DbModel.Appointment" Width="1.5" PointX="3" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DbModel.Car" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DbModel.Issue" Width="1.5" PointX="8.25" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DbModel.RepairHistory" Width="1.5" PointX="3" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DbModel.Request" Width="1.5" PointX="11.25" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DbModel.Review" Width="1.5" PointX="8.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DbModel.Shop" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
+        <AssociationConnector Association="DbModel.FK_Appointment_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="DbModel.FK_RepairHistory_Car" ManuallyRouted="false" />
+        <AssociationConnector Association="DbModel.FK_RepairHistory_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="DbModel.FK_Request_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="DbModel.FK_Review_Shop" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DbModel.Location" Width="1.5" PointX="8.625" PointY="12.375" />
+        <AssociationConnector Association="DbModel.FK_Shop_Location" />
+        <EntityTypeShape EntityType="DbModel.Log" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="DbModel.Token" Width="1.5" PointX="5" PointY="13.5" />
+        <EntityTypeShape EntityType="DbModel.User" Width="1.5" PointX="3" PointY="16" />
+        <AssociationConnector Association="DbModel.FK_User_Car" />
+        <AssociationConnector Association="DbModel.FK_Issue_User" />
+        <AssociationConnector Association="DbModel.FK_Location_User" />
+        <AssociationConnector Association="DbModel.FK_RepairHistory_User" />
+        <AssociationConnector Association="DbModel.FK_Request_User" />
+        <AssociationConnector Association="DbModel.FK_Review_User" />
+        <AssociationConnector Association="DbModel.FK_Token_User" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
