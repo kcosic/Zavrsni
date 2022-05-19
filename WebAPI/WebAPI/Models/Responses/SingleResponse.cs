@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace WebAPI.Models.Responses
+﻿namespace WebAPI.Models.Responses
 {
-    public class SingleResponse<T>
+    public class SingleResponse<T> : BaseResponse
     {
         public T Data{ get; set; }
     }

@@ -8,33 +8,33 @@ using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
-    public class LoginController : BaseController
+    public class ShopController : BaseController
     {
-        public LoginController() : base("LoginController"){}
+        public ShopController() : base(nameof(ShopController)) { }
 
-        // GET: api/Login
+        // GET: api/Shop
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET: api/Login/5
+        // GET: api/Shop/5
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST: api/Login
+        // POST: api/Shop
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT: api/Login/5
+        // PUT: api/Shop/5
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE: api/Login/5
+        // DELETE: api/Shop/5
         public void Delete(int id)
         {
         }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace WebAPI.Models.Responses
 {
-    public class ListResponse<T>
+    public class ListResponse<T> : BaseResponse
     { 
         public List<T> Data { get; set; }
     }

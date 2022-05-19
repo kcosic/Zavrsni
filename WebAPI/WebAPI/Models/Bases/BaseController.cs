@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Http;
+using WebAPI.Auth;
 using WebAPI.Models.Enums;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.ORM;
+using WebAPI.Models.Responses;
 
 namespace WebAPI.Models
 {
+    [BasicAuthentication]
     public abstract class BaseController : ApiController
     {
-        protected readonly string _controllerName;
-        protected readonly DbEntities _db;
-        protected User _user;
+        internal readonly string _controllerName;
+        internal readonly DbEntities _db;
+        internal User _user;
 
-        public User AuthUser { 
-            get {
-
+        public User AuthUser
+        {
+            get
+            {
                 if (_user != null)
                 {
                     return _user;
@@ -24,20 +28,20 @@ namespace WebAPI.Models
 
                 if (_user == null && User?.Identity?.Name != null)
                 {
-                    
                     _user = _db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+                    return _user;
                 }
 
-                return null;
-            } 
+                throw null;
+            }
         }
 
-        public DbEntities Db {
-            get
+        public DbEntities Db 
+        { 
+            get 
             {
-                return _db;
-            }
-            
+                return _db; 
+            } 
         }
 
         public BaseController(string controllerName)
@@ -46,16 +50,79 @@ namespace WebAPI.Models
             _db = new DbEntities();
         }
 
+        #region Responses
 
+        public ListResponse<T> CreateOkResponse<T>(List<T> data)
+        {
+            return new ListResponse<T>
+            {
+                Data = data,
+                Message = "Success!",
+                Status = System.Net.HttpStatusCode.OK,
+                IsSuccess = true
+            };
+        }
+
+        public SingleResponse<T> CreateOkResponse<T>(T data)
+        {
+            return new SingleResponse<T>
+            {
+                Data = data,
+                Message = "Success!",
+                Status = System.Net.HttpStatusCode.OK,
+                IsSuccess = true
+            };
+        }
+
+        public PaginatedResponse<T> CreateOkResponse<T>(List<T> data, int page, int pageSize, int total)
+        {
+            return new PaginatedResponse<T>
+            {
+                Data = data,
+                Page = page,
+                PageSize = pageSize,
+                Total = total,
+                Message = "Success!",
+                Status = System.Net.HttpStatusCode.OK,
+                IsSuccess = true
+            };
+        }
+
+        public ErrorResponse CreateErrorResponse(Exception e, ErrorCodeEnum errorCode)
+        {
+            return CreateErrorResponse(e.Message, errorCode);
+        }
+
+        public ErrorResponse CreateErrorResponse(string message, ErrorCodeEnum errorCode)
+        {
+            Log(SeverityEnum.Error, message);
+
+            return new ErrorResponse
+            {
+                Message = "message",
+                Status = System.Net.HttpStatusCode.InternalServerError,
+                ErrorCode = errorCode,
+                IsSuccess = false
+            };
+        }
+
+        #endregion
+
+        #region Log
+        private void Log(SeverityEnum severity, string message)
+        {
+            Log(severity, message, DateTime.Now);
+
+        }
         private void Log(SeverityEnum severity, string message, DateTime timestamp)
         {
-            Log(AuthUser.Id, ApplicationEnum.API, severity, _controllerName, message, timestamp);
+            Log(ApplicationEnum.API, severity, message, timestamp);
 
-        }        
-        
+        }
+
         private void Log(ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp)
         {
-            Log(AuthUser.Id, application, severity, _controllerName, message, timestamp);
+            Log(AuthUser.Id, application, severity, message, timestamp);
 
         }
 
@@ -83,5 +150,6 @@ namespace WebAPI.Models
             });
             Db.SaveChanges();
         }
+        #endregion
     }
 }

@@ -10,7 +10,7 @@ namespace WebAPI.Controllers
 {
     public class UserController : BaseController
     {
-        public UserController() : base("UserController") { }
+        public UserController() : base(nameof(UserController)) { }
 
         // GET: api/User
         public IEnumerable<string> Get()
@@ -32,11 +32,6 @@ namespace WebAPI.Controllers
         // PUT: api/User/5
         public void Put(int id, [FromBody]string value)
         {
-        }
-
-        public void Patch()
-        {
-
         }
 
         // DELETE: api/User/5

@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 
 namespace WebAPI.Models.Responses
 {
     public abstract class BaseResponse
     {
-        protected readonly DateTime _timestamp;
-        public DateTime Timestamp { get
+        public string Message { get; set; }
+        public HttpStatusCode Status { get; set; }
+
+        public bool IsSuccess { get; set; }
+
+
+        internal readonly DateTime _timestamp;
+        public DateTime Timestamp
+        {
+            get
             {
                 return _timestamp;
             }
