@@ -28,7 +28,7 @@ namespace WebAPI.Models.ORM
         public decimal ActualPrice { get; set; }
         public string BillPicture { get; set; }
     
-        public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
+        public virtual Shop Shop { get; set; }
     }
 }

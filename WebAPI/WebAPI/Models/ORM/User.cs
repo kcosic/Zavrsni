@@ -22,6 +22,7 @@ namespace WebAPI.Models.ORM
             this.RepairHistories = new HashSet<RepairHistory>();
             this.Requests = new HashSet<Request>();
             this.Reviews = new HashSet<Review>();
+            this.Cars = new HashSet<Car>();
         }
     
         public int Id { get; set; }
@@ -37,7 +38,6 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateOfBirth { get; set; }
         public Nullable<int> CarId { get; set; }
     
-        public virtual Car Car { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Issue> Issues { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -49,5 +49,7 @@ namespace WebAPI.Models.ORM
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual Token Token { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Car> Cars { get; set; }
     }
 }

@@ -18,7 +18,6 @@ namespace WebAPI.Models.ORM
         public Car()
         {
             this.RepairHistories = new HashSet<RepairHistory>();
-            this.Users = new HashSet<User>();
         }
     
         public int Id { get; set; }
@@ -26,15 +25,15 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
         public Nullable<bool> Deleted { get; set; }
+        public int UserId { get; set; }
         public string Manufacturer { get; set; }
         public string Make { get; set; }
         public string Model { get; set; }
         public int Year { get; set; }
         public decimal Odometer { get; set; }
     
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RepairHistory> RepairHistories { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<User> Users { get; set; }
     }
 }
