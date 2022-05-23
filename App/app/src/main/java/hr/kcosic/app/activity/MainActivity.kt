@@ -17,14 +17,18 @@ class MainActivity : AppCompatActivity() {
         validateUser()
     }
 
-    fun validateUser(){
+    fun validateUser() {
         try {
-            if (getSharedPreferences(PreferenceEnum.TOKEN.getName(), Context.MODE_PRIVATE) == null){
+            if (getSharedPreferences(
+                    PreferenceEnum.TOKEN.getName(),
+                    Context.MODE_PRIVATE
+                ) == null
+            ) {
                 Helper.openActivity(this, ActivityEnum.MAIN)
             }
             Helper.openActivity(this, ActivityEnum.MAIN)
-        }catch (e: Exception){
-            Helper.showToast
+        } catch (e: Exception) {
+            Helper.showShortToast(this, getString(R.string.token_error))
             Helper.openActivity(this, ActivityEnum.MAIN)
 
         }

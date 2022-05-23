@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">App</string>
+    <string name="token_error">Invalid login</string>
+    <string name="invalid_pref_type_error">Invalid type for preferences</string>
 </resources>
