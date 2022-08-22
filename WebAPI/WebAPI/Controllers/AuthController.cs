@@ -20,6 +20,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+                Log(Models.Enums.SeverityEnum.Error, "Greška jbte");
                 return CreateOkResponse(AuthUser.Token.TokenValue);
             }
             catch (Exception e)

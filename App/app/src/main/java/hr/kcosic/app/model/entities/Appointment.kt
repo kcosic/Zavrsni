@@ -9,5 +9,4 @@ class Appointment : BaseEntity() {
     lateinit var Date: Date
     var Istaken by Delegates.notNull<Boolean>()
     lateinit var Shop: Shop
-
 }

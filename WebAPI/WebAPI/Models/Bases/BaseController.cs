@@ -32,7 +32,7 @@ namespace WebAPI.Models
                     return _user;
                 }
 
-                throw null;
+                return null;
             }
         }
 
@@ -109,35 +109,35 @@ namespace WebAPI.Models
         #endregion
 
         #region Log
-        private void Log(SeverityEnum severity, string message)
+        public void Log(SeverityEnum severity, string message)
         {
             Log(severity, message, DateTime.Now);
 
         }
-        private void Log(SeverityEnum severity, string message, DateTime timestamp)
+        public void Log(SeverityEnum severity, string message, DateTime timestamp)
         {
             Log(ApplicationEnum.API, severity, message, timestamp);
 
         }
 
-        private void Log(ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp)
+        public void Log(ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp)
         {
             Log(AuthUser.Id, application, severity, message, timestamp);
 
         }
 
-        private void Log(int userId, ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp)
+        public void Log(int userId, ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp)
         {
             Log(userId, application, severity, _controllerName, message, timestamp);
 
         }
 
-        private void Log(int userId, SeverityEnum severity, string message, DateTime timestamp)
+        public void Log(int userId, SeverityEnum severity, string message, DateTime timestamp)
         {
             Log(userId, ApplicationEnum.API, severity, _controllerName, message, timestamp);
         }
 
-        private void Log(int userId, ApplicationEnum application, SeverityEnum severity, string source, string message, DateTime timestamp)
+        public void Log(int userId, ApplicationEnum application, SeverityEnum severity, string source, string message, DateTime timestamp)
         {
             Db.Logs.Add(new Log
             {

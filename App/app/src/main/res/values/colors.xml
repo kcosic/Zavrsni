@@ -1,10 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- pulsating blue -->
+    <color name="primary_100">#69a3bb</color>
+    <color name="primary_200">#5094af</color>
+    <color name="primary_300">#3785a4</color>
+    <color name="primary_400">#1e7598</color>
+    <color name="primary_500">#05668D</color>
+    <color name="primary_600">#055c7f</color>
+    <color name="primary_700">#045271</color>
+    <color name="primary_800">#045271</color>
+    <color name="primary_900">#044763</color>
+
+    <!-- island lush -->
+    <color name="secondary_100">#67b3bc</color>
+    <color name="secondary_200">#4ea6b1</color>
+    <color name="secondary_300">#3599a6</color>
+    <color name="secondary_400">#1b8d9b</color>
+    <color name="secondary_500">#028090</color>
+    <color name="secondary_600">#027382</color>
+    <color name="secondary_700">#026673</color>
+    <color name="secondary_800">#015a65</color>
+    <color name="secondary_900">#014d56</color>
+
+    <!-- arcadia -->
+    <color name="tertiary_100">#66c6b8</color>
+    <color name="tertiary_200">#4dbdac</color>
+    <color name="tertiary_300">#33b3a1</color>
+    <color name="tertiary_400">#1aaa95</color>
+    <color name="tertiary_500">#00a089</color>
+    <color name="tertiary_600">#00907b</color>
+    <color name="tertiary_700">#00806e</color>
+    <color name="tertiary_800">#007060</color>
+    <color name="tertiary_900">#006052</color>
+
+    <!-- caribbean green -->
+    <color name="confirm_100">#67dbc2</color>
+    <color name="confirm_200">#4ed5b8</color>
+    <color name="confirm_300">#35cfae</color>
+    <color name="confirm_400">#1bc9a4</color>
+    <color name="confirm_500">#02C39A</color>
+    <color name="confirm_600">#02b08b</color>
+    <color name="confirm_700">#029c7b</color>
+    <color name="confirm_800">#01896c</color>
+    <color name="confirm_900">#01755c</color>
+
+    <!-- chiffon -->
+    <color name="warning_100">#f6f8d7</color>
+    <color name="warning_200">#f5f7d1</color>
+    <color name="warning_300">#f3f5ca</color>
+    <color name="warning_400">#f2f4c4</color>
+    <color name="warning_500">#F0F3BD</color>
+    <color name="warning_600">#d8dbaa</color>
+    <color name="warning_700">#c0c297</color>
+    <color name="warning_800">#a8aa84</color>
+    <color name="warning_900">#909271</color>
+
+    <!-- bonfire flame -->
+    <color name="danger_100">#e29385</color>
+    <color name="danger_200">#dd8170</color>
+    <color name="danger_300">#d86f5c</color>
+    <color name="danger_400">#d35d47</color>
+    <color name="danger_500">#ce4b33</color>
+    <color name="danger_600">#b9442e</color>
+    <color name="danger_700">#a53c29</color>
+    <color name="danger_800">#903524</color>
+    <color name="danger_900">#7c2d1f</color>
+
+    <!-- surgical green -->
+    <color name="information_100">#9cc8d9</color>
+    <color name="information_200">#8cbfd2</color>
+    <color name="information_300">#7bb6cc</color>
+    <color name="information_400">#6badc5</color>
+    <color name="information_500">#5aa4bf</color>
+    <color name="information_600">#5194ac</color>
+    <color name="information_700">#488399</color>
+    <color name="information_800">#3f7386</color>
+    <color name="information_900">#366273</color>
+
+    <!-- coated -->
+    <color name="text_dark_100">#eaeaea</color>
+    <color name="text_dark_200">#abacac</color>
+    <color name="text_dark_300">#6b6d6e</color>
+    <color name="text_dark_400">#414445</color>
+    <color name="text_dark_500">#2c2f30</color>
+    <color name="text_dark_600">#282a2b</color>
+    <color name="text_dark_700">#232626</color>
+    <color name="text_dark_800">#1f2122</color>
+    <color name="text_dark_900">#1a1c1d</color>
 </resources>

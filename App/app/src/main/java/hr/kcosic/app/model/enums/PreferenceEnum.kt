@@ -3,9 +3,10 @@ package hr.kcosic.app.model.enums
 enum class PreferenceEnum(
     private var Name: String
 ) {
-    TOKEN("Token");
+    TOKEN("Token"),
+    USER("User");
 
     fun getName() : String{
-        return Name;
+        return Name
     }
 }
