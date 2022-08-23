@@ -14,8 +14,11 @@ class RepairHistory : BaseEntity() {
 
     @Serializable(with = DateSerializer::class)
     var DateOfRepair: Date? = null
+    @Serializable
     var Shop: Shop? = null
+    @Serializable
     var User: User? = null
+    @Serializable
     var Car: Car? = null
 
 }

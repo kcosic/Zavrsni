@@ -10,18 +10,18 @@ import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-object DateSerializer : KSerializer<Date> {
+object TimestampSerializer : KSerializer<Date> {
     override val descriptor = PrimitiveSerialDescriptor("Date", PrimitiveKind.STRING)
 
     @SuppressLint("SimpleDateFormat")
     override fun serialize(encoder: Encoder, value: Date) {
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSSSSSX")
         encoder.encodeString(formatter.format(value))
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun deserialize(decoder: Decoder): Date {
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSSSSSX")
         return formatter.parse(decoder.decodeString())!!
     }
 }

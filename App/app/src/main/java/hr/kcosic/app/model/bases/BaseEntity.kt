@@ -1,12 +1,18 @@
 package hr.kcosic.app.model.bases
 
-import java.io.Serializable
-import kotlin.properties.Delegates
+import hr.kcosic.app.model.serializer.DateSerializer
+import kotlinx.serialization.Serializable
+import java.util.*
 
-open class BaseEntity :Serializable{
-    var Id: String? = null
-    var DateCreated: String? = null
-    var DateModified: String? = null
-    var DateDeleted: String? = null
-    var IsDeleted: Boolean? = null
+
+@Serializable
+open class BaseEntity{
+    var Id: Int? = null
+    @Serializable(DateSerializer::class)
+    var DateCreated: Date? = null
+    @Serializable(DateSerializer::class)
+    var DateModified: Date? = null
+    @Serializable(DateSerializer::class)
+    var DateDeleted: Date? = null
+    var Deleted: Boolean? = null
 }

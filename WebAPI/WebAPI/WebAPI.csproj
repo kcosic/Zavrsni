@@ -210,9 +210,31 @@
     </Compile>
     <Compile Include="Models\Bases\BaseController.cs" />
     <Compile Include="Models\Bases\BaseException.cs" />
+    <Compile Include="Models\DTOs\UserDTO.cs" />
+    <Compile Include="Models\DTOs\TokenDTO.cs" />
+    <Compile Include="Models\DTOs\ShopDTO.cs" />
+    <Compile Include="Models\DTOs\ReviewDTO.cs" />
+    <Compile Include="Models\DTOs\RequestDTO.cs" />
+    <Compile Include="Models\DTOs\RepairHistoryDTO.cs" />
+    <Compile Include="Models\DTOs\LogDTO.cs" />
+    <Compile Include="Models\DTOs\LocationDTO.cs" />
+    <Compile Include="Models\DTOs\IssueDTO.cs" />
+    <Compile Include="Models\DTOs\CarDTO.cs" />
+    <Compile Include="Models\DTOs\AppointmentDTO.cs" />
     <Compile Include="Models\Enums\ErrorCodeEnum.cs" />
     <Compile Include="Models\Exceptions\InvalidCredentialsException.cs" />
     <Compile Include="Models\Exceptions\TokenNotFoundException.cs" />
+    <Compile Include="Models\Partials\Appointment.cs" />
+    <Compile Include="Models\Partials\Car.cs" />
+    <Compile Include="Models\Partials\Issue.cs" />
+    <Compile Include="Models\Partials\Location.cs" />
+    <Compile Include="Models\Partials\Log.cs" />
+    <Compile Include="Models\Partials\RepairHistory.cs" />
+    <Compile Include="Models\Partials\Request.cs" />
+    <Compile Include="Models\Partials\Review.cs" />
+    <Compile Include="Models\Partials\Shop.cs" />
+    <Compile Include="Models\Partials\Token.cs" />
+    <Compile Include="Models\Partials\User.cs" />
     <Compile Include="Models\Responses\ErrorResponse.cs" />
     <Compile Include="Models\Responses\ListResponse.cs" />
     <Compile Include="Models\Responses\PaginatedResponse.cs" />
@@ -320,7 +342,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\Partials\" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="Models\ORM\DbModel.edmx">

@@ -8,9 +8,11 @@ import kotlin.properties.Delegates
 
 @Serializable
 class Issue : BaseEntity() {
-    var UserId:Int? = null
+    var UserId: Int? = null
+
     @Serializable(with = DateSerializer::class)
     var DateOfSubmission: Date? = null
     var Summary: String? = null
+    @Serializable
     var User: User? = null
 }

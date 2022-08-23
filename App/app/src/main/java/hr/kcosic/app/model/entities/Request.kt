@@ -21,6 +21,8 @@ class Request : BaseEntity() {
     var ActualFinishDate: Date? = null
 
     var BillPicture: String? = null
+    @Serializable
     var Shop: Shop? = null
+    @Serializable
     var User: User? = null
 }

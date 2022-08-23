@@ -6,5 +6,5 @@ import kotlin.properties.Delegates
 
 @Serializable
 class SingleResponse<T : Any> : BaseResponse() {
-    var Data by Delegates.notNull<T>()
+    var Data: T? = null;
 }

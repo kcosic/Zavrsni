@@ -2,33 +2,26 @@ package hr.kcosic.app.model.helpers
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.Icon
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import hr.kcosic.app.R
 import hr.kcosic.app.model.OnPositiveButtonClickListener
-import hr.kcosic.app.model.bases.BaseEntity
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ContextSingleton
-import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
-import hr.kcosic.app.model.exceptions.DuplicateKeyException
+import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.responses.ErrorResponse
-import hr.kcosic.app.model.responses.SingleResponse
 import java.io.InvalidObjectException
 import java.util.*
 import kotlin.reflect.typeOf
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-import okhttp3.Response
 
 class Helper {
     companion object {
@@ -122,16 +115,16 @@ class Helper {
                 }
         }
 
-        inline fun <reified T> retrieveSharedPreference(key: String): T {
+        inline fun <reified T> retrieveSharedPreference(key: PreferenceEnum): T {
             val sharedPrefs =
                 ContextSingleton.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
 
             return when (typeOf<T>()) {
-                typeOf<Boolean>() -> sharedPrefs.getBoolean(key, false) as T
-                typeOf<String>() -> sharedPrefs.getString(key, NO_VALUE) as T
-                typeOf<Float>() -> sharedPrefs.getFloat(key, -1f) as T
-                typeOf<Int>() -> sharedPrefs.getInt(key, -1) as T
-                typeOf<Long>() -> sharedPrefs.getLong(key, -1L) as T
+                typeOf<Boolean>() -> sharedPrefs.getBoolean(key.getName(), false) as T
+                typeOf<String>() -> sharedPrefs.getString(key.getName(), NO_VALUE) as T
+                typeOf<Float>() -> sharedPrefs.getFloat(key.getName(), -1f) as T
+                typeOf<Int>() -> sharedPrefs.getInt(key.getName(), -1) as T
+                typeOf<Long>() -> sharedPrefs.getLong(key.getName(), -1L) as T
                 else -> throw InvalidObjectException(
                     ContextSingleton.getContext()!!.getString(R.string.invalid_pref_type_error)
                 )
@@ -139,30 +132,41 @@ class Helper {
         }
 
         inline fun <reified T> createOrEditSharedPreference(
-            key: String,
+            key: PreferenceEnum,
             value: T
         ) {
             val sharedPrefs =
                 ContextSingleton.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
 
-            if (sharedPrefs.contains(key))
-                sharedPrefs.edit().remove(key).apply()
+            if (sharedPrefs.contains(key.getName())) sharedPrefs.edit().remove(key.getName()).apply()
 
-            when (typeOf<T>()) {
-                typeOf<Boolean>() -> sharedPrefs.edit().putBoolean(key, value as Boolean).apply()
-                typeOf<String>() -> sharedPrefs.edit().putString(key, value as String).apply()
-                typeOf<Float>() -> sharedPrefs.edit().putFloat(key, value as Float).apply()
-                typeOf<Int>() -> sharedPrefs.edit().putInt(key, value as Int).apply()
-                typeOf<Long>() -> sharedPrefs.edit().putLong(key, value as Long).apply()
-                else -> throw InvalidObjectException(
-                    ContextSingleton.getContext()!!.getString(R.string.invalid_pref_type_error)
-                )
+            when (T::class) {
+                Boolean::class -> {
+                    sharedPrefs.edit().putBoolean(key.getName(), value as Boolean).apply()
+                }
+                String::class  -> {
+                    sharedPrefs.edit().putString(key.getName(), value as String).apply()
+                }
+                Float::class  -> {
+                    sharedPrefs.edit().putFloat(key.getName(), value as Float).apply()
+                }
+                Int::class  -> {
+                    sharedPrefs.edit().putInt(key.getName(), value as Int).apply()
+                }
+                Long::class  -> {
+                    sharedPrefs.edit().putLong(key.getName(), value as Long).apply()
+                }
+                else -> {
+                    throw InvalidObjectException(
+                        ContextSingleton.getContext()!!.getString(R.string.invalid_pref_type_error) + ": " +T::class
+                    )
+                }
             }
         }
 
-        fun deleteSharedPreference(key: String) {
+        fun deleteSharedPreference(key: PreferenceEnum) {
             ContextSingleton.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
-                .edit().remove(key).apply()
+                .edit().remove(key.getName()).apply()
         }
 
         inline fun <reified T> serializeData(value: T): String {
@@ -193,9 +197,9 @@ class Helper {
             return ContextSingleton.getContext()!!.resources.getString(color)
         }
 
-        fun parseStringResponse(response: String): BaseResponse {
+        inline fun <reified T : BaseResponse> parseStringResponse(response: String): BaseResponse {
             return try {
-                deserializeObject<SingleResponse<User>>(response)
+                deserializeObject<T>(response)
             } catch (ex: Exception) {
                 deserializeObject<ErrorResponse>(response)
             }

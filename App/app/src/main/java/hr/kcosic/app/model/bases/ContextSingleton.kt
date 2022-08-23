@@ -10,7 +10,7 @@ class ContextSingleton {
 
         fun initialize(ctx: Context){
             if(singleton == null){
-                singleton = ctx.applicationContext
+                singleton = ctx
             }
         }
 

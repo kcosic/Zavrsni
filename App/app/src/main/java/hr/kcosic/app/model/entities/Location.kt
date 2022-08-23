@@ -13,6 +13,8 @@ class Location {
     var City: String? = null
     var County: String? = null
     var Country: String? = null
+    @Serializable
     var Shops: MutableList<Shop>? = null
+    @Serializable
     var User: User? = null
 }

@@ -8,19 +8,29 @@ import kotlin.properties.Delegates
 
 @Serializable
 class User : BaseEntity() {
-    var Username: String?=null
-    var Password: String?=null
-    var Email: String?=null
-    var FirstName: String?=null
-    var LastName: String?=null
-    var Issues: MutableList<Issue>?=null
-    var Locations: MutableList<Location>?=null
-    var RepairHistories: MutableList<RepairHistory>?=null
-    var Requests: MutableList<Request>?=null
-    var Reviews: MutableList<Review>?=null
-    var Cars: MutableList<Car>?=null
+    var Username: String? = null
+    var Password: String? = null
+    var Email: String? = null
+    var FirstName: String? = null
+    var LastName: String? = null
+
+    @Serializable
+    var Token: Token? = null
+
+    @Serializable
+    var Issues: MutableList<Issue>? = null
+    @Serializable
+    var Locations: MutableList<Location>? = null
+    @Serializable
+    var RepairHistories: MutableList<RepairHistory>? = null
+    @Serializable
+    var Requests: MutableList<Request>? = null
+    @Serializable
+    var Reviews: MutableList<Review>? = null
+    @Serializable
+    var Cars: MutableList<Car>? = null
+
     @Serializable(with = DateSerializer::class)
-    var DateOfBirth: Date?=null
-    var CarId:Int? = null
+    var DateOfBirth: Date? = null
 
 }

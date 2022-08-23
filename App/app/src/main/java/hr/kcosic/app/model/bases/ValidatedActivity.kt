@@ -15,7 +15,7 @@ open class ValidatedActivity : BaseActivity() {
 
     fun validateUser() {
         try {
-            val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN.getName())
+            val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN)
             if (token == Helper.NO_VALUE) {
                 Helper.showShortToast(this,getString(R.string.token_error))
                 Helper.openActivity(this,ActivityEnum.LOGIN)

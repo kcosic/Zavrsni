@@ -14,12 +14,13 @@ object ErrorCodeSerializer : KSerializer<ErrorCodeEnum> {
     override val descriptor = PrimitiveSerialDescriptor("ErrorCodeEnum", PrimitiveKind.INT)
 
     @SuppressLint("SimpleDateFormat")
-    override fun serialize(encoder: Encoder, value: ErrorCodeEnum) {
-        encoder.encodeInt(value.code)
-    }
+    override fun serialize(encoder: Encoder, value: ErrorCodeEnum) = encoder.encodeInt(value.code)
 
     @SuppressLint("SimpleDateFormat")
     override fun deserialize(decoder: Decoder): ErrorCodeEnum {
-        return ErrorCodeEnum.values().toList().find { errorCodeEnum -> errorCodeEnum.code == decoder.decodeInt() }!!
+        val wantedCode = decoder.decodeInt();
+
+        val errorCode = ErrorCodeEnum.values().toList().find { errorCodeEnum -> errorCodeEnum.code == wantedCode}
+        return errorCode!!;
     }
 }

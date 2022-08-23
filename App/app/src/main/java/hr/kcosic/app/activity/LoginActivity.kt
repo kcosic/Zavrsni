@@ -1,20 +1,24 @@
 package hr.kcosic.app.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.BaseActivity
 import hr.kcosic.app.model.bases.BaseResponse
+import hr.kcosic.app.model.entities.Token
+import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.responses.SingleResponse
+import kotlinx.serialization.json.Json
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.io.InvalidObjectException
 
 class LoginActivity : BaseActivity() {
     private lateinit var btnLogin: Button
@@ -27,10 +31,16 @@ class LoginActivity : BaseActivity() {
         initComponents()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initComponents() {
         btnLogin = findViewById(R.id.btnLogin)
         txtEmail = findViewById(R.id.txtEmail)
         txtPassword = findViewById(R.id.txtPassword)
+
+        //TODO: remove, for dev purposes only
+        txtEmail.setText("menta")
+        txtPassword.setText("123456")
+
 
         btnLogin.setOnClickListener {
 
@@ -60,7 +70,7 @@ class LoginActivity : BaseActivity() {
                 Callback {
                 var mainHandler: Handler = Handler(applicationContext.mainLooper)
 
-                override fun onFailure(call: Call, e: IOException){
+                override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleLoginException(call, e)
                     }
@@ -76,13 +86,26 @@ class LoginActivity : BaseActivity() {
 
     fun handleLoginSuccess(response: Response) {
 
-        val resp: BaseResponse = Helper.parseStringResponse(response.body!!.string())
+        val resp: BaseResponse = Helper.parseStringResponse<SingleResponse<Token>>(response.body!!.string())
 
-        if (resp.IsSuccess!!) {
-            Helper.createOrEditSharedPreference(
-                PreferenceEnum.USER.toString(),
-                (resp as SingleResponse<*>).Data
-            )
+        if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+            val data = resp.Data as Token
+
+            try{
+                Helper.createOrEditSharedPreference(
+                    PreferenceEnum.TOKEN,
+                    data.TokenValue
+                )
+                Helper.createOrEditSharedPreference(
+                    PreferenceEnum.USER,
+                    Helper.serializeData(data.User)
+                )
+                Helper.openActivity(this, ActivityEnum.MAIN)
+
+            } catch(e: InvalidObjectException){
+                Helper.showLongToast(this, e.message.toString())
+            }
+
         } else {
             handleLoginError(resp.Message!!)
         }

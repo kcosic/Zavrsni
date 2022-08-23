@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebAPI.Auth;
 using WebAPI.Models;
+using WebAPI.Models.Helpers;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
@@ -14,12 +16,11 @@ namespace WebAPI.Controllers
     {
         public AuthController() : base(nameof(AuthController)) { }
 
-        [AllowAnonymous]
         public BaseResponse Get()
         {
             try
             {
-                return CreateOkResponse(AuthUser.Token.TokenValue);
+                return CreateOkResponse(AuthUser.Token.ToDTO(false));
             }
             catch (Exception e)
             {

@@ -18,7 +18,7 @@ open class BaseActivity : AppCompatActivity() {
     val activityScope = MainScope()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ContextSingleton.initialize(applicationContext)
+        ContextSingleton.initialize(this)
     }
 
     override fun onDestroy() {
@@ -28,7 +28,7 @@ open class BaseActivity : AppCompatActivity() {
 
     fun getUser(): User {
         return Helper.deserializeObject(
-            Helper.retrieveSharedPreference(PreferenceEnum.USER.getName())
+            Helper.retrieveSharedPreference(PreferenceEnum.USER)
         )
     }
 

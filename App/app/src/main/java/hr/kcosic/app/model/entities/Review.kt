@@ -10,6 +10,8 @@ class Review : BaseEntity() {
     var ShopId: Int? = null
     var Rating: Double? = null
     var Comment: String? = null
+    @Serializable
     var Shop: Shop? = null
+    @Serializable
     var User: User? = null
 }

@@ -10,7 +10,7 @@
         <EntityTypeShape EntityType="DbModel.RepairHistory" Width="1.5" PointX="3" PointY="7.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DbModel.Request" Width="1.5" PointX="11.25" PointY="7.375" IsExpanded="true" />
         <EntityTypeShape EntityType="DbModel.Review" Width="1.5" PointX="8.25" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DbModel.Location" Width="1.5" PointX="8.625" PointY="12.375" />
+        <EntityTypeShape EntityType="DbModel.Location" Width="1.5" PointX="8.625" PointY="12.375" IsExpanded="true" />
         <EntityTypeShape EntityType="DbModel.Log" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="DbModel.Token" Width="1.5" PointX="5" PointY="13.5" />
         <EntityTypeShape EntityType="DbModel.Car" Width="1.5" PointX="0.5" PointY="11.75" />

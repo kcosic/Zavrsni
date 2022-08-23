@@ -5,7 +5,7 @@ import kotlin.properties.Delegates
 
 @Serializable
 class PaginatedResponse<T> : ListResponse<T>() {
-    var Page by Delegates.notNull<Int>()
-    var PageSize by Delegates.notNull<Int>()
-    var Total by Delegates.notNull<Int>()
+    var Page: Int? = null
+    var PageSize: Int? = null
+    var Total: Int? = null
 }

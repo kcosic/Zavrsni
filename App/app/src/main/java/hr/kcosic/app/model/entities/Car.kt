@@ -11,6 +11,8 @@ class Car : BaseEntity() {
     var Model: String? = null
     var Year: Int? = null
     var Odometer: Double? = null
+    @Serializable
     var RepairHistories: MutableList<RepairHistory>? = null
+    @Serializable
     var User: User? = null
 }
