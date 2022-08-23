@@ -4,9 +4,9 @@ import java.io.Serializable
 import kotlin.properties.Delegates
 
 open class BaseEntity :Serializable{
-    lateinit var Id: String
-    lateinit var DateCreated: String
-    lateinit var DateModified: String
-    lateinit var DateDeleted: String
-    var IsDeleted by Delegates.notNull<Boolean>()
+    var Id: String? = null
+    var DateCreated: String? = null
+    var DateModified: String? = null
+    var DateDeleted: String? = null
+    var IsDeleted: Boolean? = null
 }

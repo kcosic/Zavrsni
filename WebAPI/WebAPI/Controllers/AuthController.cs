@@ -14,13 +14,11 @@ namespace WebAPI.Controllers
     {
         public AuthController() : base(nameof(AuthController)) { }
 
-        [HttpGet]
-        [Route("api/Auth/Login")]
-        public BaseResponse Login()
+        [AllowAnonymous]
+        public BaseResponse Get()
         {
             try
             {
-                Log(Models.Enums.SeverityEnum.Error, "Greška jbte");
                 return CreateOkResponse(AuthUser.Token.TokenValue);
             }
             catch (Exception e)
@@ -30,9 +28,7 @@ namespace WebAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
-        [Route("api/Auth/Register")]
-        public string Register([FromBody] User user)
+        public string Post([FromBody] User user)
         {
             return "value";
         }

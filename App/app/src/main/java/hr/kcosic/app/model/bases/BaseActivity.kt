@@ -6,8 +6,11 @@ import hr.kcosic.app.dal.ApiService
 import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.responses.SingleResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.*
+import okhttp3.Call
+import okhttp3.Response
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -28,4 +31,5 @@ open class BaseActivity : AppCompatActivity() {
             Helper.retrieveSharedPreference(PreferenceEnum.USER.getName())
         )
     }
+
 }

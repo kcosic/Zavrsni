@@ -99,7 +99,7 @@ namespace WebAPI.Models
 
             return new ErrorResponse
             {
-                Message = "message",
+                Message = message,
                 Status = System.Net.HttpStatusCode.InternalServerError,
                 ErrorCode = errorCode,
                 IsSuccess = false
@@ -122,7 +122,7 @@ namespace WebAPI.Models
 
         public void Log(ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp)
         {
-            Log(AuthUser.Id, application, severity, message, timestamp);
+            Log(AuthUser?.Id ?? -1, application, severity, message, timestamp);
 
         }
 

@@ -1,12 +1,17 @@
 package hr.kcosic.app.model.entities
 
 import hr.kcosic.app.model.bases.BaseEntity
+import hr.kcosic.app.model.serializer.DateSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
 import java.util.*
 import kotlin.properties.Delegates
 
+@Serializable
 class Appointment : BaseEntity() {
-    var ShopId by Delegates.notNull<Int>()
-    lateinit var Date: Date
+    var ShopId:Int? = null
+    @Serializable(with = DateSerializer::class)
+    var Date: Date? = null
     var Istaken by Delegates.notNull<Boolean>()
-    lateinit var Shop: Shop
+    var Shop: Shop? = null
 }

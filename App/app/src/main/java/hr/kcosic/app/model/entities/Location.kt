@@ -1,16 +1,18 @@
 package hr.kcosic.app.model.entities
 
+import kotlinx.serialization.Serializable
 import kotlin.properties.Delegates
 
+@Serializable
 class Location {
-    var UserId by Delegates.notNull<Int>()
-    lateinit var Street: String
-    lateinit var StreetNumber: String
-    lateinit var City: String
-    lateinit var County: String
-    lateinit var Country: String
-    var Longitude by Delegates.notNull<Double>()
-    var Latitude by Delegates.notNull<Double>()
-    lateinit var Shops: MutableList<Shop>
-    lateinit var User: User
+    var UserId: Int? = null
+    var Longitude: Double? = null
+    var Latitude: Double? = null
+    var Street: String? = null
+    var StreetNumber: String? = null
+    var City: String? = null
+    var County: String? = null
+    var Country: String? = null
+    var Shops: MutableList<Shop>? = null
+    var User: User? = null
 }

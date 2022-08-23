@@ -17,11 +17,11 @@ open class ValidatedActivity : BaseActivity() {
         try {
             val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN.getName())
             if (token == Helper.NO_VALUE) {
-                Helper.showShortToast(getString(R.string.token_error))
+                Helper.showShortToast(this,getString(R.string.token_error))
                 Helper.openActivity(this,ActivityEnum.LOGIN)
             }
         } catch (e: Exception) {
-            Helper.showShortToast(e.message ?: getString(R.string.unknown_error))
+            Helper.showShortToast(this,e.message ?: getString(R.string.unknown_error))
             Helper.openActivity(this,ActivityEnum.LOGIN)
         }
     }

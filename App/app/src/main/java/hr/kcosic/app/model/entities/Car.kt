@@ -1,14 +1,16 @@
 package hr.kcosic.app.model.entities
 
 import hr.kcosic.app.model.bases.BaseEntity
+import kotlinx.serialization.Serializable
 import kotlin.properties.Delegates
 
+@Serializable
 class Car : BaseEntity() {
-    lateinit var Manufacturer: String
-    lateinit var Make: String
-    lateinit var Model: String
-    var Year by Delegates.notNull<Int>()
-    var Odometer by Delegates.notNull<Double>()
-    lateinit var RepairHistories: MutableList<RepairHistory>
-    lateinit var User: User
+    var Manufacturer: String? = null
+    var Make: String? = null
+    var Model: String? = null
+    var Year: Int? = null
+    var Odometer: Double? = null
+    var RepairHistories: MutableList<RepairHistory>? = null
+    var User: User? = null
 }

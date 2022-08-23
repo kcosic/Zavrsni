@@ -11,6 +11,7 @@ import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.concurrent.TimeUnit
 
 
 class ApiService private constructor() {
@@ -31,7 +32,7 @@ class ApiService private constructor() {
     /**
      * Instance of Http Client
      */
-    private val client: OkHttpClient = OkHttpClient()
+    private val client: OkHttpClient = OkHttpClient.Builder().callTimeout(0,TimeUnit.MINUTES).build()
 
     /**
      * Media type for regular
@@ -47,14 +48,8 @@ class ApiService private constructor() {
         return Base64.encodeToString("token:${token}".toByteArray(), Base64.NO_WRAP)
     }
 
-    fun login(username: String, password: String): BaseResponse {
-        val response = get(ApiRoutes.AUTH, "${username}:${password}")
-
-        return try {
-            Helper.deserializeObject(response) as SingleResponse<User>
-        } catch(ex: Error){
-            Helper.deserializeObject(response) as ErrorResponse
-        }
+    fun login(username: String, password: String): Call {
+        return get(ApiRoutes.AUTH, "${username}:${password}")
     }
 
 
@@ -65,7 +60,7 @@ class ApiService private constructor() {
      * @param url URL that GET request will target
      * @param usernamePassword OPTIONAL username and password for header
      */
-    private fun get(url: String, usernamePassword: String? = null): String {
+    private fun get(url: String, usernamePassword: String? = null): Call {
         val request: Request = Request.Builder()
             .url(url)
             .addHeader(
@@ -75,7 +70,7 @@ class ApiService private constructor() {
             )
             .build()
 
-        client.newCall(request).execute().use { response -> return response.body!!.string() }
+        return client.newCall(request)
     }
 
 

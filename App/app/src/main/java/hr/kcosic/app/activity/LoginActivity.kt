@@ -1,17 +1,20 @@
 package hr.kcosic.app.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.os.Handler
+import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.BaseActivity
-import hr.kcosic.app.model.entities.User
+import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.responses.SingleResponse
-import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 
 class LoginActivity : BaseActivity() {
     private lateinit var btnLogin: Button
@@ -52,14 +55,46 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun login() {
-        activityScope.launch {
-            val response = apiService.login(txtEmail.text.toString(), txtPassword.text.toString())
-            if(response.IsSuccess){
-                Helper.createOrEditSharedPreference(PreferenceEnum.USER.toString(), (response as SingleResponse<*>).Data)
-            }
-            else {
-                Helper.showLongToast(response.Message)
-            }
+        apiService.login(txtEmail.text.toString(), txtPassword.text.toString())
+            .enqueue(object :
+                Callback {
+                var mainHandler: Handler = Handler(applicationContext.mainLooper)
+
+                override fun onFailure(call: Call, e: IOException){
+                    mainHandler.post {
+                        handleLoginException(call, e)
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    mainHandler.post {
+                        handleLoginSuccess(response)
+                    }
+                }
+            })
+    }
+
+    fun handleLoginSuccess(response: Response) {
+
+        val resp: BaseResponse = Helper.parseStringResponse(response.body!!.string())
+
+        if (resp.IsSuccess!!) {
+            Helper.createOrEditSharedPreference(
+                PreferenceEnum.USER.toString(),
+                (resp as SingleResponse<*>).Data
+            )
+        } else {
+            handleLoginError(resp.Message!!)
         }
+    }
+
+    fun handleLoginError(message: String) {
+        Helper.showLongToast(this, message)
+    }
+
+    fun handleLoginException(call: Call, e: Exception) {
+        call.cancel()
+        Helper.showLongToast(this, e.message.toString())
+
     }
 }

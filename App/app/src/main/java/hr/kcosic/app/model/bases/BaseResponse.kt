@@ -1,11 +1,16 @@
 package hr.kcosic.app.model.bases
 
+import hr.kcosic.app.model.serializer.DateSerializer
+import kotlinx.serialization.Serializable
 import java.util.*
 import kotlin.properties.Delegates
 
+@Serializable
 open class BaseResponse {
-    lateinit var Message: String
-    var Status by Delegates.notNull<Int>()
-    var IsSuccess by Delegates.notNull<Boolean>()
-    lateinit var TimeStamp: Date
+    var Message: String? = null
+    var Status:Int? = null
+    var IsSuccess:Boolean? = null
+
+    @Serializable(DateSerializer::class)
+    var Timestamp: Date? = null
 }
