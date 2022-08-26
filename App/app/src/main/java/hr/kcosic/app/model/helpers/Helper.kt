@@ -2,10 +2,15 @@ package hr.kcosic.app.model.helpers
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
@@ -13,21 +18,23 @@ import androidx.core.graphics.drawable.DrawableCompat
 import hr.kcosic.app.R
 import hr.kcosic.app.model.OnPositiveButtonClickListener
 import hr.kcosic.app.model.bases.BaseResponse
-import hr.kcosic.app.model.bases.ContextSingleton
+import hr.kcosic.app.model.bases.ContextInstance
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.responses.ErrorResponse
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 import java.io.InvalidObjectException
 import java.util.*
 import kotlin.reflect.typeOf
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+
 
 class Helper {
+    @OptIn(ExperimentalSerializationApi::class)
     companion object {
         const val APP_KEY = "My App"
         const val NO_VALUE = "not_found"
-
+        val json = Json { explicitNulls = true }
 
         fun openActivity(context: Context, activity: ActivityEnum) {
             val intent = Intent(context, activity.getClass().java)
@@ -62,6 +69,14 @@ class Helper {
             dialogBuilder
                 .setMessage(text)
                 .setTitle(title)
+                .show()
+        }
+
+
+        fun showAlertDialog(context: Context,view: View) {
+            val dialogBuilder = AlertDialog.Builder(context)
+            dialogBuilder
+                .setView(view)
                 .show()
         }
 
@@ -117,7 +132,7 @@ class Helper {
 
         inline fun <reified T> retrieveSharedPreference(key: PreferenceEnum): T {
             val sharedPrefs =
-                ContextSingleton.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
+                ContextInstance.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
 
             return when (typeOf<T>()) {
                 typeOf<Boolean>() -> sharedPrefs.getBoolean(key.getName(), false) as T
@@ -126,7 +141,7 @@ class Helper {
                 typeOf<Int>() -> sharedPrefs.getInt(key.getName(), -1) as T
                 typeOf<Long>() -> sharedPrefs.getLong(key.getName(), -1L) as T
                 else -> throw InvalidObjectException(
-                    ContextSingleton.getContext()!!.getString(R.string.invalid_pref_type_error)
+                    ContextInstance.getContext()!!.getString(R.string.invalid_pref_type_error)
                 )
             }
         }
@@ -136,7 +151,7 @@ class Helper {
             value: T
         ) {
             val sharedPrefs =
-                ContextSingleton.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
+                ContextInstance.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
 
             if (sharedPrefs.contains(key.getName())) sharedPrefs.edit().remove(key.getName()).apply()
 
@@ -158,33 +173,34 @@ class Helper {
                 }
                 else -> {
                     throw InvalidObjectException(
-                        ContextSingleton.getContext()!!.getString(R.string.invalid_pref_type_error) + ": " +T::class
+                        ContextInstance.getContext()!!.getString(R.string.invalid_pref_type_error) + ": " +T::class
                     )
                 }
             }
         }
 
         fun deleteSharedPreference(key: PreferenceEnum) {
-            ContextSingleton.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
+            ContextInstance.getContext()!!.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
                 .edit().remove(key.getName()).apply()
         }
 
+
         inline fun <reified T> serializeData(value: T): String {
-            return Json.encodeToString(value)
+            return json.encodeToString(value)
         }
 
         inline fun <reified T : Any> deserializeObject(value: String): T {
-            return Json.decodeFromString(value.trimIndent())
+            return json.decodeFromString(value.trimIndent())
         }
 
         inline fun <reified T : List<Any>> deserializeArray(value: String): List<T> {
-            return Json.decodeFromString(value.trimIndent())
+            return json.decodeFromString(value.trimIndent())
         }
 
         @SuppressLint("PrivateResource")
         fun getErrorIcon(): Drawable {
             val icon = AppCompatResources.getDrawable(
-                ContextSingleton.getContext()!!,
+                ContextInstance.getContext()!!,
                 com.google.android.material.R.drawable.mtrl_ic_error
             )!!
             DrawableCompat.setTint(icon, Color.parseColor(getColor(R.color.danger_500)))
@@ -194,7 +210,7 @@ class Helper {
 
         fun getColor(color: Int): String {
             //noinspection ResourceType
-            return ContextSingleton.getContext()!!.resources.getString(color)
+            return ContextInstance.getContext()!!.resources.getString(color)
         }
 
         inline fun <reified T : BaseResponse> parseStringResponse(response: String): BaseResponse {
@@ -203,6 +219,15 @@ class Helper {
             } catch (ex: Exception) {
                 deserializeObject<ErrorResponse>(response)
             }
+        }
+
+        fun inflateView(viewId: Int, viewGroup: ViewGroup? = null): View {
+            val inflater = LayoutInflater.from(ContextInstance.getContext())
+            return inflater.inflate(viewId, viewGroup);
+        }
+
+        fun isStringInRange(text: String, minimum: Int, maximum: Int): Boolean {
+            return text.length in minimum..maximum
         }
 
     }

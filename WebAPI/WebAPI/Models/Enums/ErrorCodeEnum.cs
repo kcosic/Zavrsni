@@ -10,6 +10,7 @@ namespace WebAPI.Models.Enums
         UnexpectedError,
         InvalidCredentials,
         InvalidToken,
-
+        UsernameExists,
+        EmailExists
     }
 }

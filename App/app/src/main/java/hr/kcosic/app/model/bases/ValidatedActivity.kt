@@ -2,12 +2,13 @@ package hr.kcosic.app.model.bases
 
 import android.os.Bundle
 import hr.kcosic.app.R
+import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
 import java.lang.Exception
 
-open class ValidatedActivity : BaseActivity() {
+abstract class ValidatedActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         validateUser()
@@ -16,6 +17,7 @@ open class ValidatedActivity : BaseActivity() {
     fun validateUser() {
         try {
             val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN)
+            throw Exception("Bypass to login")
             if (token == Helper.NO_VALUE) {
                 Helper.showShortToast(this,getString(R.string.token_error))
                 Helper.openActivity(this,ActivityEnum.LOGIN)
@@ -24,5 +26,11 @@ open class ValidatedActivity : BaseActivity() {
             Helper.showShortToast(this,e.message ?: getString(R.string.unknown_error))
             Helper.openActivity(this,ActivityEnum.LOGIN)
         }
+    }
+
+    fun getUser(): User {
+        return Helper.deserializeObject(
+            Helper.retrieveSharedPreference(PreferenceEnum.USER)
+        )
     }
 }

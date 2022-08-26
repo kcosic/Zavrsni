@@ -2,18 +2,13 @@ package hr.kcosic.app.dal
 
 import android.util.Base64
 import hr.kcosic.app.model.bases.ApiRoutes
-import hr.kcosic.app.model.bases.BaseResponse
-import hr.kcosic.app.model.bases.ContextSingleton
 import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
-import hr.kcosic.app.model.responses.ErrorResponse
-import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Duration
-import java.util.concurrent.TimeUnit
 
 
 class ApiService private constructor() {
@@ -82,11 +77,14 @@ class ApiService private constructor() {
 
 
     private inline fun <reified T> post(url: String, value: T): Call {
-        val body: RequestBody = Helper.serializeData(value).toRequestBody(headers)
+        val data = value;
+        val json = Helper.serializeData(value)
+        val body: RequestBody = json.toRequestBody(headers)
         val request: Request = Request.Builder()
             .url(url)
             .post(body)
-            .addHeader("Authorization", getTokenHeader())
+            //.addHeader()
+            //.addHeader("Authorization", getTokenHeader())
             .build()
         return client.newCall(request)
     }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/login"
@@ -30,7 +31,7 @@
             android:layout_gravity="center"
             android:layout_weight="3"
             android:labelFor="@+id/txtEmail"
-            android:text="@string/email"
+            android:text="@string/login_credential"
             android:textSize="20sp" />
 
         <EditText
@@ -38,15 +39,11 @@
 
             style="@style/textField"
             android:layout_width="0dp"
-            android:layout_height="40sp"
             android:layout_gravity="center"
             android:layout_marginStart="20sp"
             android:layout_weight="7"
             android:autofillHints="emailAddress"
-            android:inputType="textEmailAddress"
-            android:maxHeight="40sp"
-            android:padding="5sp"
-            android:singleLine="true" />
+            android:inputType="textEmailAddress" />
 
     </LinearLayout>
 
@@ -71,15 +68,12 @@
             android:id="@+id/txtPassword"
             style="@style/textField"
             android:layout_width="0dp"
-            android:layout_height="40sp"
             android:layout_gravity="center"
             android:layout_marginStart="20sp"
             android:layout_weight="7"
             android:autofillHints="password"
             android:inputType="textPassword"
-            android:maxHeight="40sp"
-            android:padding="5sp"
-            android:singleLine="true" />
+            />
 
     </LinearLayout>
 

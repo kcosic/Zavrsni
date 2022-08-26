@@ -3,7 +3,7 @@ package hr.kcosic.app.model.enums
 import androidx.appcompat.app.AppCompatActivity
 import hr.kcosic.app.activity.LoginActivity
 import hr.kcosic.app.activity.MainActivity
-import hr.kcosic.app.activity.RegisterActivity
+import hr.kcosic.app.activity.RegisterUserActivity
 import kotlin.reflect.KClass
 
 enum class ActivityEnum {
@@ -22,9 +22,12 @@ enum class ActivityEnum {
     LOGIN{
         override fun getClass(): KClass<LoginActivity> = LoginActivity::class
     },
-    REGISTER{
-        override fun getClass(): KClass<RegisterActivity> = RegisterActivity::class
+    REGISTER_USER{
+        override fun getClass(): KClass<RegisterUserActivity> = RegisterUserActivity::class
     },
+    /*REGISTER_SHOP{
+        override fun getClass(): KClass<RegisterUserActivity> = RegisterUserActivity::class
+    },*/
 
 
 

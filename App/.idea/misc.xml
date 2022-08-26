@@ -7,6 +7,7 @@
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3615" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/background_gradient.xml" value="0.331" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/base_button.xml" value="0.5475" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/dialog_border.xml" value="0.272" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/edit_text_border.xml" value="0.3845" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/edit_text_border_invalid.xml" value="0.3845" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/edit_text_border_valid.xml" value="0.3845" />
@@ -14,6 +15,9 @@
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/text_field.xml" value="0.3845" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_login.xml" value="0.4125" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_main.xml" value="0.2651975683890577" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_register_shop.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_register_user.xml" value="0.2" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/register_dialog.xml" value="0.421875" />
       </map>
     </option>
   </component>

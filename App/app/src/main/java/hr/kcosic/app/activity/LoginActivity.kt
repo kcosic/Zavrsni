@@ -22,25 +22,45 @@ import java.io.InvalidObjectException
 
 class LoginActivity : BaseActivity() {
     private lateinit var btnLogin: Button
+    private lateinit var btnRegister: Button
+    private lateinit var btnRegisterUser: Button
+    private lateinit var btnRegisterShop: Button
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        initComponents()
+        initializeComponents()
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun initComponents() {
+@SuppressLint("SetTextI18n")             //TODO remove, for dev purposes
+    override fun initializeComponents() {
         btnLogin = findViewById(R.id.btnLogin)
+        btnRegister = findViewById(R.id.btnRegister)
+
         txtEmail = findViewById(R.id.txtEmail)
         txtPassword = findViewById(R.id.txtPassword)
 
-        //TODO: remove, for dev purposes only
-        txtEmail.setText("menta")
-        txtPassword.setText("123456")
+        txtEmail.setText("menta")               //TODO: remove, for dev purposes only
+        txtPassword.setText("123456")           //TODO: remove, for dev purposes only
 
+        btnRegister.setOnClickListener{
+            val dialogView = Helper.inflateView(R.layout.register_dialog)
+            btnRegisterUser = dialogView.findViewById(R.id.btnUserRegister)
+            btnRegisterShop = dialogView.findViewById(R.id.btnShopRegister)
+
+
+            btnRegisterUser.setOnClickListener{
+                Helper.openActivity(this, ActivityEnum.REGISTER_USER)
+                //TODO: close dialog
+            }
+            btnRegisterShop.setOnClickListener{
+                Helper.showShortToast(this, "Navigating to shop reg")
+                //TODO: close dialog
+            }
+            Helper.showAlertDialog(this, dialogView)
+        }
 
         btnLogin.setOnClickListener {
 

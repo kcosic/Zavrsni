@@ -10,4 +10,8 @@ class MainActivity : ValidatedActivity() {
         setContentView(R.layout.activity_main)
     }
 
+    override fun initializeComponents() {
+
+    }
+
 }

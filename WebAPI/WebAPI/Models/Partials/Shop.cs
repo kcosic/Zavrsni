@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebAPI.Models.DTOs;
+using WebAPI.Models.Helpers;
 
 namespace WebAPI.Models.ORM
 {
@@ -23,7 +24,10 @@ namespace WebAPI.Models.ORM
                 Appointments = singleLevel ? null : Appointment.ToListDTO(item.Appointments),
                 LegalName = item.LegalName,
                 LocationId= item.LocationId,
-                ShortName= item.ShortName
+                ShortName= item.ShortName,
+                Vat= item.Vat,
+                Email= item.Email,
+                Password= Helper.PASSWORD_PLACEHOLDER
             };
         }
 
@@ -48,7 +52,10 @@ namespace WebAPI.Models.ORM
                 Appointments = singleLevel ? null : Appointment.ToListDTO(Appointments),
                 LegalName = LegalName,
                 LocationId = LocationId,
-                ShortName = ShortName
+                ShortName = ShortName,               
+                Vat = Vat,
+                Email = Email,
+                Password = Helper.PASSWORD_PLACEHOLDER
             };
         }
     }

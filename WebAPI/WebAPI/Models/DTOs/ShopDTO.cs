@@ -35,6 +35,12 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public int LocationId { get; set; }
         [JsonProperty]
+        public string Vat { get; set; }
+        [JsonProperty]
+        public string Email { get; set; }
+        [JsonProperty]
+        public string Password { get; set; }
+        [JsonProperty]
         public ICollection<AppointmentDTO> Appointments { get; set; }
         [JsonProperty]
         public LocationDTO Location { get; set; }

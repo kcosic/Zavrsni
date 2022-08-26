@@ -4,12 +4,26 @@
         <item name="buttonStyle">@style/primaryButton</item>
     </style>
 
+    <style name="modal">
+        <item name="android:background">@drawable/dialog_border</item>
+        <item name="borderWidth">3sp</item>
+        <item name="cornerRadius">100sp</item>
+
+    </style>
+
     <style name="login" parent="Theme.App">
+        <item name="android:background">@drawable/background_gradient</item>
+    </style>
+    <style name="register" parent="Theme.App">
         <item name="android:background">@drawable/background_gradient</item>
     </style>
 
     <style name="textField">
         <item name="android:background">@drawable/edit_text_border</item>
+        <item name="android:maxHeight">40sp</item>
+        <item name="android:padding">5sp</item>
+        <item name="android:layout_height">40sp</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="textView">

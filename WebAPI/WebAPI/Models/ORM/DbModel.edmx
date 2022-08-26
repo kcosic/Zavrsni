@@ -132,9 +132,12 @@
           <Property Name="DateModified" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="DateDeleted" Type="datetime2" Precision="7" />
           <Property Name="Deleted" Type="bit" />
+          <Property Name="Vat" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LegalName" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="ShortName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LocationId" Type="int" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -617,6 +620,9 @@
           <NavigationProperty Name="RepairHistories" Relationship="DbModel.FK_RepairHistory_Shop" FromRole="Shop" ToRole="RepairHistory" />
           <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_Shop" FromRole="Shop" ToRole="Request" />
           <NavigationProperty Name="Reviews" Relationship="DbModel.FK_Review_Shop" FromRole="Shop" ToRole="Review" />
+          <Property Name="Vat" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Appointment_Shop">
           <End Type="DbModel.Shop" Role="Shop" Multiplicity="1" />
@@ -928,6 +934,9 @@
           <EntitySetMapping Name="Shops">
             <EntityTypeMapping TypeName="DbModel.Shop">
               <MappingFragment StoreEntitySet="Shop">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Vat" ColumnName="Vat" />
                 <ScalarProperty Name="LocationId" ColumnName="LocationId" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
                 <ScalarProperty Name="LegalName" ColumnName="LegalName" />

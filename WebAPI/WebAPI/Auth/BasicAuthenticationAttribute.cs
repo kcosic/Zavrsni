@@ -26,11 +26,15 @@ namespace WebAPI.Auth
         {
             HttpRequestMessage request = context.Request;
             AuthenticationHeaderValue authorization = request.Headers.Authorization;
-
+            if (context.ActionContext.ActionDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any())
+            {
+                return;
+            }
             if (authorization == null)
             {
                 // No authentication was attempted (for this authentication method).
                 // Do not set either Principal (which would indicate success) or ErrorResult (indicating an error).
+                context.ErrorResult = new AuthenticationFailureResult(new Exception("Forbidden"), request);
                 return;
             }
 
@@ -38,6 +42,7 @@ namespace WebAPI.Auth
             {
                 // No authentication was attempted (for this authentication method).
                 // Do not set either Principal (which would indicate success) or ErrorResult (indicating an error).
+                context.ErrorResult = new AuthenticationFailureResult(new Exception("Forbidden"), request);
                 return;
             }
 

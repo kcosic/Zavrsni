@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">App</string>
+    <string name="token_error">Neispravna prijava</string>
+    <string name="unknown_error">Nepoznata greška</string>
+    <string name="invalid_pref_type_error">Nevažeća vrsta postavki</string>
+    <string name="login">Prijava</string>
+    <string name="password">Lozinka</string>
+    <string name="invalid_email">Neispravan e-mail</string>
+    <string name="invalid_password">Neispravna lozinka</string>
+    <string name="register">Registracija</string>
+    <string name="register_modal">Želite li se registrirati kao korisnik ili kao autoservis?</string>
+    <string name="user">Korisnik</string>
+    <string name="repair_shop">Autoservis</string>
+    <string name="last_name">Prezime</string>
+    <string name="first_name">Ime</string>
+    <string name="email">E-pošta</string>
+    <string name="date_of_birth">Datum rođenja</string>
+    <string name="repeat_password">Ponovite lozinku</string>
+    <string name="user_registration">Registracija korisnika</string>
+    <string name="back">Natrag</string>
+    <string name="finish">Završi</string>
+    <string name="required_value">Vrijednost je obavezna</string>
+    <string name="passwords_must_match">Lozinke se moraju poklapati</string>
+    <string name="length_between_1_50">Duljina mora biti između 1 i 50</string>
+    <string name="username">Korisničko ime</string>
+    <string name="length_between_5_50">Duljina mora biti između 5 i 50</string>
+    <string name="login_credential">Korisničko ime ili e-pošta</string>
+    <string name="shop_registration">Registracija Autoservisa</string>
+</resources>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        style="@style/register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="40sp"
+        tools:context=".activity.RegisterUserActivity">
+
+        <TextView
+            style="@style/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20sp"
+            android:text="@string/shop_registration"
+            android:textAlignment="center"
+            android:textSize="30sp" />
+
+
+        <EditText
+            android:id="@+id/txtName"
+            style="@style/textField"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:autofillHints="AUTOFILL_HINT_PERSON_NAME"
+            android:hint="@string/first_name"
+            android:inputType="textPersonName"
+            android:maxLength="50" />
+
+        <EditText
+            android:id="@+id/txtLastName"
+            style="@style/textField"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:autofillHints="AUTOFILL_HINT_PERSON_NAME_FAMILY"
+            android:hint="@string/last_name"
+            android:inputType="textPersonName"
+            android:maxLength="50" />
+
+        <EditText
+            android:id="@+id/txtDob"
+            style="@style/textField"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:autofillHints=""
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/date_of_birth"
+            android:inputType="none"
+            android:maxLength="50" />
+
+
+        <EditText
+            android:id="@+id/txtEmail"
+            style="@style/textField"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:autofillHints="emailAddress"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/txtUserName"
+            style="@style/textField"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:autofillHints="emailAddress"
+            android:hint="@string/username"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/txtPassword"
+            style="@style/textField"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:autofillHints=""
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:maxLength="50" />
+
+        <EditText
+            android:id="@+id/txtRepeatPassword"
+            style="@style/textField"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:autofillHints=""
+            android:hint="@string/repeat_password"
+            android:inputType="textPassword"
+            android:maxLength="50" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnBack"
+                style="@style/warningButton"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="@string/back" />
+
+            <Button
+                android:id="@+id/btnFinishRegistration"
+                style="@style/primaryButton"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="@string/finish" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>
