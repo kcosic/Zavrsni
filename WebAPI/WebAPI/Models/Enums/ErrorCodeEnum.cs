@@ -8,9 +8,13 @@ namespace WebAPI.Models.Enums
     public enum ErrorCodeEnum
     {
         UnexpectedError,
-        InvalidCredentials,
+        Forbidden,
         InvalidToken,
         UsernameExists,
-        EmailExists
+        EmailExists,
+        InvalidParameter,
+        LegalNameExists,
+        ShortNameExists,
+        VatExists
     }
 }

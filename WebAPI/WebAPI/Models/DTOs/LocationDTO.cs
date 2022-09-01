@@ -24,7 +24,7 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public bool? Deleted { get; set; }
         [JsonProperty]
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         [JsonProperty]
         public string Street { get; set; }
         [JsonProperty]
@@ -36,9 +36,9 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public string Country { get; set; }
         [JsonProperty]
-        public decimal? Longitude { get; set; }
+        public double? Longitude { get; set; }
         [JsonProperty]
-        public decimal? Latitude { get; set; }
+        public double? Latitude { get; set; }
         [JsonProperty]
         public ICollection<ShopDTO> Shops { get; set; }
         [JsonProperty]

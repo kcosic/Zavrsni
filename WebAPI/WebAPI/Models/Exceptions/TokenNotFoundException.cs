@@ -11,7 +11,7 @@ namespace WebAPI.Models.Exceptions
     {
         public TokenNotFoundException() : base("Invalid token")
         {
-            _errorCode = ErrorCodeEnum.InvalidCredentials;
+            _errorCode = ErrorCodeEnum.Forbidden;
         }
     }
 }

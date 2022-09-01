@@ -14,11 +14,15 @@ using WebAPI.Models.Responses;
 
 namespace WebAPI.Controllers
 {
+    [Route("api/Auth")]
     public class AuthController : BaseController
     {
         public AuthController() : base(nameof(AuthController)) { }
 
-        public BaseResponse Get()
+
+        [HttpGet]
+        [Route("Login")]
+        public BaseResponse Login()
         {
             try
             {
@@ -26,12 +30,14 @@ namespace WebAPI.Controllers
             }
             catch (Exception e)
             {
-                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+                return CreateErrorResponse(e, ErrorCodeEnum.UnexpectedError);
             }
         }
 
         [AllowAnonymous]
-        public BaseResponse Post([FromBody]UserDTO user)
+        [HttpPost]
+        [Route("Register/User")]
+        public BaseResponse RegisterUser([FromBody]UserDTO user)
         {
             try
             {
@@ -67,6 +73,81 @@ namespace WebAPI.Controllers
                 };
 
                 Db.Users.Add(newUser);
+                Db.SaveChanges();
+
+                return CreateOkResponse();                
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, ErrorCodeEnum.UnexpectedError);
+            }
+        }        
+        
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Register/Shop")]
+        public BaseResponse RegisterShop([FromBody]ShopDTO shop)
+        {
+            try
+            {
+                if(shop == null)
+                {
+                    throw new ArgumentNullException("Shop cannot be null");
+                }
+
+                var existingShop = Db.Shops.Where(x => x.Vat == shop.Vat).FirstOrDefault();
+                if(existingShop != null)
+                {
+                    return CreateErrorResponse("VAT already exists.", ErrorCodeEnum.VatExists);
+                }
+                existingShop = Db.Shops.Where(x => x.LegalName == shop.LegalName).FirstOrDefault();
+                if(existingShop != null)
+                {
+                    return CreateErrorResponse("Legal name already exists.", ErrorCodeEnum.UsernameExists);
+                }
+
+                existingShop = Db.Shops.Where(x => x.ShortName == shop.ShortName).FirstOrDefault();
+                if(existingShop != null)
+                {
+                    return CreateErrorResponse("Short name already exists.", ErrorCodeEnum.UsernameExists);
+                }
+
+                existingShop = Db.Shops.Where(x => x.Email == shop.Email).FirstOrDefault();
+                if(existingShop != null)
+                {
+                    return CreateErrorResponse("Email already exists.", ErrorCodeEnum.EmailExists);
+                }
+
+                var newShopLocation = new Location
+                {
+                    DateCreated = DateTime.Now.ToUniversalTime(),
+                    DateModified = DateTime.Now.ToUniversalTime(),
+                    Deleted = false,
+                    Latitude = shop.Location.Latitude,
+                    City = shop.Location.City,
+                    Country = shop.Location.Country,
+                    County = shop.Location.County,
+                    Longitude = shop.Location.Longitude,
+                    Street = shop.Location.Street,
+                    StreetNumber = shop.Location.StreetNumber
+                };
+
+                Db.Locations.Add(newShopLocation);
+
+                var newShop = new Shop
+                {
+                    DateCreated = DateTime.Now.ToUniversalTime(),
+                    DateModified = DateTime.Now.ToUniversalTime(),
+                    Email = shop.Email,
+                    Password = Helper.Hash(shop.Password),
+                    Deleted = false,
+                    LegalName = shop.LegalName,
+                    ShortName = shop.ShortName,
+                    Vat = shop.Vat,
+                    Location = newShopLocation
+                };
+
+                Db.Shops.Add(newShop);
                 Db.SaveChanges();
 
                 return CreateOkResponse();                

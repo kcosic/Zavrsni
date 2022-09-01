@@ -2,6 +2,7 @@ package hr.kcosic.app.dal
 
 import android.util.Base64
 import hr.kcosic.app.model.bases.ApiRoutes
+import hr.kcosic.app.model.entities.Shop
 import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
@@ -76,17 +77,16 @@ class ApiService private constructor() {
     }
 
 
-    private inline fun <reified T> post(url: String, value: T): Call {
+    private inline fun <reified T> post(url: String, value: T, addAuth: Boolean = true): Call {
         val data = value;
         val json = Helper.serializeData(value)
         val body: RequestBody = json.toRequestBody(headers)
-        val request: Request = Request.Builder()
+        val request = Request.Builder()
             .url(url)
             .post(body)
-            //.addHeader()
-            //.addHeader("Authorization", getTokenHeader())
-            .build()
-        return client.newCall(request)
+        if (addAuth) request.addHeader("Authorization", getTokenHeader())
+
+        return client.newCall(request.build())
     }
 
     private inline fun <reified T> delete(url: String): Call {
@@ -101,14 +101,29 @@ class ApiService private constructor() {
 
     //region Auth
     fun login(username: String, password: String): Call {
-        return get(ApiRoutes.AUTH, "${username}:${password}")
+        return get("${ApiRoutes.BASE_URL}/Login", "${username}:${password}")
     }
 
-    fun register(newUser: User): Call{
-        return post(ApiRoutes.AUTH, newUser)
+    fun register(newUser: User): Call {
+        return post("${ApiRoutes.BASE_URL}/Register/User", newUser, false)
     }
+    fun register(newShop: Shop): Call {
+        return post("${ApiRoutes.BASE_URL}/Register/Shop", newShop, false)
+    }
+
     //endregion
 
+    //#region Location
+
+    fun retrieveLocationByCoordinates(latLng: String): Call {
+        return get("${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}")
+    }
+
+    fun discoverLocationByAddress(address: String): Call {
+        return get("${ApiRoutes.LOCATION}/Discover/${Helper.toBase64(address)}")
+
+    }
+    //#endregion
 }
 
 

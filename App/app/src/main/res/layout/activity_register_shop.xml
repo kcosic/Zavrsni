@@ -23,38 +23,33 @@
 
 
         <EditText
-            android:id="@+id/txtName"
+            android:id="@+id/txtVat"
             style="@style/textField"
             android:layout_width="match_parent"
             android:layout_margin="20sp"
-            android:autofillHints="AUTOFILL_HINT_PERSON_NAME"
-            android:hint="@string/first_name"
+            android:hint="@string/vat_id"
             android:inputType="textPersonName"
+            android:maxLength="50"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/txtShortName"
+            style="@style/textField"
+            android:layout_width="match_parent"
+            android:layout_margin="20sp"
+            android:hint="@string/short_name"
+            android:inputType="text"
             android:maxLength="50" />
 
         <EditText
-            android:id="@+id/txtLastName"
+            android:id="@+id/txtLegalName"
             style="@style/textField"
             android:layout_width="match_parent"
             android:layout_margin="20sp"
-            android:autofillHints="AUTOFILL_HINT_PERSON_NAME_FAMILY"
-            android:hint="@string/last_name"
-            android:inputType="textPersonName"
+            android:hint="@string/legal_name"
+            android:inputType="text"
             android:maxLength="50" />
 
-        <EditText
-            android:id="@+id/txtDob"
-            style="@style/textField"
-            android:layout_width="match_parent"
-            android:layout_margin="20sp"
-            android:autofillHints=""
-            android:clickable="false"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:hint="@string/date_of_birth"
-            android:inputType="none"
-            android:maxLength="50" />
 
 
         <EditText
@@ -66,14 +61,6 @@
             android:hint="@string/email"
             android:inputType="textEmailAddress" />
 
-        <EditText
-            android:id="@+id/txtUserName"
-            style="@style/textField"
-            android:layout_width="match_parent"
-            android:layout_margin="20sp"
-            android:autofillHints="emailAddress"
-            android:hint="@string/username"
-            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/txtPassword"
@@ -94,9 +81,18 @@
             android:hint="@string/repeat_password"
             android:inputType="textPassword"
             android:maxLength="50" />
+        <Button
+            android:id="@+id/btnLocation"
+            style="@style/primaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:layout_margin="5dp"
+            android:text="@string/location" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_marginTop="20sp"
             android:layout_height="wrap_content">
 
             <Button

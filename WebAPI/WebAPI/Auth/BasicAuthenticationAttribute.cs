@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using WebAPI.Models.Bases;
 using WebAPI.Models.Exceptions;
 using WebAPI.Models.Helpers;
 using WebAPI.Models.ORM;
@@ -30,19 +31,10 @@ namespace WebAPI.Auth
             {
                 return;
             }
-            if (authorization == null)
-            {
-                // No authentication was attempted (for this authentication method).
-                // Do not set either Principal (which would indicate success) or ErrorResult (indicating an error).
-                context.ErrorResult = new AuthenticationFailureResult(new Exception("Forbidden"), request);
-                return;
-            }
 
-            if (authorization.Scheme != "Basic")
+            if (authorization == null || authorization.Scheme != "Basic")
             {
-                // No authentication was attempted (for this authentication method).
-                // Do not set either Principal (which would indicate success) or ErrorResult (indicating an error).
-                context.ErrorResult = new AuthenticationFailureResult(new Exception("Forbidden"), request);
+                context.ErrorResult = new AuthenticationFailureResult(new ForbiddenExepction(), request);
                 return;
             }
 

@@ -1,6 +1,7 @@
 package hr.kcosic.app.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Button
@@ -27,6 +28,7 @@ class LoginActivity : BaseActivity() {
     private lateinit var btnRegisterShop: Button
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
+    private lateinit var registerDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +36,7 @@ class LoginActivity : BaseActivity() {
         initializeComponents()
     }
 
-@SuppressLint("SetTextI18n")             //TODO remove, for dev purposes
+    @SuppressLint("SetTextI18n")             //TODO remove, for dev purposes
     override fun initializeComponents() {
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
@@ -45,21 +47,21 @@ class LoginActivity : BaseActivity() {
         txtEmail.setText("menta")               //TODO: remove, for dev purposes only
         txtPassword.setText("123456")           //TODO: remove, for dev purposes only
 
-        btnRegister.setOnClickListener{
+        btnRegister.setOnClickListener {
             val dialogView = Helper.inflateView(R.layout.register_dialog)
             btnRegisterUser = dialogView.findViewById(R.id.btnUserRegister)
             btnRegisterShop = dialogView.findViewById(R.id.btnShopRegister)
 
 
-            btnRegisterUser.setOnClickListener{
+            btnRegisterUser.setOnClickListener {
                 Helper.openActivity(this, ActivityEnum.REGISTER_USER)
-                //TODO: close dialog
+                registerDialog.dismiss()
             }
-            btnRegisterShop.setOnClickListener{
-                Helper.showShortToast(this, "Navigating to shop reg")
-                //TODO: close dialog
+            btnRegisterShop.setOnClickListener {
+                Helper.openActivity(this, ActivityEnum.REGISTER_SHOP)
+                registerDialog.dismiss()
             }
-            Helper.showAlertDialog(this, dialogView)
+            registerDialog = Helper.showAlertDialog(this, dialogView)
         }
 
         btnLogin.setOnClickListener {
@@ -106,12 +108,13 @@ class LoginActivity : BaseActivity() {
 
     fun handleLoginSuccess(response: Response) {
 
-        val resp: BaseResponse = Helper.parseStringResponse<SingleResponse<Token>>(response.body!!.string())
+        val resp: BaseResponse =
+            Helper.parseStringResponse<SingleResponse<Token>>(response.body!!.string())
 
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             val data = resp.Data as Token
 
-            try{
+            try {
                 Helper.createOrEditSharedPreference(
                     PreferenceEnum.TOKEN,
                     data.TokenValue
@@ -122,7 +125,7 @@ class LoginActivity : BaseActivity() {
                 )
                 Helper.openActivity(this, ActivityEnum.MAIN)
 
-            } catch(e: InvalidObjectException){
+            } catch (e: InvalidObjectException) {
                 Helper.showLongToast(this, e.message.toString())
             }
 

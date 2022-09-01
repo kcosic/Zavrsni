@@ -203,6 +203,7 @@
     <Compile Include="Auth\BasicAuthenticationAttribute.cs" />
     <Compile Include="Auth\AuthenticationFailureResult.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\LocationController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -223,7 +224,15 @@
     <Compile Include="Models\DTOs\AppointmentDTO.cs" />
     <Compile Include="Models\Enums\ErrorCodeEnum.cs" />
     <Compile Include="Models\Exceptions\InvalidCredentialsException.cs" />
+    <Compile Include="Models\Exceptions\LocationNotFoundException.cs" />
+    <Compile Include="Models\Exceptions\ForbiddenException.cs" />
     <Compile Include="Models\Exceptions\TokenNotFoundException.cs" />
+    <Compile Include="Models\HERE\Address.cs" />
+    <Compile Include="Models\HERE\HereService.cs" />
+    <Compile Include="Models\HERE\LatLong.cs" />
+    <Compile Include="Models\HERE\Location.cs" />
+    <Compile Include="Models\HERE\MapView.cs" />
+    <Compile Include="Models\HERE\Responses\LocationResponse.cs" />
     <Compile Include="Models\Partials\Appointment.cs" />
     <Compile Include="Models\Partials\Car.cs" />
     <Compile Include="Models\Partials\Issue.cs" />

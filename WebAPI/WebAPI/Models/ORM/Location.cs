@@ -25,17 +25,17 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
         public Nullable<bool> Deleted { get; set; }
-        public int UserId { get; set; }
+        public Nullable<int> UserId { get; set; }
         public string Street { get; set; }
         public string StreetNumber { get; set; }
         public string City { get; set; }
         public string County { get; set; }
         public string Country { get; set; }
-        public Nullable<decimal> Longitude { get; set; }
-        public Nullable<decimal> Latitude { get; set; }
+        public Nullable<double> Longitude { get; set; }
+        public Nullable<double> Latitude { get; set; }
     
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Shop> Shops { get; set; }
-        public virtual User User { get; set; }
     }
 }

@@ -5,5 +5,9 @@ enum class ErrorCodeEnum(val code: Int) {
     InvalidCredentials(1),
     InvalidToken(2),
     UsernameExists(3),
-    EmailExists(4)
+    EmailExists(4),
+    InvalidParameter(5),
+    LegalNameExists(6),
+    ShortNameExists(7),
+    VatExists(8),
 }

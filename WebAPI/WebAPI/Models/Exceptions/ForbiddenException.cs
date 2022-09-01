@@ -7,9 +7,9 @@ using WebAPI.Models.Enums;
 
 namespace WebAPI.Models.Exceptions
 {
-    public class InvalidCredentialsException : BaseException
+    public class ForbiddenExepction : BaseException
     {
-        public InvalidCredentialsException() : base ("Invalid login.")
+        public ForbiddenExepction() : base("Forbidden")
         {
             _errorCode = ErrorCodeEnum.Forbidden;
         }

@@ -56,14 +56,14 @@
           <Property Name="DateModified" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="DateDeleted" Type="datetime2" Precision="7" />
           <Property Name="Deleted" Type="bit" />
-          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" />
           <Property Name="Street" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="StreetNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="City" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="County" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Country" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Longitude" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="Latitude" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Longitude" Type="float" />
+          <Property Name="Latitude" Type="float" />
         </EntityType>
         <EntityType Name="Log">
           <Key>
@@ -199,7 +199,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Location_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
           <End Role="Location" Type="Self.Location" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
@@ -474,7 +474,6 @@
           <EntitySet Name="RepairHistories" EntityType="Self.RepairHistory" />
           <EntitySet Name="Requests" EntityType="Self.Request" />
           <EntitySet Name="Reviews" EntityType="Self.Review" />
-          <EntitySet Name="Locations" EntityType="DbModel.Location" />
           <EntitySet Name="Logs" EntityType="DbModel.Log" />
           <EntitySet Name="Tokens" EntityType="DbModel.Token" />
           <EntitySet Name="Cars" EntityType="DbModel.Car" />
@@ -486,10 +485,6 @@
           <AssociationSet Name="FK_Appointment_Shop" Association="DbModel.FK_Appointment_Shop">
             <End Role="Shop" EntitySet="Shops" />
             <End Role="Appointment" EntitySet="Appointments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Shop_Location" Association="DbModel.FK_Shop_Location">
-            <End Role="Location" EntitySet="Locations" />
-            <End Role="Shop" EntitySet="Shops" />
           </AssociationSet>
           <AssociationSet Name="FK_RepairHistory_Shop" Association="DbModel.FK_RepairHistory_Shop">
             <End Role="Shop" EntitySet="Shops" />
@@ -512,10 +507,6 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Issue" EntitySet="Issues" />
           </AssociationSet>
-          <AssociationSet Name="FK_Location_User" Association="DbModel.FK_Location_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Location" EntitySet="Locations" />
-          </AssociationSet>
           <AssociationSet Name="FK_RepairHistory_User" Association="DbModel.FK_RepairHistory_User">
             <End Role="User" EntitySet="Users" />
             <End Role="RepairHistory" EntitySet="RepairHistories" />
@@ -532,27 +523,16 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Token" EntitySet="Tokens" />
           </AssociationSet>
+          <EntitySet Name="Locations" EntityType="DbModel.Location" />
+          <AssociationSet Name="FK_Location_User" Association="DbModel.FK_Location_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Location" EntitySet="Locations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shop_Location" Association="DbModel.FK_Shop_Location">
+            <End Role="Location" EntitySet="Locations" />
+            <End Role="Shop" EntitySet="Shops" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Location">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="DateDeleted" Type="DateTime" Precision="7" />
-          <Property Name="Deleted" Type="Boolean" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="Street" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StreetNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="County" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Country" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Longitude" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Latitude" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="Shops" Relationship="DbModel.FK_Shop_Location" FromRole="Location" ToRole="Shop" />
-          <NavigationProperty Name="User" Relationship="DbModel.FK_Location_User" FromRole="Location" ToRole="User" />
-        </EntityType>
         <EntityType Name="Log">
           <Key>
             <PropertyRef Name="Id" />
@@ -616,13 +596,13 @@
           <Property Name="ShortName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LocationId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Appointments" Relationship="DbModel.FK_Appointment_Shop" FromRole="Shop" ToRole="Appointment" />
-          <NavigationProperty Name="Location" Relationship="DbModel.FK_Shop_Location" FromRole="Shop" ToRole="Location" />
           <NavigationProperty Name="RepairHistories" Relationship="DbModel.FK_RepairHistory_Shop" FromRole="Shop" ToRole="RepairHistory" />
           <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_Shop" FromRole="Shop" ToRole="Request" />
           <NavigationProperty Name="Reviews" Relationship="DbModel.FK_Review_Shop" FromRole="Shop" ToRole="Review" />
           <Property Name="Vat" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Location" Relationship="DbModel.FK_Shop_Location" FromRole="Shop" ToRole="Location" />
         </EntityType>
         <Association Name="FK_Appointment_Shop">
           <End Type="DbModel.Shop" Role="Shop" Multiplicity="1" />
@@ -633,18 +613,6 @@
             </Principal>
             <Dependent Role="Appointment">
               <PropertyRef Name="ShopId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Shop_Location">
-          <End Type="DbModel.Location" Role="Location" Multiplicity="1" />
-          <End Type="DbModel.Shop" Role="Shop" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Shop">
-              <PropertyRef Name="LocationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -701,11 +669,11 @@
           <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="Cars" Relationship="DbModel.FK_Car_User" FromRole="User" ToRole="Car" />
           <NavigationProperty Name="Issues" Relationship="DbModel.FK_Issue_User" FromRole="User" ToRole="Issue" />
-          <NavigationProperty Name="Locations" Relationship="DbModel.FK_Location_User" FromRole="User" ToRole="Location" />
           <NavigationProperty Name="RepairHistories" Relationship="DbModel.FK_RepairHistory_User" FromRole="User" ToRole="RepairHistory" />
           <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_User" FromRole="User" ToRole="Request" />
           <NavigationProperty Name="Reviews" Relationship="DbModel.FK_Review_User" FromRole="User" ToRole="Review" />
           <NavigationProperty Name="Token" Relationship="DbModel.FK_Token_User" FromRole="User" ToRole="Token" />
+          <NavigationProperty Name="Locations" Relationship="DbModel.FK_Location_User" FromRole="User" ToRole="Location" />
         </EntityType>
         <Association Name="FK_Car_User">
           <End Type="DbModel.User" Role="User" Multiplicity="1" />
@@ -727,18 +695,6 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Issue">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Location_User">
-          <End Type="DbModel.User" Role="User" Multiplicity="1" />
-          <End Type="DbModel.Location" Role="Location" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Location">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -788,6 +744,50 @@
             </Principal>
             <Dependent Role="Token">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="7" />
+          <Property Name="Deleted" Type="Boolean" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="Street" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StreetNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="County" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Longitude" Type="Double" />
+          <Property Name="Latitude" Type="Double" />
+          <NavigationProperty Name="User" Relationship="DbModel.FK_Location_User" FromRole="Location" ToRole="User" />
+          <NavigationProperty Name="Shops" Relationship="DbModel.FK_Shop_Location" FromRole="Location" ToRole="Shop" />
+        </EntityType>
+        <Association Name="FK_Location_User">
+          <End Type="DbModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="DbModel.Location" Role="Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Location">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shop_Location">
+          <End Type="DbModel.Location" Role="Location" Multiplicity="1" />
+          <End Type="DbModel.Shop" Role="Shop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Shop">
+              <PropertyRef Name="LocationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -874,25 +874,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Locations">
-            <EntityTypeMapping TypeName="DbModel.Location">
-              <MappingFragment StoreEntitySet="Location">
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="County" ColumnName="County" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="StreetNumber" ColumnName="StreetNumber" />
-                <ScalarProperty Name="Street" ColumnName="Street" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Logs">
             <EntityTypeMapping TypeName="DbModel.Log">
               <MappingFragment StoreEntitySet="Log">
@@ -957,6 +938,25 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="DbModel.Location">
+              <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="StreetNumber" ColumnName="StreetNumber" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
                 <ScalarProperty Name="DateModified" ColumnName="DateModified" />

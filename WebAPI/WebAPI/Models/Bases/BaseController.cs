@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using WebAPI.Auth;
 using WebAPI.Models.Enums;
@@ -59,7 +60,7 @@ namespace WebAPI.Models
             {
                 Data = data,
                 Message = "Success!",
-                Status = System.Net.HttpStatusCode.OK,
+                Status = HttpStatusCode.OK,
                 IsSuccess = true
             };
         }
@@ -71,7 +72,7 @@ namespace WebAPI.Models
             {
                 Data = data,
                 Message = "Success!",
-                Status = System.Net.HttpStatusCode.OK,
+                Status = HttpStatusCode.OK,
                 IsSuccess = true
             };
         }        
@@ -83,7 +84,7 @@ namespace WebAPI.Models
             {
                 Data = null,
                 Message = "Success!",
-                Status = System.Net.HttpStatusCode.OK,
+                Status = HttpStatusCode.OK,
                 IsSuccess = true
             };
         }
@@ -98,7 +99,7 @@ namespace WebAPI.Models
                 PageSize = pageSize,
                 Total = total,
                 Message = "Success!",
-                Status = System.Net.HttpStatusCode.OK,
+                Status = HttpStatusCode.OK,
                 IsSuccess = true
             };
         }
@@ -117,10 +118,18 @@ namespace WebAPI.Models
             return new ErrorResponse
             {
                 Message = message,
-                Status = System.Net.HttpStatusCode.InternalServerError,
+                Status = DetermineStatusFromErrorCode(errorCode) ?? HttpStatusCode.InternalServerError,
                 ErrorCode = errorCode,
                 IsSuccess = false
             };
+        }
+
+        [NonAction]
+        private HttpStatusCode? DetermineStatusFromErrorCode(ErrorCodeEnum errorCode)
+        {
+
+            //TODO : implement proper error code switch
+            return null;
         }
 
         #endregion
