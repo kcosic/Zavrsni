@@ -7,9 +7,15 @@ using WebAPI.Models.Helpers;
 
 namespace WebAPI.Models.ORM
 {
-    partial class User{
+    partial class User
+    {
         public static UserDTO ToDTO(User item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new UserDTO
             {
                 DateCreated = item.DateCreated,
@@ -17,7 +23,7 @@ namespace WebAPI.Models.ORM
                 DateModified = item.DateModified,
                 Deleted = item.Deleted,
                 Id = item.Id,
-                Token = singleLevel ? null : Token.ToDTO(item.Token),
+                Tokens = singleLevel ? null : Token.ToListDTO(item.Tokens),
                 RepairHistories = singleLevel ? null : RepairHistory.ToListDTO(item.RepairHistories),
                 Requests = singleLevel ? null : Request.ToListDTO(item.Requests),
                 Reviews = singleLevel ? null : Review.ToListDTO(item.Reviews),
@@ -25,16 +31,21 @@ namespace WebAPI.Models.ORM
                 Issues = singleLevel ? null : Issue.ToListDTO(item.Issues),
                 Locations = singleLevel ? null : Location.ToListDTO(item.Locations),
                 DateOfBirth = item.DateOfBirth,
-                Email= item.Email,
-                FirstName= item.FirstName,
-                LastName= item.LastName,
-                Username= item.Username,
-                Password= Helper.PASSWORD_PLACEHOLDER
+                Email = item.Email,
+                FirstName = item.FirstName,
+                LastName = item.LastName,
+                Username = item.Username,
+                Password = Helper.PASSWORD_PLACEHOLDER
             };
         }
 
         public static ICollection<UserDTO> ToListDTO(ICollection<User> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 
@@ -47,7 +58,7 @@ namespace WebAPI.Models.ORM
                 DateModified = DateModified,
                 Deleted = Deleted,
                 Id = Id,
-                Token = singleLevel ? null : Token.ToDTO(Token, false),
+                Tokens = singleLevel ? null : Token.ToListDTO(Tokens, false),
                 RepairHistories = singleLevel ? null : RepairHistory.ToListDTO(RepairHistories),
                 Requests = singleLevel ? null : Request.ToListDTO(Requests),
                 Reviews = singleLevel ? null : Review.ToListDTO(Reviews),

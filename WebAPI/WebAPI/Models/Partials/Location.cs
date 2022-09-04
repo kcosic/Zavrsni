@@ -10,6 +10,11 @@ namespace WebAPI.Models.ORM
     partial class Location {
         public static LocationDTO ToDTO(Location item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new LocationDTO
             {
                 DateCreated = item.DateCreated,
@@ -33,6 +38,11 @@ namespace WebAPI.Models.ORM
 
         public static ICollection<LocationDTO> ToListDTO(ICollection<Location> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 

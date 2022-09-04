@@ -6,10 +6,16 @@ using WebAPI.Models.DTOs;
 
 namespace WebAPI.Models.ORM
 {
-    partial class Car {
-    
+    partial class Car
+    {
+
         public static CarDTO ToDTO(Car item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new CarDTO
             {
                 Make = item.Make,
@@ -31,6 +37,11 @@ namespace WebAPI.Models.ORM
 
         public static ICollection<CarDTO> ToListDTO(ICollection<Car> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 

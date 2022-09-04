@@ -17,8 +17,8 @@ abstract class ValidatedActivity : BaseActivity() {
     fun validateUser() {
         try {
             val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN)
-            throw Exception("Bypass to login")
-            if (token == Helper.NO_VALUE) {
+            val authFor = Helper.retrieveSharedPreference<String>(PreferenceEnum.AUTH_FOR)
+            if (token == Helper.NO_VALUE || authFor == Helper.NO_VALUE) {
                 Helper.showShortToast(this,getString(R.string.token_error))
                 Helper.openActivity(this,ActivityEnum.LOGIN)
             }
@@ -31,6 +31,11 @@ abstract class ValidatedActivity : BaseActivity() {
     fun getUser(): User {
         return Helper.deserializeObject(
             Helper.retrieveSharedPreference(PreferenceEnum.USER)
+        )
+    }
+    fun getShop(): User {
+        return Helper.deserializeObject(
+            Helper.retrieveSharedPreference(PreferenceEnum.SHOP)
         )
     }
 }

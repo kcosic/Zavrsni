@@ -5,8 +5,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 class Token {
     var UserId: Int? = null
+    var ShopId: Int? = null
     var TokenValue: String?= null
 
     @Serializable
     var User: User? = null
+    @Serializable
+    var Shop: Shop? = null
 }

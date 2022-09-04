@@ -7,9 +7,15 @@ using WebAPI.Models.Helpers;
 
 namespace WebAPI.Models.ORM
 {
-    partial class Shop{
+    partial class Shop
+    {
         public static ShopDTO ToDTO(Shop item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new ShopDTO
             {
                 DateCreated = item.DateCreated,
@@ -22,17 +28,25 @@ namespace WebAPI.Models.ORM
                 Requests = singleLevel ? null : Request.ToListDTO(item.Requests),
                 Reviews = singleLevel ? null : Review.ToListDTO(item.Reviews),
                 Appointments = singleLevel ? null : Appointment.ToListDTO(item.Appointments),
+                ChildShops = singleLevel ? null : Shop.ToListDTO(item.ChildShops),
+                ParentShop = singleLevel ? null : Shop.ToDTO(item.ParentShop),
+                ParentShopId = item.ParentShopId,
+                Tokens = singleLevel ? null : Token.ToListDTO(item.Tokens),
                 LegalName = item.LegalName,
-                LocationId= item.LocationId,
-                ShortName= item.ShortName,
-                Vat= item.Vat,
-                Email= item.Email,
-                Password= Helper.PASSWORD_PLACEHOLDER
+                LocationId = item.LocationId,
+                ShortName = item.ShortName,
+                Vat = item.Vat,
+                Email = item.Email,
+                Password = Helper.PASSWORD_PLACEHOLDER
             };
         }
 
         public static ICollection<ShopDTO> ToListDTO(ICollection<Shop> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 
@@ -52,10 +66,14 @@ namespace WebAPI.Models.ORM
                 Appointments = singleLevel ? null : Appointment.ToListDTO(Appointments),
                 LegalName = LegalName,
                 LocationId = LocationId,
-                ShortName = ShortName,               
+                ShortName = ShortName,
                 Vat = Vat,
                 Email = Email,
-                Password = Helper.PASSWORD_PLACEHOLDER
+                Password = Helper.PASSWORD_PLACEHOLDER,
+                ChildShops = singleLevel ? null : Shop.ToListDTO(ChildShops),
+                ParentShop = singleLevel ? null : Shop.ToDTO(ParentShop),
+                ParentShopId = ParentShopId,
+                Tokens = singleLevel ? null : Token.ToListDTO(Tokens),
             };
         }
     }

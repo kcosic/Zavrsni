@@ -32,6 +32,7 @@ import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.responses.ErrorResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.InvalidObjectException
@@ -45,11 +46,20 @@ class Helper {
     companion object {
         const val APP_KEY = "My App"
         const val NO_VALUE = "not_found"
+        var AUTH_FOR_KEY:String? = null
         val json = Json { explicitNulls = true }
 
         fun openActivity(context: Context, activity: ActivityEnum) {
             val intent = Intent(context, activity.getClass().java)
             ContextCompat.startActivity(context, intent, null)
+        }
+
+        fun setAuthKeyToUser(){
+            AUTH_FOR_KEY = "User"
+        }
+
+        fun setAuthKeyToShop(){
+            AUTH_FOR_KEY = "Shop"
         }
 
         fun showLongToast(context: Context, text: String) {
@@ -62,7 +72,8 @@ class Helper {
             Toast
                 .makeText(
                     context,
-                    text, Toast.LENGTH_SHORT
+                    text,
+                    Toast.LENGTH_SHORT
                 )
                 .show()
         }

@@ -36,4 +36,12 @@
     <string name="confirm">Confirm</string>
     <string name="length_between_1_200">Length must be between 1 and 200</string>
     <string name="location_required">Location is required</string>
+    <string name="remember_me">Remember me</string>
+    <string name="login_as_shop">Login as car shop</string>
+    <string name="already_logged_in">Already logged in</string>
+    <string name="car_service_in_next_30_days">Car service in next 30 days</string>
+    <string name="description">Description</string>
+    <string name="repair_shop_name">Repair shop name</string>
+    <string name="repair_shop_vat">Repair Shop VAT</string>
+    <string name="request_description" >Request Description</string>
 </resources>

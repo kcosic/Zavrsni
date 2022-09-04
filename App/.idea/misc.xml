@@ -11,14 +11,34 @@
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/edit_text_border.xml" value="0.3845" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/edit_text_border_invalid.xml" value="0.3845" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/edit_text_border_valid.xml" value="0.3845" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.221" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/ic_house_solid.xml" value="0.221" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3615" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.221" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/selector.xml" value="0.221" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/drawable/text_field.xml" value="0.3845" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/font/fragment_core.xml" value="0.5833333333333334" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/font/luis_george_font_family.xml" value="0.38958333333333334" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_home_shop.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_home_user.xml" value="0.2921195652173913" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_login.xml" value="0.4125" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_main.xml" value="0.2651975683890577" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_main_shop.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_main_user.xml" value="0.2921195652173913" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_register_shop.xml" value="0.33" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_register_user.xml" value="0.2" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/activity_test.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/content_home_user.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/fragment_dashboard.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/fragment_home.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/fragment_notifications.xml" value="0.2921195652173913" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/map_dialog.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/layout/register_dialog.xml" value="0.421875" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/menu/activity_main_drawer.xml" value="0.31302083333333336" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/menu/bottom_nav_menu.xml" value="0.31302083333333336" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/menu/menu_navigation.xml" value="0.31302083333333336" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.221" />
+        <entry key="..\:/Users/Kresimir/Desktop/Stuff/Faks/Zavrsni/App/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.221" />
       </map>
     </option>
   </component>

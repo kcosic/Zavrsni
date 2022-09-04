@@ -81,6 +81,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:padding="30dp">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_login_as_shop"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="20sp"
+            android:layout_height="wrap_content"
+            tools:ignore="UseSwitchCompatOrMaterialXml"
+            android:checked="false"
+            android:hint="@string/login_as_shop"/>
+
+<!--        <Switch-->
+<!--            android:id="@+id/sw_remember_me"-->
+<!--            android:layout_weight="5"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:layout_marginStart="20sp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            tools:ignore="UseSwitchCompatOrMaterialXml"-->
+<!--            android:checked="false"-->
+<!--            android:hint="@string/remember_me"/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="30dp"
         android:orientation="vertical">
 

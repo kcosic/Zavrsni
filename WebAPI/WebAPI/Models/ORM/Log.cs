@@ -15,7 +15,8 @@ namespace WebAPI.Models.ORM
     public partial class Log
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public Nullable<int> ShopId { get; set; }
+        public Nullable<int> UserId { get; set; }
         public System.DateTime Timestamp { get; set; }
         public string Application { get; set; }
         public string Source { get; set; }

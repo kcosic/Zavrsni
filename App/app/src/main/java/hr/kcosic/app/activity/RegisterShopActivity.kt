@@ -40,7 +40,7 @@ import java.io.IOException
 import java.io.InvalidObjectException
 
 class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
-    var map: SupportMapFragment? = null
+    private var map: SupportMapFragment? = null
     private lateinit var btnFinishRegistration: Button
     private lateinit var btnBack: Button
     private lateinit var btnLocation: Button
@@ -53,7 +53,6 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var txtRepeatPassword: EditText
     private lateinit var locationDialog: AlertDialog
     private lateinit var googleMap: GoogleMap
-    private var searchJob: Job? = null
     private var coroutineScope: CoroutineScope = CoroutineScope(Job())
     private var mapMarker: Marker? = null
     private var location: Location? = null
@@ -133,7 +132,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
     }
 
     private fun register() {
-        val newShop = Shop();
+        val newShop = Shop()
         newShop.Location = location
         newShop.Email = txtEmail.text.toString()
         newShop.LegalName = txtLegalName.text.toString()
@@ -170,7 +169,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         }
     }
 
-    fun handleRegisterError(message: String) {
+    private fun handleRegisterError(message: String) {
         Helper.showLongToast(this, message)
     }
 
@@ -305,7 +304,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
                 val data = resp.Data as Location
 
                 mapMarker!!.remove()
-                location = data;
+                location = data
                 mapMarker = googleMap.addMarker(
                     MarkerOptions()
                         .position(latLng)
@@ -322,7 +321,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         }
     }
 
-    fun handleRetrieveLocationError(message: String) {
+    private fun handleRetrieveLocationError(message: String) {
         Helper.showLongToast(this, message)
     }
 
@@ -331,8 +330,8 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         Helper.showLongToast(this, e.message.toString())
     }
 
-    fun <T> debounce(
-        waitMs: Long = 300L,
+    private fun <T> debounce(
+        @Suppress("SameParameterValue") waitMs: Long,
         coroutineScope: CoroutineScope,
         destinationFunction: (T) -> Unit
     ): (T) -> Unit {
@@ -401,7 +400,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         }
     }
 
-    fun handleDiscoverAddressError(message: String) {
+    private fun handleDiscoverAddressError(message: String) {
         Helper.showLongToast(this, message)
     }
 
@@ -410,7 +409,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         Helper.showLongToast(this, e.message.toString())
     }
 
-    fun setLocationToMap(location: Location) {
+    private fun setLocationToMap(location: Location) {
         if (location.Latitude != null && location.Longitude != null) {
             val latLng = LatLng(location.Latitude!!, location.Longitude!!)
             mapMarker!!.remove()

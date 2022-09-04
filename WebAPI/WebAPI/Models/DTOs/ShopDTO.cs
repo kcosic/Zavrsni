@@ -16,6 +16,8 @@ namespace WebAPI.Models.DTOs
             RepairHistories = new HashSet<RepairHistoryDTO>();
             Requests = new HashSet<RequestDTO>();
             Reviews = new HashSet<ReviewDTO>();
+            ChildShops = new HashSet<ShopDTO>();
+            Tokens = new HashSet<TokenDTO>();
         }
 
         [JsonProperty]
@@ -41,6 +43,9 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public string Password { get; set; }
         [JsonProperty]
+        public int? ParentShopId { get; set; }
+
+        [JsonProperty]
         public ICollection<AppointmentDTO> Appointments { get; set; }
         [JsonProperty]
         public LocationDTO Location { get; set; }
@@ -50,5 +55,11 @@ namespace WebAPI.Models.DTOs
         public ICollection<RequestDTO> Requests { get; set; }
         [JsonProperty]
         public ICollection<ReviewDTO> Reviews { get; set; }
+        [JsonProperty]
+        public virtual ICollection<ShopDTO> ChildShops { get; set; }
+        [JsonProperty]
+        public virtual ShopDTO ParentShop { get; set; }
+        [JsonProperty]
+        public virtual ICollection<TokenDTO> Tokens { get; set; }
     }
 }

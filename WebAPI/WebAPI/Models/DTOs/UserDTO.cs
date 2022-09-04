@@ -55,6 +55,6 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public ICollection<ReviewDTO> Reviews { get; set; }
         [JsonProperty]
-        public TokenDTO Token { get; set; }
+        public ICollection<TokenDTO> Tokens { get; set; }
     }
 }

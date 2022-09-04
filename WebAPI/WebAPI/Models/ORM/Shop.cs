@@ -21,6 +21,8 @@ namespace WebAPI.Models.ORM
             this.RepairHistories = new HashSet<RepairHistory>();
             this.Requests = new HashSet<Request>();
             this.Reviews = new HashSet<Review>();
+            this.ChildShops = new HashSet<Shop>();
+            this.Tokens = new HashSet<Token>();
         }
     
         public int Id { get; set; }
@@ -28,21 +30,27 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
         public Nullable<bool> Deleted { get; set; }
+        public string Vat { get; set; }
         public string LegalName { get; set; }
         public string ShortName { get; set; }
         public int LocationId { get; set; }
-        public string Vat { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public Nullable<int> ParentShopId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }
+        public virtual Location Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RepairHistory> RepairHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Request> Requests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Review> Reviews { get; set; }
-        public virtual Location Location { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Shop> ChildShops { get; set; }
+        public virtual Shop ParentShop { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Token> Tokens { get; set; }
     }
 }

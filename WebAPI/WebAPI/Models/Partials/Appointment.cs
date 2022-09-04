@@ -6,25 +6,36 @@ using WebAPI.Models.DTOs;
 
 namespace WebAPI.Models.ORM
 {
-    partial class Appointment { 
-        public static AppointmentDTO ToDTO(Appointment appointment, bool singleLevel = true)
+    partial class Appointment
+    {
+        public static AppointmentDTO ToDTO(Appointment item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new AppointmentDTO
             {
-                Date = appointment.Date,
-                Shop = singleLevel ? null : Shop.ToDTO(appointment.Shop),
-                DateCreated = appointment.DateCreated,
-                DateDeleted = appointment.DateDeleted,
-                DateModified = appointment.DateModified,
-                Deleted = appointment.Deleted,
-                Id = appointment.Id,
-                IsTaken = appointment.IsTaken,
-                ShopId = appointment.ShopId
+                Date = item.Date,
+                Shop = singleLevel ? null : Shop.ToDTO(item.Shop),
+                DateCreated = item.DateCreated,
+                DateDeleted = item.DateDeleted,
+                DateModified = item.DateModified,
+                Deleted = item.Deleted,
+                Id = item.Id,
+                IsTaken = item.IsTaken,
+                ShopId = item.ShopId
             };
         }
 
         public static ICollection<AppointmentDTO> ToListDTO(ICollection<Appointment> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 

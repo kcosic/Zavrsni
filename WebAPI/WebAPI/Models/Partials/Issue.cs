@@ -7,10 +7,16 @@ using WebAPI.Models.DTOs;
 namespace WebAPI.Models.ORM
 {
 
-    partial class Issue {
+    partial class Issue
+    {
 
         public static IssueDTO ToDTO(Issue item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new IssueDTO
             {
                 DateCreated = item.DateCreated,
@@ -28,6 +34,11 @@ namespace WebAPI.Models.ORM
 
         public static ICollection<IssueDTO> ToListDTO(ICollection<Issue> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using WebAPI.Models;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.Helpers;
 using WebAPI.Models.HERE;
 using WebAPI.Models.Responses;
@@ -54,11 +55,12 @@ namespace WebAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("api/Location/Address/{address}")]
-        public BaseResponse RetrieveLocationByAddress(string address)
+        [Route("api/Location/Address/{encodedAddress}")]
+        public BaseResponse RetrieveLocationByAddress(string encodedAddress)
         {
             try
             {
+                var address = Helper.FromBase64(encodedAddress);
                 if (address == null || address.Length == 0)
                 {
                     throw new ArgumentException("Invalid address");
@@ -67,21 +69,25 @@ namespace WebAPI.Controllers
                 var locationDTO = service.RetrieveLocationDTOInformation(address);
                 return CreateOkResponse(locationDTO);
             }
-            catch (Exception e)
+            catch (LocationNotFoundException e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.InvalidParameter);
+            }            
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
         }
 
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("api/Location/Discover/{base64Address}")]
-        public BaseResponse DiscoverLocationByAddress(string base64Address)
+        [Route("api/Location/Discover/{encodedAddress}")]
+        public BaseResponse DiscoverLocationByAddress(string encodedAddress)
         {
             try
             {
-                var address = Helper.FromBase64(base64Address);
+                var address = Helper.FromBase64(encodedAddress);
                 if (address == null || address.Length == 0)
                 {
                     throw new ArgumentException("Invalid address");
@@ -90,9 +96,13 @@ namespace WebAPI.Controllers
                 var locationsDTO = service.DiscoverLocationDTOByAddress(address);
                 return CreateOkResponse(locationsDTO);
             }
-            catch (Exception e)
+            catch (LocationNotFoundException e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.InvalidParameter);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
         }
     }

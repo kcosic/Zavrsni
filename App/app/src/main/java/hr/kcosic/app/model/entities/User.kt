@@ -15,7 +15,7 @@ class User : BaseEntity() {
     var LastName: String? = null
 
     @Serializable
-    var Token: Token? = null
+    var Tokens: MutableList<Token>? = null
 
     @Serializable
     var Issues: MutableList<Issue>? = null

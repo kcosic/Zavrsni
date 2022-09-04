@@ -14,9 +14,11 @@ namespace WebAPI.Models.ORM
     
     public partial class Token
     {
-        public int UserId { get; set; }
         public string TokenValue { get; set; }
+        public Nullable<int> UserId { get; set; }
+        public Nullable<int> ShopId { get; set; }
     
+        public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
     }
 }

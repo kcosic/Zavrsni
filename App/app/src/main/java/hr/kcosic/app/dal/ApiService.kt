@@ -71,6 +71,9 @@ class ApiService private constructor() {
                         Base64.NO_WRAP
                     )
                 }"
+            ).addHeader(
+                "Authorization-For",
+                Helper.AUTH_FOR_KEY!!
             )
             .build()
         return client.newCall(request)
@@ -84,6 +87,10 @@ class ApiService private constructor() {
         val request = Request.Builder()
             .url(url)
             .post(body)
+            .addHeader(
+                "Authorization-For",
+                Helper.AUTH_FOR_KEY!!
+            )
         if (addAuth) request.addHeader("Authorization", getTokenHeader())
 
         return client.newCall(request.build())
@@ -93,6 +100,10 @@ class ApiService private constructor() {
         val request: Request = Request.Builder()
             .url(url)
             .addHeader("Authorization", getTokenHeader())
+            .addHeader(
+                "Authorization-For",
+                Helper.AUTH_FOR_KEY!!
+            )
             .delete()
             .build()
         return client.newCall(request)
@@ -107,6 +118,7 @@ class ApiService private constructor() {
     fun register(newUser: User): Call {
         return post("${ApiRoutes.BASE_URL}/Register/User", newUser, false)
     }
+
     fun register(newShop: Shop): Call {
         return post("${ApiRoutes.BASE_URL}/Register/Shop", newShop, false)
     }

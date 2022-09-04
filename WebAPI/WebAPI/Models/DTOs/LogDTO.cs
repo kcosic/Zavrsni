@@ -9,7 +9,9 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public int Id { get; set; }
         [JsonProperty]
-        public int UserId { get; set; }
+        public int? UserId { get; set; }        
+        [JsonProperty]
+        public int? ShopId { get; set; }
         [JsonProperty]
         public DateTime Timestamp { get; set; }
         [JsonProperty]

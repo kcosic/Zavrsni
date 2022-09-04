@@ -1,25 +1,23 @@
 package hr.kcosic.app.model.enums
 
 import androidx.appcompat.app.AppCompatActivity
-import hr.kcosic.app.activity.LoginActivity
-import hr.kcosic.app.activity.MainActivity
-import hr.kcosic.app.activity.RegisterShopActivity
-import hr.kcosic.app.activity.RegisterUserActivity
+import hr.kcosic.app.activity.*
 import kotlin.reflect.KClass
 
 enum class ActivityEnum {
-    MAIN{
-        override fun getClass(): KClass<MainActivity> = MainActivity::class
+//    MAIN{
+//        override fun getClass(): KClass<MainActivity> = MainActivity::class
+//    },
+//    MAP{
+//        override fun getClass(): KClass<MainActivity> = MainActivity::class
+//    },
+    HOME_USER{
+        override fun getClass(): KClass<HomeUserActivity> = HomeUserActivity::class
     },
-    MAP{
-        override fun getClass(): KClass<MainActivity> = MainActivity::class
-    },
-    USER_PROFILE{
-        override fun getClass(): KClass<MainActivity> = MainActivity::class
-    },
-    SHOP_PROFILE{
-        override fun getClass(): KClass<MainActivity> = MainActivity::class
-    },
+//    HOME_SHOP{
+//        override fun getClass(): KClass<
+//                HomeShopActivity> = HomeShopActivity::class
+//    },
     LOGIN{
         override fun getClass(): KClass<LoginActivity> = LoginActivity::class
     },

@@ -17,6 +17,7 @@ namespace WebAPI.Models
         internal readonly string _controllerName;
         internal readonly DbEntities _db;
         internal User _user;
+        internal Shop _shop;
 
         public User AuthUser
         {
@@ -27,10 +28,29 @@ namespace WebAPI.Models
                     return _user;
                 }
 
-                if (_user == null && User?.Identity?.Name != null)
+                if (_user == null && User?.Identity?.AuthenticationType == "User" && User?.Identity?.Name != null)
                 {
                     _user = _db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
                     return _user;
+                }
+
+                return null;
+            }
+        }
+
+        public Shop AuthShop
+        {
+            get
+            {
+                if (_shop != null)
+                {
+                    return _shop;
+                }
+
+                if (_shop == null && User?.Identity?.AuthenticationType == "Shop" && User?.Identity?.Name != null)
+                {
+                    _shop = _db.Shops.Where(u => u.Email == User.Identity.Name).FirstOrDefault();
+                    return _shop;
                 }
 
                 return null;
@@ -75,8 +95,8 @@ namespace WebAPI.Models
                 Status = HttpStatusCode.OK,
                 IsSuccess = true
             };
-        }        
-        
+        }
+
         [NonAction]
         public SingleResponse<object> CreateOkResponse()
         {
@@ -153,29 +173,30 @@ namespace WebAPI.Models
         [NonAction]
         public void Log(ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp)
         {
-            Log(AuthUser?.Id ?? -1, application, severity, message, timestamp);
+            Log( application, severity, message, timestamp, AuthUser?.Id, AuthShop?.Id);
 
         }
 
         [NonAction]
-        public void Log(int userId, ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp)
+        public void Log( ApplicationEnum application, SeverityEnum severity, string message, DateTime timestamp, int? userId = null, int? shopId = null)
         {
-            Log(userId, application, severity, _controllerName, message, timestamp);
+            Log(application, severity, _controllerName, message, timestamp, userId, shopId);
 
         }
 
         [NonAction]
-        public void Log(int userId, SeverityEnum severity, string message, DateTime timestamp)
+        public void Log(SeverityEnum severity, string message, DateTime timestamp, int? userId = null, int? shopId = null )
         {
-            Log(userId, ApplicationEnum.API, severity, _controllerName, message, timestamp);
+            Log( ApplicationEnum.API, severity, _controllerName, message, timestamp,userId, shopId);
         }
 
         [NonAction]
-        public void Log(int userId, ApplicationEnum application, SeverityEnum severity, string source, string message, DateTime timestamp)
+        public void Log(ApplicationEnum application, SeverityEnum severity, string source, string message, DateTime timestamp, int? userId = null, int? shopId = null)
         {
             Db.Logs.Add(new Log
             {
                 UserId = userId,
+                ShopId = shopId,
                 Application = Enum.GetName(typeof(ApplicationEnum), application),
                 Severity = Enum.GetName(typeof(SeverityEnum), severity),
                 Source = source.Length > 200 ? source.Substring(0, 199) : source,

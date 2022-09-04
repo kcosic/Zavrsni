@@ -11,10 +11,15 @@ namespace WebAPI.Models.DTOs
     public class TokenDTO
     {
         [JsonProperty]
-        public int UserId { get; set; }
-        [JsonProperty]
         public string TokenValue { get; set; }
         [JsonProperty]
+        public int? UserId { get; set; }        
+        [JsonProperty]
+        public int? ShopId { get; set; }
+
+        [JsonProperty]
         public UserDTO User { get; set; }
+        [JsonProperty]
+        public ShopDTO Shop { get; set; }
     }
 }

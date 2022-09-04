@@ -26,7 +26,14 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return CreateOkResponse(AuthUser.Token.ToDTO(false));
+                if (AuthUser != null)
+                {
+                    return CreateOkResponse(AuthUser.Tokens.First().ToDTO(false));
+                }
+                else
+                {
+                    return CreateOkResponse(AuthShop.Tokens.First().ToDTO(false));
+                }
             }
             catch (Exception e)
             {
@@ -37,23 +44,23 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Register/User")]
-        public BaseResponse RegisterUser([FromBody]UserDTO user)
+        public BaseResponse RegisterUser([FromBody] UserDTO user)
         {
             try
             {
-                if(user == null)
+                if (user == null)
                 {
                     throw new ArgumentNullException("User cannot be null");
                 }
 
                 var existingUser = Db.Users.Where(x => x.Username == user.Username).FirstOrDefault();
-                if(existingUser != null)
+                if (existingUser != null)
                 {
                     return CreateErrorResponse("Username already exists.", ErrorCodeEnum.UsernameExists);
-                }       
-                
+                }
+
                 existingUser = Db.Users.Where(x => x.Email == user.Email).FirstOrDefault();
-                if(existingUser != null)
+                if (existingUser != null)
                 {
                     return CreateErrorResponse("Email already exists.", ErrorCodeEnum.EmailExists);
                 }
@@ -69,51 +76,51 @@ namespace WebAPI.Controllers
                     Password = Helper.Hash(user.Password),
                     Username = user.Username,
                     Deleted = false
-                   
+
                 };
 
                 Db.Users.Add(newUser);
                 Db.SaveChanges();
 
-                return CreateOkResponse();                
+                return CreateOkResponse();
             }
             catch (Exception e)
             {
                 return CreateErrorResponse(e, ErrorCodeEnum.UnexpectedError);
             }
-        }        
-        
+        }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("Register/Shop")]
-        public BaseResponse RegisterShop([FromBody]ShopDTO shop)
+        public BaseResponse RegisterShop([FromBody] ShopDTO shop)
         {
             try
             {
-                if(shop == null)
+                if (shop == null)
                 {
                     throw new ArgumentNullException("Shop cannot be null");
                 }
 
                 var existingShop = Db.Shops.Where(x => x.Vat == shop.Vat).FirstOrDefault();
-                if(existingShop != null)
+                if (existingShop != null)
                 {
                     return CreateErrorResponse("VAT already exists.", ErrorCodeEnum.VatExists);
                 }
                 existingShop = Db.Shops.Where(x => x.LegalName == shop.LegalName).FirstOrDefault();
-                if(existingShop != null)
+                if (existingShop != null)
                 {
                     return CreateErrorResponse("Legal name already exists.", ErrorCodeEnum.UsernameExists);
                 }
 
                 existingShop = Db.Shops.Where(x => x.ShortName == shop.ShortName).FirstOrDefault();
-                if(existingShop != null)
+                if (existingShop != null)
                 {
                     return CreateErrorResponse("Short name already exists.", ErrorCodeEnum.UsernameExists);
                 }
 
                 existingShop = Db.Shops.Where(x => x.Email == shop.Email).FirstOrDefault();
-                if(existingShop != null)
+                if (existingShop != null)
                 {
                     return CreateErrorResponse("Email already exists.", ErrorCodeEnum.EmailExists);
                 }
@@ -150,7 +157,7 @@ namespace WebAPI.Controllers
                 Db.Shops.Add(newShop);
                 Db.SaveChanges();
 
-                return CreateOkResponse();                
+                return CreateOkResponse();
             }
             catch (Exception e)
             {

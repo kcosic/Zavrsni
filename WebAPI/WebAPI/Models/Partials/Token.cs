@@ -6,9 +6,15 @@ using WebAPI.Models.DTOs;
 
 namespace WebAPI.Models.ORM
 {
-    partial class Token{
+    partial class Token
+    {
         public static TokenDTO ToDTO(Token item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new TokenDTO
             {
                 TokenValue = item.TokenValue,
@@ -19,6 +25,11 @@ namespace WebAPI.Models.ORM
 
         public static ICollection<TokenDTO> ToListDTO(ICollection<Token> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 

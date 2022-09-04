@@ -7,9 +7,15 @@ using WebAPI.Models.DTOs;
 namespace WebAPI.Models.ORM
 {
 
-    partial class RepairHistory{
+    partial class RepairHistory
+    {
         public static RepairHistoryDTO ToDTO(RepairHistory item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new RepairHistoryDTO
             {
                 DateCreated = item.DateCreated,
@@ -29,6 +35,11 @@ namespace WebAPI.Models.ORM
 
         public static ICollection<RepairHistoryDTO> ToListDTO(ICollection<RepairHistory> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 

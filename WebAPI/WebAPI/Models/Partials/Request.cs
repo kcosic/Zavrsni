@@ -6,9 +6,15 @@ using WebAPI.Models.DTOs;
 
 namespace WebAPI.Models.ORM
 {
-    partial class Request {
+    partial class Request
+    {
         public static RequestDTO ToDTO(Request item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new RequestDTO
             {
                 DateCreated = item.DateCreated,
@@ -21,16 +27,21 @@ namespace WebAPI.Models.ORM
                 UserId = item.UserId,
                 ShopId = item.ShopId,
                 ActualFinishDate = item.ActualFinishDate,
-                ActualPrice= item.ActualPrice,
-                BillPicture= item.BillPicture,
-                EstimatedFinishDate= item.EstimatedFinishDate,
-                EstimatedPrice= item.EstimatedPrice,
-                Price= item.Price,
+                ActualPrice = item.ActualPrice,
+                BillPicture = item.BillPicture,
+                EstimatedFinishDate = item.EstimatedFinishDate,
+                EstimatedPrice = item.EstimatedPrice,
+                Price = item.Price,
             };
         }
 
         public static ICollection<RequestDTO> ToListDTO(ICollection<Request> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 

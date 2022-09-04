@@ -6,9 +6,15 @@ using WebAPI.Models.DTOs;
 
 namespace WebAPI.Models.ORM
 {
-    partial class Review{
+    partial class Review
+    {
         public static ReviewDTO ToDTO(Review item, bool singleLevel = true)
         {
+            if (item == null)
+            {
+                return null;
+            }
+
             return new ReviewDTO
             {
                 DateCreated = item.DateCreated,
@@ -27,6 +33,11 @@ namespace WebAPI.Models.ORM
 
         public static ICollection<ReviewDTO> ToListDTO(ICollection<Review> list, bool singleLevel = true)
         {
+            if (list == null)
+            {
+                return null;
+            }
+
             return list.Select(x => x.ToDTO(singleLevel)).ToList();
         }
 

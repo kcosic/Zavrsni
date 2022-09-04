@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.App" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="buttonStyle">@style/primaryButton</item>
+        <item name="fontFamily">@font/luis_george_font_family</item>
     </style>
 
     <style name="modal">
@@ -11,11 +12,20 @@
 
     </style>
 
+    <style name="home" parent="Theme.App">
+        <item name="android:background">@drawable/background_gradient</item>
+    </style>
     <style name="login" parent="Theme.App">
         <item name="android:background">@drawable/background_gradient</item>
     </style>
     <style name="register" parent="Theme.App">
         <item name="android:background">@drawable/background_gradient</item>
+    </style>
+
+    <style name="card_style" parent="Theme.App">
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:background">@drawable/edit_text_border</item>
+
     </style>
 
     <style name="textField">
@@ -49,4 +59,10 @@
         <item name="backgroundTint">@color/information_500</item>
         <item name="android:textColor">@color/text_dark_700</item>
     </style>
+    <style name="Theme.App.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.App.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.App.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
