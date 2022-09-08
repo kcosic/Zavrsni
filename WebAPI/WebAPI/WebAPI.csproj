@@ -202,8 +202,14 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Auth\BasicAuthenticationAttribute.cs" />
     <Compile Include="Auth\AuthenticationFailureResult.cs" />
+    <Compile Include="Controllers\AppointmentController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\CarController.cs" />
+    <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
+    <Compile Include="Controllers\RepairHistoryController.cs" />
+    <Compile Include="Controllers\RequestController.cs" />
+    <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -351,6 +357,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Appointment\" />
+    <Folder Include="Views\Car\" />
+    <Folder Include="Views\Issue\" />
+    <Folder Include="Views\RepairHistory\" />
+    <Folder Include="Views\Request\" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="Models\ORM\DbModel.edmx">

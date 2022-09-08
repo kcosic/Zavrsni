@@ -18,13 +18,13 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
-        public Nullable<bool> Deleted { get; set; }
+        public bool Deleted { get; set; }
         public int UserId { get; set; }
         public int ShopId { get; set; }
         public string Comment { get; set; }
         public decimal Rating { get; set; }
     
-        public virtual User User { get; set; }
         public virtual Shop Shop { get; set; }
+        public virtual User User { get; set; }
     }
 }

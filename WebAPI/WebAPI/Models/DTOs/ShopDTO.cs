@@ -29,7 +29,7 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public DateTime? DateDeleted { get; set; }
         [JsonProperty]
-        public bool? Deleted { get; set; }
+        public bool Deleted { get; set; }
         [JsonProperty]
         public string LegalName { get; set; }
         [JsonProperty]

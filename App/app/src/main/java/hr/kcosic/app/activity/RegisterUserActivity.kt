@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.BaseActivity
 import hr.kcosic.app.model.bases.BaseResponse
@@ -39,6 +41,7 @@ class RegisterUserActivity : BaseActivity() {
     private lateinit var txtDob: EditText
     private lateinit var txtPassword: EditText
     private lateinit var txtRepeatPassword: EditText
+    private lateinit var progressBarHolder: FrameLayout
     private val dobCalendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
 
 
@@ -59,6 +62,7 @@ class RegisterUserActivity : BaseActivity() {
         txtFirstName = findViewById(R.id.txtFirstName)
         txtUsername = findViewById(R.id.txtUserName)
         txtLastName = findViewById(R.id.txtLastName)
+        progressBarHolder = findViewById(R.id.progressBarHolder)
 
 
         //TODO remove, for development only
@@ -167,6 +171,8 @@ class RegisterUserActivity : BaseActivity() {
 
     @SuppressLint("SimpleDateFormat")
     private fun register() {
+        progressBarHolder.visibility = View.VISIBLE
+
         val formatter = SimpleDateFormat("dd.MM.yyyy")
 
         val newUser = User()
@@ -176,7 +182,6 @@ class RegisterUserActivity : BaseActivity() {
         newUser.Password = txtPassword.text.toString()
         newUser.Username = txtUsername.text.toString()
         newUser.DateOfBirth = formatter.parse(txtDob.text.toString())
-
 
         apiService.register(newUser).enqueue(object :
             Callback {
@@ -197,23 +202,26 @@ class RegisterUserActivity : BaseActivity() {
     }
 
     fun handleRegisterSuccess(response: Response) {
-
         val resp: BaseResponse = Helper.parseStringResponse<SingleResponse<String>>(response.body!!.string())
-
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+            progressBarHolder.visibility = View.GONE
             Helper.openActivity(this, ActivityEnum.LOGIN)
         } else {
+            progressBarHolder.visibility = View.GONE
             handleRegisterError(resp.Message!!)
         }
     }
 
     fun handleRegisterError(message: String) {
         Helper.showLongToast(this, message)
+        progressBarHolder.visibility = View.GONE
+
     }
 
     fun handleRegisterException(call: Call, e: Exception) {
         call.cancel()
         Helper.showLongToast(this, e.message.toString())
+        progressBarHolder.visibility = View.GONE
 
     }
 

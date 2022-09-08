@@ -19,10 +19,10 @@ namespace WebAPI.Models.ORM
         {
             this.Cars = new HashSet<Car>();
             this.Issues = new HashSet<Issue>();
+            this.Locations = new HashSet<Location>();
             this.RepairHistories = new HashSet<RepairHistory>();
             this.Requests = new HashSet<Request>();
             this.Reviews = new HashSet<Review>();
-            this.Locations = new HashSet<Location>();
             this.Tokens = new HashSet<Token>();
         }
     
@@ -30,7 +30,7 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
-        public Nullable<bool> Deleted { get; set; }
+        public bool Deleted { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
@@ -43,13 +43,13 @@ namespace WebAPI.Models.ORM
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Issue> Issues { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Location> Locations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RepairHistory> RepairHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Request> Requests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Review> Reviews { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Location> Locations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Token> Tokens { get; set; }
     }

@@ -24,7 +24,7 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
-        public Nullable<bool> Deleted { get; set; }
+        public bool Deleted { get; set; }
         public int UserId { get; set; }
         public string Manufacturer { get; set; }
         public string Make { get; set; }
@@ -32,8 +32,8 @@ namespace WebAPI.Models.ORM
         public int Year { get; set; }
         public decimal Odometer { get; set; }
     
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RepairHistory> RepairHistories { get; set; }
-        public virtual User User { get; set; }
     }
 }

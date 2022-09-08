@@ -22,7 +22,7 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public DateTime? DateDeleted { get; set; }
         [JsonProperty]
-        public bool? Deleted { get; set; }
+        public bool Deleted { get; set; }
         [JsonProperty]
         public int? UserId { get; set; }
         [JsonProperty]

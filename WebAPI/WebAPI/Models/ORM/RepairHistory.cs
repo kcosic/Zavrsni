@@ -18,14 +18,14 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
-        public Nullable<bool> Deleted { get; set; }
+        public bool Deleted { get; set; }
         public int UserId { get; set; }
         public System.DateTime DateOfRepair { get; set; }
         public int CarId { get; set; }
         public int ShopId { get; set; }
     
         public virtual Car Car { get; set; }
-        public virtual User User { get; set; }
         public virtual Shop Shop { get; set; }
+        public virtual User User { get; set; }
     }
 }

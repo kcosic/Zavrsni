@@ -7,10 +7,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
+import android.view.View
+import android.widget.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -52,6 +50,8 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var txtPassword: EditText
     private lateinit var txtRepeatPassword: EditText
     private lateinit var locationDialog: AlertDialog
+    private lateinit var progressBarHolder: FrameLayout
+    private lateinit var dialogProgressbar: FrameLayout
     private lateinit var googleMap: GoogleMap
     private var coroutineScope: CoroutineScope = CoroutineScope(Job())
     private var mapMarker: Marker? = null
@@ -78,10 +78,14 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         txtRepeatPassword = findViewById(R.id.txtRepeatPassword)
         txtShortName = findViewById(R.id.txtShortName)
         txtLegalName = findViewById(R.id.txtLegalName)
+        progressBarHolder = findViewById(R.id.progressBarHolder)
 
         btnLocation.setOnClickListener {
             val dialogView = Helper.inflateView(R.layout.map_dialog)
             actvAddress = dialogView.findViewById(R.id.actvAddress)
+            dialogProgressbar = dialogView.findViewById(R.id.progressBarHolder)
+            dialogProgressbar.visibility = View.VISIBLE
+
             actvAddress.addTextChangedListener(object : TextWatcher {
                 var textBefore: String? = null
 
@@ -270,7 +274,11 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
                             .title("Your location")
                     )
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(myPosition))
+                    dialogProgressbar.visibility = View.GONE
+
                     googleMap.setOnMapLongClickListener {
+                        dialogProgressbar.visibility = View.VISIBLE
+
                         apiService.retrieveLocationByCoordinates("${it.latitude}!${it.longitude}")
                             .enqueue(object :
                                 Callback {
@@ -311,21 +319,31 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
                         .title("${location!!.Street} ${location!!.StreetNumber}, ${location!!.City}")
                 )
                 googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                progressBarHolder.visibility = View.GONE
+
 
             } catch (e: InvalidObjectException) {
+                progressBarHolder.visibility = View.GONE
+
                 Helper.showLongToast(this, e.message.toString())
             }
 
         } else {
+            progressBarHolder.visibility = View.GONE
+
             handleRetrieveLocationError(resp.Message!!)
         }
     }
 
     private fun handleRetrieveLocationError(message: String) {
         Helper.showLongToast(this, message)
+        dialogProgressbar.visibility = View.GONE
+
     }
 
     fun handleRetrieveLocationException(call: Call, e: Exception) {
+        dialogProgressbar.visibility = View.GONE
+
         call.cancel()
         Helper.showLongToast(this, e.message.toString())
     }

@@ -1,121 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
-        style="@style/register"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="40sp"
-        tools:context=".activity.RegisterUserActivity">
-
-        <TextView
-            style="@style/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20sp"
-            android:text="@string/shop_registration"
-            android:textAlignment="center"
-            android:textSize="30sp" />
-
-
-        <EditText
-            android:id="@+id/txtVat"
-            style="@style/textField"
-            android:layout_width="match_parent"
-            android:layout_margin="20sp"
-            android:hint="@string/vat_id"
-            android:inputType="textPersonName"
-            android:maxLength="50"
-            android:importantForAutofill="no" />
-
-        <EditText
-            android:id="@+id/txtShortName"
-            style="@style/textField"
-            android:layout_width="match_parent"
-            android:layout_margin="20sp"
-            android:hint="@string/short_name"
-            android:inputType="text"
-            android:maxLength="50" />
-
-        <EditText
-            android:id="@+id/txtLegalName"
-            style="@style/textField"
-            android:layout_width="match_parent"
-            android:layout_margin="20sp"
-            android:hint="@string/legal_name"
-            android:inputType="text"
-            android:maxLength="50" />
-
-
-
-        <EditText
-            android:id="@+id/txtEmail"
-            style="@style/textField"
-            android:layout_width="match_parent"
-            android:layout_margin="20sp"
-            android:autofillHints="emailAddress"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
-
-
-        <EditText
-            android:id="@+id/txtPassword"
-            style="@style/textField"
-            android:layout_width="match_parent"
-            android:layout_margin="20sp"
-            android:autofillHints=""
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:maxLength="50" />
-
-        <EditText
-            android:id="@+id/txtRepeatPassword"
-            style="@style/textField"
-            android:layout_width="match_parent"
-            android:layout_margin="20sp"
-            android:autofillHints=""
-            android:hint="@string/repeat_password"
-            android:inputType="textPassword"
-            android:maxLength="50" />
-        <Button
-            android:id="@+id/btnLocation"
-            style="@style/primaryButton"
-            android:layout_width="match_parent"
-            android:layout_height="60sp"
-            android:layout_margin="5dp"
-            android:text="@string/location" />
-
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
+            style="@style/register"
             android:layout_width="match_parent"
-            android:layout_marginTop="20sp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="40sp"
+            tools:context=".activity.RegisterUserActivity">
 
-            <Button
-                android:id="@+id/btnBack"
-                style="@style/warningButton"
-                android:layout_width="0sp"
+            <TextView
+                style="@style/textView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:text="@string/back" />
+                android:layout_marginBottom="20sp"
+                android:text="@string/shop_registration"
+                android:textAlignment="center"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/txtVat"
+                style="@style/textField"
+                android:layout_width="match_parent"
+                android:layout_margin="20sp"
+                android:hint="@string/vat_id"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:maxLength="50" />
+
+            <EditText
+                android:id="@+id/txtShortName"
+                style="@style/textField"
+                android:layout_width="match_parent"
+                android:layout_margin="20sp"
+                android:hint="@string/short_name"
+                android:inputType="text"
+                android:maxLength="50" />
+
+            <EditText
+                android:id="@+id/txtLegalName"
+                style="@style/textField"
+                android:layout_width="match_parent"
+                android:layout_margin="20sp"
+                android:hint="@string/legal_name"
+                android:inputType="text"
+                android:maxLength="50" />
+
+            <EditText
+                android:id="@+id/txtEmail"
+                style="@style/textField"
+                android:layout_width="match_parent"
+                android:layout_margin="20sp"
+                android:autofillHints="emailAddress"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/txtPassword"
+                style="@style/textField"
+                android:layout_width="match_parent"
+                android:layout_margin="20sp"
+                android:autofillHints=""
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:maxLength="50" />
+
+            <EditText
+                android:id="@+id/txtRepeatPassword"
+                style="@style/textField"
+                android:layout_width="match_parent"
+                android:layout_margin="20sp"
+                android:autofillHints=""
+                android:hint="@string/repeat_password"
+                android:inputType="textPassword"
+                android:maxLength="50" />
 
             <Button
-                android:id="@+id/btnFinishRegistration"
+                android:id="@+id/btnLocation"
                 style="@style/primaryButton"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:text="@string/finish" />
+                android:text="@string/location" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp">
+
+                <Button
+                    android:id="@+id/btnBack"
+                    style="@style/warningButton"
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="@string/back" />
+
+                <Button
+                    android:id="@+id/btnFinishRegistration"
+                    style="@style/primaryButton"
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="@string/finish" />
+
+            </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-
-    </LinearLayout>
-</ScrollView>
+    <include layout="@layout/loading_layout" />
+</RelativeLayout>

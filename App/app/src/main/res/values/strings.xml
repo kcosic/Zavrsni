@@ -44,4 +44,10 @@
     <string name="repair_shop_name">Repair shop name</string>
     <string name="repair_shop_vat">Repair Shop VAT</string>
     <string name="request_description" >Request Description</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</string>
+    <string name="no_requests">You have no car repair requests in next 30 days</string>
+    <string name="to_find_mechanic_shop_in_your_vicinity_go_to_search">To find mechanic shop in your vicinity, go to Search</string>
+    <string name="date_of_next_service">Date</string>
+    <string name="date_of_repair">Date of Repair</string>
+    <string name="time_of_repair">Time of Repair</string>
 </resources>

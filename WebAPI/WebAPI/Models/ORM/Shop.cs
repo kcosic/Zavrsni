@@ -29,7 +29,7 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
-        public Nullable<bool> Deleted { get; set; }
+        public bool Deleted { get; set; }
         public string Vat { get; set; }
         public string LegalName { get; set; }
         public string ShortName { get; set; }

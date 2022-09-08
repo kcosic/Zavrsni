@@ -2,10 +2,15 @@ package hr.kcosic.app.activity
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import androidx.appcompat.widget.SwitchCompat
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.BaseActivity
@@ -30,6 +35,8 @@ class LoginActivity : BaseActivity() {
     private lateinit var txtPassword: EditText
     private lateinit var registerDialog: AlertDialog
     private lateinit var swLoginAsShop: SwitchCompat
+    private lateinit var progressBarHolder: FrameLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +54,7 @@ class LoginActivity : BaseActivity() {
     override fun initializeComponents() {
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
+        progressBarHolder = findViewById(R.id.progressBarHolder)
 
         txtEmail = findViewById(R.id.txtEmail)
         txtPassword = findViewById(R.id.txtPassword)
@@ -96,6 +104,7 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun login() {
+        progressBarHolder.visibility = VISIBLE
         if(swLoginAsShop.isActivated){
             Helper.setAuthKeyToShop()
         }else {
@@ -109,6 +118,8 @@ class LoginActivity : BaseActivity() {
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleLoginException(call, e)
+                        progressBarHolder.visibility = GONE
+
                     }
                 }
 
@@ -142,14 +153,18 @@ class LoginActivity : BaseActivity() {
                     if(Helper.AUTH_FOR_KEY == "User")PreferenceEnum.USER else PreferenceEnum.SHOP,
                     if(Helper.AUTH_FOR_KEY == "User")Helper.serializeData(data.User) else Helper.serializeData(data.Shop)
                 )
+                progressBarHolder.visibility = GONE
                 Helper.openActivity(this, if(Helper.AUTH_FOR_KEY == "User")ActivityEnum.HOME_USER else ActivityEnum.HOME_USER)
 
             } catch (e: InvalidObjectException) {
+                progressBarHolder.visibility = GONE
                 Helper.showLongToast(this, e.message.toString())
             }
 
         } else {
             handleLoginError(resp.Message!!)
+            progressBarHolder.visibility =GONE
+
         }
     }
 
