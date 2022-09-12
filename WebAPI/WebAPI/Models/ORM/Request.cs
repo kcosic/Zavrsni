@@ -14,6 +14,12 @@ namespace WebAPI.Models.ORM
     
     public partial class Request
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Request()
+        {
+            this.Issues = new HashSet<Issue>();
+        }
+    
         public int Id { get; set; }
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
@@ -27,7 +33,10 @@ namespace WebAPI.Models.ORM
         public decimal EstimatedPrice { get; set; }
         public decimal ActualPrice { get; set; }
         public string BillPicture { get; set; }
+        public bool Completed { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Issue> Issues { get; set; }
         public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
     }

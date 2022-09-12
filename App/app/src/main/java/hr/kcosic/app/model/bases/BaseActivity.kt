@@ -11,10 +11,13 @@ import hr.kcosic.app.dal.ApiService
 import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 
 abstract class BaseActivity : AppCompatActivity() {
 
     val apiService = ApiService.instance()
+    val coroutineScope: CoroutineScope = CoroutineScope(Job())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

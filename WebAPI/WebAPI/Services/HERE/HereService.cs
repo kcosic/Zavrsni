@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Web;
 using WebAPI.Models.DTOs;
 using WebAPI.Models.Exceptions;
+using WebAPI.Services.Models.HERE;
+using WebAPI.Services.Models.Responses.HERE;
 
-namespace WebAPI.Models.HERE
+namespace WebAPI.Services.HERE
 {
     public class HereService
     {
@@ -29,14 +29,14 @@ namespace WebAPI.Models.HERE
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <returns><see cref="Location"></returns>
-        public ORM.Location RetrieveLocationInformation(double latitude, double longitude)
+        public WebAPI.Models.ORM.Location RetrieveLocationInformation(double latitude, double longitude)
         {
-            ORM.Location location;
+            WebAPI.Models.ORM.Location location;
 
             using (HttpClient client = new HttpClient())
             {
                 var response = client.GetAsync($"https://revgeocode.search.hereapi.com/v1/revgeocode?at={latitude},{longitude}&apiKey=b0ZYVFwkO821z1uYL8GAEQgJmxSaOOrEGEWR1xk9BN4")?.Result;
-                var locationResponse = JsonConvert.DeserializeObject<HERE.LocationResponse>(response.Content.ReadAsStringAsync().Result);
+                var locationResponse = JsonConvert.DeserializeObject<LocationResponse>(response.Content.ReadAsStringAsync().Result);
 
                 if (locationResponse.Items?.Length == 0)
                 {
@@ -45,7 +45,7 @@ namespace WebAPI.Models.HERE
 
                 var hereLocation = locationResponse.Items[0];
 
-                location = new ORM.Location
+                location = new WebAPI.Models.ORM.Location
                 {
                     Street = hereLocation.Address?.Street,
                     City = hereLocation.Address?.City,
@@ -72,14 +72,14 @@ namespace WebAPI.Models.HERE
             return RetrieveLocationInformation(latitude, longitude).ToDTO();
         }
 
-        public List<ORM.Location> DiscoverLocationByAddress(string address)
+        public List<WebAPI.Models.ORM.Location> DiscoverLocationByAddress(string address)
         {
-            List<ORM.Location> locations = new List<ORM.Location>();
+            List<WebAPI.Models.ORM.Location> locations = new List<WebAPI.Models.ORM.Location>();
 
             using (HttpClient client = new HttpClient())
             {
                 var response = client.GetAsync($"https://autocomplete.search.hereapi.com/v1/autocomplete?q={address}&limit=5&apiKey=b0ZYVFwkO821z1uYL8GAEQgJmxSaOOrEGEWR1xk9BN4")?.Result;
-                var locationResponse = JsonConvert.DeserializeObject<HERE.LocationResponse>(response.Content.ReadAsStringAsync().Result);
+                var locationResponse = JsonConvert.DeserializeObject<LocationResponse>(response.Content.ReadAsStringAsync().Result);
 
                 if (locationResponse.Items?.Length == 0)
                 {
@@ -96,7 +96,7 @@ namespace WebAPI.Models.HERE
                     }
                     else
                     {
-                        locations.Add(new ORM.Location
+                        locations.Add(new WebAPI.Models.ORM.Location
                         {
                             Street = hereLocation.Address?.Street,
                             City = hereLocation.Address?.City,
@@ -114,7 +114,7 @@ namespace WebAPI.Models.HERE
         }
         public List<LocationDTO> DiscoverLocationDTOByAddress(string address)
         {
-            return ORM.Location.ToListDTO(DiscoverLocationByAddress(address))?.ToList();
+            return WebAPI.Models.ORM.Location.ToListDTO(DiscoverLocationByAddress(address))?.ToList();
 
         }
 
@@ -124,14 +124,14 @@ namespace WebAPI.Models.HERE
         /// </summary>
         /// <param name="address"></param>
         /// <returns><see cref="Location"></returns>
-        public ORM.Location RetrieveLocationInformation(string address)
+        public WebAPI.Models.ORM.Location RetrieveLocationInformation(string address)
         {
-            ORM.Location location;
+            WebAPI.Models.ORM.Location location;
 
             using (HttpClient client = new HttpClient())
             {
                 var response = client.GetAsync($"https://geocode.search.hereapi.com/v1/geocode?q={address}&apiKey=b0ZYVFwkO821z1uYL8GAEQgJmxSaOOrEGEWR1xk9BN4")?.Result;
-                var locationResponse = JsonConvert.DeserializeObject<HERE.LocationResponse>(response.Content.ReadAsStringAsync().Result);
+                var locationResponse = JsonConvert.DeserializeObject<LocationResponse>(response.Content.ReadAsStringAsync().Result);
 
                 if (locationResponse.Items?.Length == 0)
                 {
@@ -140,7 +140,7 @@ namespace WebAPI.Models.HERE
 
                 var hereLocation = locationResponse.Items[0];
 
-                location = new ORM.Location
+                location = new WebAPI.Models.ORM.Location
                 {
                     Street = hereLocation.Address?.Street,
                     City = hereLocation.Address?.City,

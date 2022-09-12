@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.DTOs;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
@@ -16,18 +17,22 @@ namespace WebAPI.Controllers
         public ShopController() : base(nameof(ShopController)) { }
 
         [HttpGet]
-        [Route("api/Shop/{id}")]
-        public BaseResponse RetrieveShop(string id)
+        [Route("api/Shop/{id}?expanded={expanded:bool=false}")]
+        public BaseResponse RetrieveShop(string id, bool expanded)
         {
             try
             {
                 var shop = Db.Shops.Find(id);
                 if (shop == null || shop.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(shop.ToDTO());
+                return CreateOkResponse(shop.ToDTO(!expanded));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -45,10 +50,14 @@ namespace WebAPI.Controllers
                 var shops = Db.Shops.Where(x => !x.Deleted).ToList();
                 if (shops == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(Shop.ToListDTO(shops));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -66,16 +75,20 @@ namespace WebAPI.Controllers
                 var parentShop = Db.Shops.Find(id);
                 if (parentShop == null || parentShop.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 var childShops = parentShop.ChildShops.Where(x => !x.Deleted).ToList();
                 if (childShops == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(Shop.ToListDTO(childShops));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -93,16 +106,20 @@ namespace WebAPI.Controllers
                 var childShop = Db.Shops.Find(id);
                 if (childShop == null || childShop.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 var parentShop = childShop.ParentShop;
                 if (parentShop == null || parentShop.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(parentShop);
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -120,16 +137,20 @@ namespace WebAPI.Controllers
                 var shop = Db.Shops.Find(id);
                 if (shop == null || shop.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 var shopReviews = shop.Reviews.Where(x=> !x.Deleted).ToList();
                 if (shopReviews == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(shopReviews);
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -147,12 +168,16 @@ namespace WebAPI.Controllers
                 var shop = Db.Shops.Find(id);
                 if (shop == null || shop.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 shop.DateDeleted = DateTime.Now;
                 shop.Deleted = true;
                 Db.SaveChanges();
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -175,7 +200,7 @@ namespace WebAPI.Controllers
                 var shop = Db.Shops.Find(id);
                 if (shop == null || shop.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 if (shop.Email != shopDTO.Email && Db.Shops.Where(x => x.Email == shopDTO.Email).Count() > 0)
                 {
@@ -199,6 +224,10 @@ namespace WebAPI.Controllers
                 Db.SaveChanges();
 
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {

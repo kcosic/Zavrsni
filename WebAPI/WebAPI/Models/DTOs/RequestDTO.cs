@@ -39,6 +39,8 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public ShopDTO Shop { get; set; }
         [JsonProperty]
-        public UserDTO User { get; set; }
+        public UserDTO User { get; set; }        
+        [JsonProperty]
+        public bool Completed { get; set; }
     }
 }

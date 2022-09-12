@@ -50,4 +50,7 @@
     <string name="date_of_next_service">Date</string>
     <string name="date_of_repair">Date of Repair</string>
     <string name="time_of_repair">Time of Repair</string>
+    <string name="details">Details</string>
+    <string name="estimated_time">Estimated time</string>
+    <string name="estimated_price">Estimated Price</string>
 </resources>

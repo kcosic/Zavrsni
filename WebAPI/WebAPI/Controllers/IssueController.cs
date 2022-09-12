@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.DTOs;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
@@ -15,18 +16,22 @@ namespace WebAPI.Controllers
         public IssueController() : base(nameof(IssueController)) { }
 
         [HttpGet]
-        [Route("api/Issue/{id}")]
-        public BaseResponse RetrieveIssue(string id)
+        [Route("api/Issue/{id}?expanded={expanded:bool=false}")]
+        public BaseResponse RetrieveIssue(string id, bool expanded)
         {
             try
             {
                 var issue = Db.Issues.Find(id);
                 if (issue == null || issue.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(issue.ToDTO());
+                return CreateOkResponse(issue.ToDTO(!expanded));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -44,10 +49,14 @@ namespace WebAPI.Controllers
                 var issue = Db.Issues.Where(x => x.UserId == AuthUser.Id && !x.Deleted).ToList();
                 if (issue == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(Issue.ToListDTO(issue));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -65,12 +74,16 @@ namespace WebAPI.Controllers
                 var issue = Db.Issues.Find(id);
                 if (issue == null || issue.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 issue.DateDeleted = DateTime.Now;
                 issue.Deleted = true;
                 Db.SaveChanges();
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -123,7 +136,7 @@ namespace WebAPI.Controllers
                 var issue = Db.Issues.Find(id);
                 if (issue == null || issue.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 issue.DateModified = DateTime.Now;
                 issue.DateOfSubmission = issueDTO.DateOfSubmission;
@@ -133,6 +146,10 @@ namespace WebAPI.Controllers
                 Db.SaveChanges();
 
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {

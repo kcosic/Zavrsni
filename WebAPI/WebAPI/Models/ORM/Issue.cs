@@ -19,10 +19,10 @@ namespace WebAPI.Models.ORM
         public System.DateTime DateModified { get; set; }
         public Nullable<System.DateTime> DateDeleted { get; set; }
         public bool Deleted { get; set; }
-        public int UserId { get; set; }
+        public int RequestId { get; set; }
         public System.DateTime DateOfSubmission { get; set; }
         public string Summary { get; set; }
     
-        public virtual User User { get; set; }
+        public virtual Request Request { get; set; }
     }
 }

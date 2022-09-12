@@ -43,7 +43,7 @@
           <Property Name="DateModified" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="DateDeleted" Type="datetime2" Precision="7" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RequestId" Type="int" Nullable="false" />
           <Property Name="DateOfSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="Summary" Type="nvarchar" MaxLength="2000" Nullable="false" />
         </EntityType>
@@ -109,6 +109,7 @@
           <Property Name="EstimatedPrice" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="ActualPrice" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="BillPicture" Type="nvarchar(max)" />
+          <Property Name="Completed" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Review">
           <Key>
@@ -189,15 +190,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Issue_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
+        <Association Name="FK_Issue_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
           <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="User">
+            <Principal Role="Request">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Issue">
-              <PropertyRef Name="UserId" />
+              <PropertyRef Name="RequestId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -365,8 +366,8 @@
             <End Role="User" EntitySet="User" />
             <End Role="Car" EntitySet="Car" />
           </AssociationSet>
-          <AssociationSet Name="FK_Issue_User" Association="Self.FK_Issue_User">
-            <End Role="User" EntitySet="User" />
+          <AssociationSet Name="FK_Issue_Request" Association="Self.FK_Issue_Request">
+            <End Role="Request" EntitySet="Request" />
             <End Role="Issue" EntitySet="Issue" />
           </AssociationSet>
           <AssociationSet Name="FK_Location_User" Association="Self.FK_Location_User">
@@ -425,34 +426,19 @@
         <EntityContainer Name="DbEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Appointments" EntityType="DbModel.Appointment" />
           <EntitySet Name="Cars" EntityType="DbModel.Car" />
-          <EntitySet Name="Issues" EntityType="DbModel.Issue" />
           <EntitySet Name="Locations" EntityType="DbModel.Location" />
           <EntitySet Name="Logs" EntityType="DbModel.Log" />
           <EntitySet Name="RepairHistories" EntityType="DbModel.RepairHistory" />
-          <EntitySet Name="Requests" EntityType="DbModel.Request" />
           <EntitySet Name="Reviews" EntityType="DbModel.Review" />
           <EntitySet Name="Shops" EntityType="DbModel.Shop" />
           <EntitySet Name="Tokens" EntityType="DbModel.Token" />
-          <EntitySet Name="Users" EntityType="DbModel.User" />
           <AssociationSet Name="FK_Appointment_Shop" Association="DbModel.FK_Appointment_Shop">
             <End Role="Shop" EntitySet="Shops" />
             <End Role="Appointment" EntitySet="Appointments" />
           </AssociationSet>
-          <AssociationSet Name="FK_Car_User" Association="DbModel.FK_Car_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Car" EntitySet="Cars" />
-          </AssociationSet>
           <AssociationSet Name="FK_RepairHistory_Car" Association="DbModel.FK_RepairHistory_Car">
             <End Role="Car" EntitySet="Cars" />
             <End Role="RepairHistory" EntitySet="RepairHistories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Issue_User" Association="DbModel.FK_Issue_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Issue" EntitySet="Issues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Location_User" Association="DbModel.FK_Location_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Location" EntitySet="Locations" />
           </AssociationSet>
           <AssociationSet Name="FK_Shop_Location" Association="DbModel.FK_Shop_Location">
             <End Role="Location" EntitySet="Locations" />
@@ -461,6 +447,33 @@
           <AssociationSet Name="FK_RepairHistory_Shop" Association="DbModel.FK_RepairHistory_Shop">
             <End Role="Shop" EntitySet="Shops" />
             <End Role="RepairHistory" EntitySet="RepairHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Review_Shop" Association="DbModel.FK_Review_Shop">
+            <End Role="Shop" EntitySet="Shops" />
+            <End Role="Review" EntitySet="Reviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shop_Shop" Association="DbModel.FK_Shop_Shop">
+            <End Role="Shop" EntitySet="Shops" />
+            <End Role="Shop1" EntitySet="Shops" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Token_Shop" Association="DbModel.FK_Token_Shop">
+            <End Role="Shop" EntitySet="Shops" />
+            <End Role="Token" EntitySet="Tokens" />
+          </AssociationSet>
+          <EntitySet Name="Issues" EntityType="DbModel.Issue" />
+          <EntitySet Name="Requests" EntityType="DbModel.Request" />
+          <EntitySet Name="Users" EntityType="DbModel.User" />
+          <AssociationSet Name="FK_Car_User" Association="DbModel.FK_Car_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Car" EntitySet="Cars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Issue_Request" Association="DbModel.FK_Issue_Request">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Location_User" Association="DbModel.FK_Location_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Location" EntitySet="Locations" />
           </AssociationSet>
           <AssociationSet Name="FK_RepairHistory_User" Association="DbModel.FK_RepairHistory_User">
             <End Role="User" EntitySet="Users" />
@@ -474,21 +487,9 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Request" EntitySet="Requests" />
           </AssociationSet>
-          <AssociationSet Name="FK_Review_Shop" Association="DbModel.FK_Review_Shop">
-            <End Role="Shop" EntitySet="Shops" />
-            <End Role="Review" EntitySet="Reviews" />
-          </AssociationSet>
           <AssociationSet Name="FK_Review_User" Association="DbModel.FK_Review_User">
             <End Role="User" EntitySet="Users" />
             <End Role="Review" EntitySet="Reviews" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Shop_Shop" Association="DbModel.FK_Shop_Shop">
-            <End Role="Shop" EntitySet="Shops" />
-            <End Role="Shop1" EntitySet="Shops" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Token_Shop" Association="DbModel.FK_Token_Shop">
-            <End Role="Shop" EntitySet="Shops" />
-            <End Role="Token" EntitySet="Tokens" />
           </AssociationSet>
           <AssociationSet Name="FK_Token_User" Association="DbModel.FK_Token_User">
             <End Role="User" EntitySet="Users" />
@@ -524,22 +525,8 @@
           <Property Name="Model" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Year" Type="Int32" Nullable="false" />
           <Property Name="Odometer" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <NavigationProperty Name="User" Relationship="DbModel.FK_Car_User" FromRole="Car" ToRole="User" />
           <NavigationProperty Name="RepairHistories" Relationship="DbModel.FK_RepairHistory_Car" FromRole="Car" ToRole="RepairHistory" />
-        </EntityType>
-        <EntityType Name="Issue">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="DateDeleted" Type="DateTime" Precision="7" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="DateOfSubmission" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="Summary" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="User" Relationship="DbModel.FK_Issue_User" FromRole="Issue" ToRole="User" />
+          <NavigationProperty Name="User" Relationship="DbModel.FK_Car_User" FromRole="Car" ToRole="User" />
         </EntityType>
         <EntityType Name="Location">
           <Key>
@@ -558,8 +545,8 @@
           <Property Name="Country" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Longitude" Type="Double" />
           <Property Name="Latitude" Type="Double" />
-          <NavigationProperty Name="User" Relationship="DbModel.FK_Location_User" FromRole="Location" ToRole="User" />
           <NavigationProperty Name="Shops" Relationship="DbModel.FK_Shop_Location" FromRole="Location" ToRole="Shop" />
+          <NavigationProperty Name="User" Relationship="DbModel.FK_Location_User" FromRole="Location" ToRole="User" />
         </EntityType>
         <EntityType Name="Log">
           <Key>
@@ -590,26 +577,6 @@
           <NavigationProperty Name="Car" Relationship="DbModel.FK_RepairHistory_Car" FromRole="RepairHistory" ToRole="Car" />
           <NavigationProperty Name="Shop" Relationship="DbModel.FK_RepairHistory_Shop" FromRole="RepairHistory" ToRole="Shop" />
           <NavigationProperty Name="User" Relationship="DbModel.FK_RepairHistory_User" FromRole="RepairHistory" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Request">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="DateDeleted" Type="DateTime" Precision="7" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="ShopId" Type="Int32" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="EstimatedFinishDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="ActualFinishDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="EstimatedPrice" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="ActualPrice" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="BillPicture" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Shop" Relationship="DbModel.FK_Request_Shop" FromRole="Request" ToRole="Shop" />
-          <NavigationProperty Name="User" Relationship="DbModel.FK_Request_User" FromRole="Request" ToRole="User" />
         </EntityType>
         <EntityType Name="Review">
           <Key>
@@ -646,11 +613,11 @@
           <NavigationProperty Name="Appointments" Relationship="DbModel.FK_Appointment_Shop" FromRole="Shop" ToRole="Appointment" />
           <NavigationProperty Name="Location" Relationship="DbModel.FK_Shop_Location" FromRole="Shop" ToRole="Location" />
           <NavigationProperty Name="RepairHistories" Relationship="DbModel.FK_RepairHistory_Shop" FromRole="Shop" ToRole="RepairHistory" />
-          <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_Shop" FromRole="Shop" ToRole="Request" />
           <NavigationProperty Name="Reviews" Relationship="DbModel.FK_Review_Shop" FromRole="Shop" ToRole="Review" />
           <NavigationProperty Name="ChildShops" Relationship="DbModel.FK_Shop_Shop" FromRole="Shop" ToRole="Shop1" />
           <NavigationProperty Name="ParentShop" Relationship="DbModel.FK_Shop_Shop" FromRole="Shop1" ToRole="Shop" />
           <NavigationProperty Name="Tokens" Relationship="DbModel.FK_Token_Shop" FromRole="Shop" ToRole="Token" />
+          <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_Shop" FromRole="Shop" ToRole="Request" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -661,29 +628,6 @@
           <Property Name="ShopId" Type="Int32" />
           <NavigationProperty Name="Shop" Relationship="DbModel.FK_Token_Shop" FromRole="Token" ToRole="Shop" />
           <NavigationProperty Name="User" Relationship="DbModel.FK_Token_User" FromRole="Token" ToRole="User" />
-        </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="DateDeleted" Type="DateTime" Precision="7" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="0" />
-          <NavigationProperty Name="Cars" Relationship="DbModel.FK_Car_User" FromRole="User" ToRole="Car" />
-          <NavigationProperty Name="Issues" Relationship="DbModel.FK_Issue_User" FromRole="User" ToRole="Issue" />
-          <NavigationProperty Name="Locations" Relationship="DbModel.FK_Location_User" FromRole="User" ToRole="Location" />
-          <NavigationProperty Name="RepairHistories" Relationship="DbModel.FK_RepairHistory_User" FromRole="User" ToRole="RepairHistory" />
-          <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_User" FromRole="User" ToRole="Request" />
-          <NavigationProperty Name="Reviews" Relationship="DbModel.FK_Review_User" FromRole="User" ToRole="Review" />
-          <NavigationProperty Name="Tokens" Relationship="DbModel.FK_Token_User" FromRole="User" ToRole="Token" />
         </EntityType>
         <Association Name="FK_Appointment_Shop">
           <End Type="DbModel.Shop" Role="Shop" Multiplicity="1" />
@@ -697,18 +641,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Car_User">
-          <End Type="DbModel.User" Role="User" Multiplicity="1" />
-          <End Type="DbModel.Car" Role="Car" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Car">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_RepairHistory_Car">
           <End Type="DbModel.Car" Role="Car" Multiplicity="1" />
           <End Type="DbModel.RepairHistory" Role="RepairHistory" Multiplicity="*" />
@@ -718,30 +650,6 @@
             </Principal>
             <Dependent Role="RepairHistory">
               <PropertyRef Name="CarId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Issue_User">
-          <End Type="DbModel.User" Role="User" Multiplicity="1" />
-          <End Type="DbModel.Issue" Role="Issue" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Issue">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Location_User">
-          <End Type="DbModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="DbModel.Location" Role="Location" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Location">
-              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -766,6 +674,136 @@
             </Principal>
             <Dependent Role="RepairHistory">
               <PropertyRef Name="ShopId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Review_Shop">
+          <End Type="DbModel.Shop" Role="Shop" Multiplicity="1" />
+          <End Type="DbModel.Review" Role="Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shop">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="ShopId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shop_Shop">
+          <End Type="DbModel.Shop" Role="Shop" Multiplicity="0..1" />
+          <End Type="DbModel.Shop" Role="Shop1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shop">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Shop1">
+              <PropertyRef Name="ParentShopId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Token_Shop">
+          <End Type="DbModel.Shop" Role="Shop" Multiplicity="0..1" />
+          <End Type="DbModel.Token" Role="Token" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shop">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Token">
+              <PropertyRef Name="ShopId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Issue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="7" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="RequestId" Type="Int32" Nullable="false" />
+          <Property Name="DateOfSubmission" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Summary" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Request" Relationship="DbModel.FK_Issue_Request" FromRole="Issue" ToRole="Request" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="7" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ShopId" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="EstimatedFinishDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ActualFinishDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EstimatedPrice" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ActualPrice" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="BillPicture" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Completed" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Issues" Relationship="DbModel.FK_Issue_Request" FromRole="Request" ToRole="Issue" />
+          <NavigationProperty Name="Shop" Relationship="DbModel.FK_Request_Shop" FromRole="Request" ToRole="Shop" />
+          <NavigationProperty Name="User" Relationship="DbModel.FK_Request_User" FromRole="Request" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="7" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Cars" Relationship="DbModel.FK_Car_User" FromRole="User" ToRole="Car" />
+          <NavigationProperty Name="Locations" Relationship="DbModel.FK_Location_User" FromRole="User" ToRole="Location" />
+          <NavigationProperty Name="RepairHistories" Relationship="DbModel.FK_RepairHistory_User" FromRole="User" ToRole="RepairHistory" />
+          <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_User" FromRole="User" ToRole="Request" />
+          <NavigationProperty Name="Reviews" Relationship="DbModel.FK_Review_User" FromRole="User" ToRole="Review" />
+          <NavigationProperty Name="Tokens" Relationship="DbModel.FK_Token_User" FromRole="User" ToRole="Token" />
+        </EntityType>
+        <Association Name="FK_Car_User">
+          <End Type="DbModel.User" Role="User" Multiplicity="1" />
+          <End Type="DbModel.Car" Role="Car" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Car">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Issue_Request">
+          <End Type="DbModel.Request" Role="Request" Multiplicity="1" />
+          <End Type="DbModel.Issue" Role="Issue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Issue">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Location_User">
+          <End Type="DbModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="DbModel.Location" Role="Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Location">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -805,18 +843,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Review_Shop">
-          <End Type="DbModel.Shop" Role="Shop" Multiplicity="1" />
-          <End Type="DbModel.Review" Role="Review" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Shop">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Review">
-              <PropertyRef Name="ShopId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Review_User">
           <End Type="DbModel.User" Role="User" Multiplicity="1" />
           <End Type="DbModel.Review" Role="Review" Multiplicity="*" />
@@ -826,30 +852,6 @@
             </Principal>
             <Dependent Role="Review">
               <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Shop_Shop">
-          <End Type="DbModel.Shop" Role="Shop" Multiplicity="0..1" />
-          <End Type="DbModel.Shop" Role="Shop1" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Shop">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Shop1">
-              <PropertyRef Name="ParentShopId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Token_Shop">
-          <End Type="DbModel.Shop" Role="Shop" Multiplicity="0..1" />
-          <End Type="DbModel.Token" Role="Token" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Shop">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Token">
-              <PropertyRef Name="ShopId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -893,20 +895,6 @@
                 <ScalarProperty Name="Model" ColumnName="Model" />
                 <ScalarProperty Name="Make" ColumnName="Make" />
                 <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Issues">
-            <EntityTypeMapping TypeName="DbModel.Issue">
-              <MappingFragment StoreEntitySet="Issue">
-                <ScalarProperty Name="Summary" ColumnName="Summary" />
-                <ScalarProperty Name="DateOfSubmission" ColumnName="DateOfSubmission" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
@@ -964,25 +952,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Requests">
-            <EntityTypeMapping TypeName="DbModel.Request">
-              <MappingFragment StoreEntitySet="Request">
-                <ScalarProperty Name="BillPicture" ColumnName="BillPicture" />
-                <ScalarProperty Name="ActualPrice" ColumnName="ActualPrice" />
-                <ScalarProperty Name="EstimatedPrice" ColumnName="EstimatedPrice" />
-                <ScalarProperty Name="ActualFinishDate" ColumnName="ActualFinishDate" />
-                <ScalarProperty Name="EstimatedFinishDate" ColumnName="EstimatedFinishDate" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="ShopId" ColumnName="ShopId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Reviews">
             <EntityTypeMapping TypeName="DbModel.Review">
               <MappingFragment StoreEntitySet="Review">
@@ -1022,6 +991,40 @@
                 <ScalarProperty Name="ShopId" ColumnName="ShopId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="TokenValue" ColumnName="Token" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Issues">
+            <EntityTypeMapping TypeName="DbModel.Issue">
+              <MappingFragment StoreEntitySet="Issue">
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="DateOfSubmission" ColumnName="DateOfSubmission" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="DbModel.Request">
+              <MappingFragment StoreEntitySet="Request">
+                <ScalarProperty Name="Completed" ColumnName="Completed" />
+                <ScalarProperty Name="BillPicture" ColumnName="BillPicture" />
+                <ScalarProperty Name="ActualPrice" ColumnName="ActualPrice" />
+                <ScalarProperty Name="EstimatedPrice" ColumnName="EstimatedPrice" />
+                <ScalarProperty Name="ActualFinishDate" ColumnName="ActualFinishDate" />
+                <ScalarProperty Name="EstimatedFinishDate" ColumnName="EstimatedFinishDate" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ShopId" ColumnName="ShopId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

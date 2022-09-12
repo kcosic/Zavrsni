@@ -12,6 +12,7 @@ using WebAPI.Models.Exceptions;
 using WebAPI.Models.Helpers;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
+using WebAPI.Services.HERE;
 
 namespace WebAPI.Controllers
 {
@@ -21,18 +22,22 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        [Route("api/Location/{id}")]
-        public BaseResponse RetrieveLocation(string id)
+        [Route("api/Location/{id}?expanded={expanded:bool=false}")]
+        public BaseResponse RetrieveLocation(string id, bool expanded)
         {
             try
             {
                 var location = Db.Locations.Find(id);
                 if (location == null || location.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(location.ToDTO());
+                return CreateOkResponse(location.ToDTO(!expanded));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -50,10 +55,14 @@ namespace WebAPI.Controllers
                 var location = Db.Locations.Where(x => x.UserId == AuthUser.Id && !x.Deleted).ToList();
                 if (location == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(Location.ToListDTO(location));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -71,12 +80,16 @@ namespace WebAPI.Controllers
                 var location = Db.Locations.Find(id);
                 if (location == null || location.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 location.DateDeleted = DateTime.Now;
                 location.Deleted = true;
                 Db.SaveChanges();
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -107,8 +120,6 @@ namespace WebAPI.Controllers
                     Longitude = newLocationDTO.Longitude,
                     Street = newLocationDTO.Street,
                     StreetNumber = newLocationDTO.StreetNumber
-
-
                 };
 
                 Db.Locations.Add(newLocation);
@@ -136,7 +147,7 @@ namespace WebAPI.Controllers
                 var location = Db.Locations.Find(id);
                 if (location == null || location.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 location.DateModified = DateTime.Now;
                 location.UserId = locationDTO.UserId;
@@ -151,6 +162,10 @@ namespace WebAPI.Controllers
                 Db.SaveChanges();
 
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -178,7 +193,7 @@ namespace WebAPI.Controllers
                 {
                     throw new ArgumentException("Invalid latitude or longitude");
                 }
-                var service = Models.HERE.HereService.getInstance();
+                var service = HereService.getInstance();
 
 
                 var locationDTO = service.RetrieveLocationDTOInformation(lat, lng);
@@ -205,7 +220,7 @@ namespace WebAPI.Controllers
                 {
                     throw new ArgumentException("Invalid address");
                 }
-                var service = Models.HERE.HereService.getInstance();
+                var service = HereService.getInstance();
                 var locationDTO = service.RetrieveLocationDTOInformation(address);
                 return CreateOkResponse(locationDTO);
             }
@@ -232,7 +247,7 @@ namespace WebAPI.Controllers
                 {
                     throw new ArgumentException("Invalid address");
                 }
-                var service = Models.HERE.HereService.getInstance();
+                var service = HereService.getInstance();
                 var locationsDTO = service.DiscoverLocationDTOByAddress(address);
                 return CreateOkResponse(locationsDTO);
             }

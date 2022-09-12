@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.Responses;
 
 namespace WebAPI.Controllers
@@ -13,18 +14,22 @@ namespace WebAPI.Controllers
         public CarController() : base(nameof(CarController)) { }
 
         [HttpGet]
-        [Route("api/Car/{id}")]
-        public BaseResponse RetrieveCar(string id)
+        [Route("api/Car/{id}?expanded={expanded:bool=false}")]
+        public BaseResponse RetrieveCar(string id, bool expanded)
         {
             try
             {
                 var car = Db.Cars.Find(id);
                 if (car == null || car.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(car.ToDTO());
+                return CreateOkResponse(car.ToDTO(!expanded));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -33,26 +38,30 @@ namespace WebAPI.Controllers
 
         }
 
-        //[HttpGet]
-        //[Route("api/Car")]
-        //public BaseResponse RetrieveCars()
-        //{
-        //    try
-        //    {
-        //        var car = Db.Cars.Where(x => x.ShopId == AuthShop.Id && !x.Deleted).ToList();
-        //        if (car == null)
-        //        {
-        //            throw new Exception("Record not found");
-        //        }
+        [HttpGet]
+        [Route("api/Car")]
+        public BaseResponse RetrieveCars()
+        {
+            try
+            {
+                var car = Db.Cars.Where(x => x.UserId == AuthUser.Id && !x.Deleted).ToList();
+                if (car == null)
+                {
+                    throw new RecordNotFoundException();
+                }
 
-        //        return CreateOkResponse(Models.ORM.Car.ToListDTO(car));
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
-        //    }
+                return CreateOkResponse(Models.ORM.Car.ToListDTO(car));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
 
-        //}
+        }
 
         [HttpDelete]
         [Route("api/Car/{id}")]
@@ -63,13 +72,17 @@ namespace WebAPI.Controllers
                 var car = Db.Cars.Find(id);
                 if (car == null || car.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 car.DateDeleted = DateTime.Now;
                 car.Deleted = true;
 
                 Db.SaveChanges();
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -83,7 +96,6 @@ namespace WebAPI.Controllers
         {
             try
             {
-                throw new NotImplementedException();
                 if (newCarDTO == null)
                 {
                     throw new Exception("Invalid value");
@@ -105,6 +117,10 @@ namespace WebAPI.Controllers
 
                 return CreateOkResponse();
             }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
             catch (Exception e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
@@ -123,6 +139,10 @@ namespace WebAPI.Controllers
                 }
 
                 var car = Db.Cars.Find(id);
+                if (car == null || car.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
                 car.DateModified = DateTime.Now;
                 car.DateCreated = DateTime.Now;
                 car.DateModified = DateTime.Now;
@@ -135,6 +155,10 @@ namespace WebAPI.Controllers
                 Db.SaveChanges();
 
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {

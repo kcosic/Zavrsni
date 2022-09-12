@@ -32,6 +32,8 @@ namespace WebAPI.Models.ORM
                 EstimatedFinishDate = item.EstimatedFinishDate,
                 EstimatedPrice = item.EstimatedPrice,
                 Price = item.Price,
+                Completed = item.Completed,
+                Issues = singleLevel ? null : Issue.ToListDTO(item.Issues),
             };
         }
 
@@ -64,6 +66,9 @@ namespace WebAPI.Models.ORM
                 EstimatedFinishDate = EstimatedFinishDate,
                 EstimatedPrice = EstimatedPrice,
                 Price = Price,
+                Completed = Completed,
+                Issues = singleLevel ? null : Issue.ToListDTO(Issues),
+
             };
         }
     }

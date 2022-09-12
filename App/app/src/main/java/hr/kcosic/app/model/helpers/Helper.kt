@@ -36,6 +36,7 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.InvalidObjectException
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.reflect.typeOf
@@ -338,6 +339,27 @@ class Helper {
 
         fun fromBase64(text: String): String {
             return String(Base64.getDecoder().decode(text.toByteArray()))
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        fun formatDate(date: Date): String {
+            val myFormat = "dd.MM.yyyy"
+            val dateFormat = SimpleDateFormat(myFormat)
+            return dateFormat.format(date)
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        fun formatDateTime(date: Date): String {
+            val myFormat = "dd.MM.yyyy HH:mm"
+            val dateFormat = SimpleDateFormat(myFormat)
+            return dateFormat.format(date)
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        fun formatTime(date: Date): String {
+            val myFormat = "HH:mm"
+            val dateFormat = SimpleDateFormat(myFormat)
+            return dateFormat.format(date)
         }
 
     }

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.DTOs;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
@@ -16,18 +17,22 @@ namespace WebAPI.Controllers
         public ReviewController() : base(nameof(ReviewController)) { }
 
         [HttpGet]
-        [Route("api/Review/{id}")]
-        public BaseResponse RetrieveReview(string id)
+        [Route("api/Review/{id}?expanded={expanded:bool=false}")]
+        public BaseResponse RetrieveReview(string id, bool expanded)
         {
             try
             {
                 var review = Db.Reviews.Find(id);
                 if (review == null || review.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(review.ToDTO());
+                return CreateOkResponse(review.ToDTO(!expanded));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -45,10 +50,14 @@ namespace WebAPI.Controllers
                 var review = Db.Reviews.Where(x => x.UserId == AuthUser.Id && !x.Deleted).ToList();
                 if (review == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(Review.ToListDTO(review));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -66,12 +75,16 @@ namespace WebAPI.Controllers
                 var review = Db.Reviews.Find(id);
                 if (review == null || review.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 review.DateDeleted = DateTime.Now;
                 review.Deleted = true;
                 Db.SaveChanges();
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -125,7 +138,7 @@ namespace WebAPI.Controllers
                 var review = Db.Reviews.Find(id);
                 if (review == null || review.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 review.DateModified = DateTime.Now;
@@ -137,6 +150,10 @@ namespace WebAPI.Controllers
                 Db.SaveChanges();
 
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {

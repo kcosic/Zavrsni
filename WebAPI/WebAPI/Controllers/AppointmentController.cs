@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.DTOs;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.Helpers;
 using WebAPI.Models.HERE;
 using WebAPI.Models.ORM;
@@ -17,18 +18,22 @@ namespace WebAPI.Controllers
         public AppointmentController() : base(nameof(AppointmentController)) { }
 
         [HttpGet]
-        [Route("api/Appointment/{id}")]
-        public BaseResponse RetrieveAppointment(string id)
+        [Route("api/Appointment/{id}?expanded={expanded:bool=false}")]
+        public BaseResponse RetrieveAppointment(string id, bool expanded)
         {
             try
             {
                 var appointment = Db.Appointments.Find(id);
                 if(appointment == null || appointment.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(appointment.ToDTO());
+                return CreateOkResponse(appointment.ToDTO(!expanded));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -46,10 +51,14 @@ namespace WebAPI.Controllers
                 var appointment = Db.Appointments.Where(x=> x.ShopId == AuthShop.Id && !x.Deleted).ToList();
                 if(appointment == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(Appointment.ToListDTO(appointment));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -67,12 +76,16 @@ namespace WebAPI.Controllers
                 var appointment = Db.Appointments.Find(id);
                 if (appointment == null || appointment.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 appointment.DateDeleted = DateTime.Now;
                 appointment.Deleted = true;
                 Db.SaveChanges();
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -123,7 +136,10 @@ namespace WebAPI.Controllers
                 }
 
                 var appointment = Db.Appointments.Find(id);
-
+                if (appointment == null || appointment.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
                 appointment.Date = appointmentDTO.Date;
                 appointment.DateModified = DateTime.Now;
                 appointment.IsTaken = appointmentDTO.IsTaken;
@@ -132,6 +148,10 @@ namespace WebAPI.Controllers
                 Db.SaveChanges();
 
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {

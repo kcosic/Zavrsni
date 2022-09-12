@@ -26,8 +26,8 @@ namespace WebAPI.Models.ORM
                 Id = item.Id,
                 Summary = item.Summary,
                 DateOfSubmission = item.DateOfSubmission,
-                User = singleLevel ? null : User.ToDTO(item.User),
-                UserId = item.UserId
+                Request = singleLevel ? null : Request.ToDTO(item.Request),
+                RequestId = item.RequestId
 
             };
         }
@@ -53,8 +53,8 @@ namespace WebAPI.Models.ORM
                 Id = Id,
                 Summary = Summary,
                 DateOfSubmission = DateOfSubmission,
-                User = singleLevel ? null : User.ToDTO(User),
-                UserId = UserId
+                Request = singleLevel ? null : Request.ToDTO(Request),
+                RequestId = RequestId
 
             };
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.Responses;
 
 namespace WebAPI.Controllers
@@ -13,18 +14,22 @@ namespace WebAPI.Controllers
         public RequestController() : base(nameof(RequestController)) { }
 
         [HttpGet]
-        [Route("api/Request/{id}")]
-        public BaseResponse RetrieveRequest(string id)
+        [Route("api/Request/{id}?expanded={expanded:bool=false}")]
+        public BaseResponse RetrieveRequest(string id, bool expanded)
         {
             try
             {
                 var request = Db.Requests.Find(id);
                 if (request == null || request.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(request.ToDTO());
+                return CreateOkResponse(request.ToDTO(!expanded));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -42,10 +47,14 @@ namespace WebAPI.Controllers
                 var request = Db.Requests.Where(x => x.ShopId == AuthShop.Id && !x.Deleted).ToList();
                 if (request == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(Models.ORM.Request.ToListDTO(request));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -63,13 +72,17 @@ namespace WebAPI.Controllers
                 var request = Db.Requests.Find(id);
                 if (request == null || request.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 request.DateDeleted = DateTime.Now;
                 request.Deleted = true;
 
                 Db.SaveChanges();
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -126,6 +139,10 @@ namespace WebAPI.Controllers
                 }
 
                 var request = Db.Requests.Find(id);
+                if (request == null || request.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
                 request.DateModified = DateTime.Now;
                 request.ShopId = requestDTO.ShopId;
                 request.ActualFinishDate = requestDTO.ActualFinishDate;
@@ -140,11 +157,81 @@ namespace WebAPI.Controllers
 
                 return CreateOkResponse();
             }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
             catch (Exception e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
         }
 
+
+        [HttpGet]
+        [Route("api/Request/User/{id}/Active")]
+        public BaseResponse RetrieveActiveUserRequest(string id)
+        {
+            try
+            {
+                var user = Db.Users.Find(id);
+                if (user == null || user.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                var activeRequest = user.Requests.Where(x => !x.Completed && !x.Deleted)?.OrderBy(x => x.DateCreated)?.FirstOrDefault();
+                if (activeRequest == null || activeRequest.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                var activeRequestDTO = activeRequest.ToDTO(false);
+                activeRequestDTO.Shop.Location = activeRequest.Shop.Location.ToDTO();
+
+                return CreateOkResponse(activeRequestDTO);
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+
+        }
+
+        [HttpGet]
+        [Route("api/Request/User/{id}")]
+        public BaseResponse RetrieveUserRequests(string id)
+        {
+            try
+            {
+                var user = Db.Users.Find(id);
+                if (user == null || user.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                var activeRequests = user.Requests.Where(x => !x.Completed && !x.Deleted)?.OrderBy(x => x.DateCreated)?.ToList();
+                if (activeRequests == null)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                return CreateOkResponse(Models.ORM.Request.ToListDTO(activeRequests));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+
+        }
     }
+
 }

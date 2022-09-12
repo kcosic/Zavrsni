@@ -45,8 +45,6 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public ICollection<CarDTO> Cars { get; set; }
         [JsonProperty]
-        public ICollection<IssueDTO> Issues { get; set; }
-        [JsonProperty]
         public ICollection<LocationDTO> Locations { get; set; }
         [JsonProperty]
         public ICollection<RepairHistoryDTO> RepairHistories { get; set; }

@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using WebAPI.Services.Models.HERE;
 
-namespace WebAPI.Models.HERE
+namespace WebAPI.Services.Models.Responses.HERE
 {
     public class LocationResponse
     {

@@ -10,4 +10,5 @@ enum class ErrorCodeEnum(val code: Int) {
     LegalNameExists(6),
     ShortNameExists(7),
     VatExists(8),
+    RecordNotFound(9),
 }

@@ -53,7 +53,6 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var progressBarHolder: FrameLayout
     private lateinit var dialogProgressbar: FrameLayout
     private lateinit var googleMap: GoogleMap
-    private var coroutineScope: CoroutineScope = CoroutineScope(Job())
     private var mapMarker: Marker? = null
     private var location: Location? = null
     private var isSearching = false

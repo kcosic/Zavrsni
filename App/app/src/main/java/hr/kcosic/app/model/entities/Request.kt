@@ -19,10 +19,12 @@ class Request : BaseEntity() {
 
     @Serializable(with = DateSerializer::class)
     var ActualFinishDate: Date? = null
-
+    var Completed: Boolean? = null
     var BillPicture: String? = null
     @Serializable
     var Shop: Shop? = null
     @Serializable
     var User: User? = null
+    @Serializable
+    var Issues: MutableList<Issue>? = null
 }

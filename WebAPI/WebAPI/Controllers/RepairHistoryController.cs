@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.DTOs;
+using WebAPI.Models.Exceptions;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
@@ -15,18 +16,22 @@ namespace WebAPI.Controllers
         public RepairHistoryController() : base(nameof(RepairHistoryController)) { }
 
         [HttpGet]
-        [Route("api/RepairHistory/{id}")]
-        public BaseResponse RetrieveRepairHistory(string id)
+        [Route("api/RepairHistory/{id}?expanded={expanded:bool=false}")]
+        public BaseResponse RetrieveRepairHistory(string id, bool expanded)
         {
             try
             {
                 var repairHistory = Db.RepairHistories.Find(id);
                 if (repairHistory == null || repairHistory.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(repairHistory.ToDTO());
+                return CreateOkResponse(repairHistory.ToDTO(!expanded));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -44,10 +49,14 @@ namespace WebAPI.Controllers
                 var repairHistory = Db.RepairHistories.Where(x => x.UserId == AuthUser.Id && !x.Deleted).ToList();
                 if (repairHistory == null)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
 
                 return CreateOkResponse(RepairHistory.ToListDTO(repairHistory));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
@@ -65,7 +74,7 @@ namespace WebAPI.Controllers
                 var repairHistory = Db.RepairHistories.Find(id);
                 if (repairHistory == null || repairHistory.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 repairHistory.DateDeleted = DateTime.Now;
                 repairHistory.Deleted = true;
@@ -124,7 +133,7 @@ namespace WebAPI.Controllers
                 var repairHistory = Db.RepairHistories.Find(id);
                 if (repairHistory == null || repairHistory.Deleted)
                 {
-                    throw new Exception("Record not found");
+                    throw new RecordNotFoundException();
                 }
                 repairHistory.DateModified = DateTime.Now;
                 repairHistory.UserId = repairHistoryDTO.UserId;
@@ -135,6 +144,10 @@ namespace WebAPI.Controllers
                 Db.SaveChanges();
 
                 return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
             }
             catch (Exception e)
             {
