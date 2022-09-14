@@ -14,8 +14,8 @@ namespace WebAPI.Controllers
         public RequestController() : base(nameof(RequestController)) { }
 
         [HttpGet]
-        [Route("api/Request/{id}?expanded={expanded:bool=false}")]
-        public BaseResponse RetrieveRequest(string id, bool expanded)
+        [Route("api/Request/{id}")]
+        public BaseResponse RetrieveRequest(int id, bool expanded = false)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("api/Request/{id}")]
-        public BaseResponse DeleteRequest(string id)
+        public BaseResponse DeleteRequest(int id)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Request/{id}")]
-        public BaseResponse UpdateAppointment([FromUri] string id, [FromBody] Models.ORM.Request requestDTO)
+        public BaseResponse UpdateAppointment([FromUri] int id, [FromBody] Models.ORM.Request requestDTO)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("api/Request/User/{id}/Active")]
-        public BaseResponse RetrieveActiveUserRequest(string id)
+        public BaseResponse RetrieveActiveUserRequest(int id)
         {
             try
             {
@@ -188,6 +188,7 @@ namespace WebAPI.Controllers
 
                 var activeRequestDTO = activeRequest.ToDTO(false);
                 activeRequestDTO.Shop.Location = activeRequest.Shop.Location.ToDTO();
+                activeRequestDTO.User = user.ToDTO(false);
 
                 return CreateOkResponse(activeRequestDTO);
             }
@@ -204,7 +205,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("api/Request/User/{id}")]
-        public BaseResponse RetrieveUserRequests(string id)
+        public BaseResponse RetrieveUserRequests(int id)
         {
             try
             {

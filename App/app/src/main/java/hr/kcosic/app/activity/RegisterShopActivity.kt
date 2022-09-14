@@ -21,6 +21,7 @@ import hr.kcosic.app.model.OnNegativeButtonClickListener
 import hr.kcosic.app.model.OnPositiveButtonClickListener
 import hr.kcosic.app.model.bases.BaseActivity
 import hr.kcosic.app.model.bases.BaseResponse
+import hr.kcosic.app.model.bases.hideKeyboard
 import hr.kcosic.app.model.entities.Location
 import hr.kcosic.app.model.entities.Shop
 import hr.kcosic.app.model.enums.ActivityEnum

@@ -13,7 +13,6 @@ namespace WebAPI.Models.DTOs
         public UserDTO()
         {
             Cars = new HashSet<CarDTO>();
-            Issues = new HashSet<IssueDTO>();
             Locations = new HashSet<LocationDTO>();
             RepairHistories = new HashSet<RepairHistoryDTO>();
             Requests = new HashSet<RequestDTO>();

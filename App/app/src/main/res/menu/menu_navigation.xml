@@ -3,20 +3,20 @@
 
     <item
         android:id="@+id/home"
-        android:title="Home"
+        android:title="@string/home"
         android:icon="@drawable/house"/>
 
     <item
-        android:id="@+id/find_service"
-        android:title="Find Service"
+        android:id="@+id/search_service"
+        android:title="@string/find_service"
         android:icon="@drawable/magnifying_glass"/>
     <item
         android:id="@+id/requests"
-        android:title="Requests"
+        android:title="@string/requests"
         android:icon="@drawable/file_lines"/>
     <item
         android:id="@+id/settings"
-        android:title="About"
+        android:title="@string/settings"
         android:icon="@drawable/gear"/>
 
 </menu>

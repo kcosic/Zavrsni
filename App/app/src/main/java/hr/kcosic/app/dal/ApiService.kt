@@ -143,6 +143,9 @@ class ApiService private constructor() {
 
     //#region Location
 
+    fun retrieveLocationByCoordinatesAndRadius(latLng: String, radius: Int):Call {
+        return get("${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}/Radius/$radius")
+    }
     fun retrieveLocationByCoordinates(latLng: String): Call {
         return get("${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}")
     }
@@ -361,6 +364,7 @@ class ApiService private constructor() {
     fun updateUser(updatedUser: User): Call {
         return put(ApiRoutes.USER, updatedUser)
     }
+
     //#endregion
 }
 

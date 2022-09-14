@@ -7,8 +7,13 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +26,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks.await
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import hr.kcosic.app.R
 import hr.kcosic.app.model.OnNegativeButtonClickListener
 import hr.kcosic.app.model.OnPositiveButtonClickListener
@@ -32,13 +36,11 @@ import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.responses.ErrorResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.InvalidObjectException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.reflect.typeOf
 
 
@@ -50,6 +52,11 @@ class Helper {
         var AUTH_FOR_KEY:String? = null
         val json = Json { explicitNulls = true }
 
+        fun openActivity(context: Activity, activity: ActivityEnum) {
+            val intent = Intent(context, activity.getClass().java)
+            ContextCompat.startActivity(context, intent, null)
+            context.overridePendingTransition(androidx.appcompat.R.anim.abc_fade_in,androidx.appcompat.R.anim.abc_fade_out);
+        }
         fun openActivity(context: Context, activity: ActivityEnum) {
             val intent = Intent(context, activity.getClass().java)
             ContextCompat.startActivity(context, intent, null)

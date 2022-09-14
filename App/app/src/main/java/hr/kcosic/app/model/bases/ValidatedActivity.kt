@@ -4,8 +4,10 @@ import android.os.Bundle
 import hr.kcosic.app.R
 import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
+import hr.kcosic.app.model.enums.ErrorCodeEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.responses.ErrorResponse
 import java.lang.Exception
 
 abstract class ValidatedActivity : BaseActivity() {
@@ -37,5 +39,19 @@ abstract class ValidatedActivity : BaseActivity() {
         return Helper.deserializeObject(
             Helper.retrieveSharedPreference(PreferenceEnum.SHOP)
         )
+    }
+
+    override fun handleApiResponseError(response: ErrorResponse){
+        super.handleApiResponseError(response)
+        if(response.ErrorCode == ErrorCodeEnum.InvalidCredentials){
+            logoutUser()
+        }
+    }
+
+    fun logoutUser(){
+        Helper.showLongToast(this,getString(R.string.token_error))
+        Helper.deleteSharedPreference(PreferenceEnum.TOKEN)
+        Helper.deleteSharedPreference(PreferenceEnum.AUTH_FOR)
+        Helper.openActivity(this,ActivityEnum.LOGIN)
     }
 }

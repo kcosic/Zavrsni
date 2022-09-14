@@ -16,8 +16,8 @@ namespace WebAPI.Controllers
         public RepairHistoryController() : base(nameof(RepairHistoryController)) { }
 
         [HttpGet]
-        [Route("api/RepairHistory/{id}?expanded={expanded:bool=false}")]
-        public BaseResponse RetrieveRepairHistory(string id, bool expanded)
+        [Route("api/RepairHistory/{id}")]
+        public BaseResponse RetrieveRepairHistory(int id, bool expanded = false)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("api/RepairHistory/{id}")]
-        public BaseResponse DeleteRepairHistory(string id)
+        public BaseResponse DeleteRepairHistory(int id)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/RepairHistory/{id}")]
-        public BaseResponse UpdateRepairHistory([FromUri] string id, [FromBody] RepairHistoryDTO repairHistoryDTO)
+        public BaseResponse UpdateRepairHistory([FromUri] int id, [FromBody] RepairHistoryDTO repairHistoryDTO)
         {
             try
             {

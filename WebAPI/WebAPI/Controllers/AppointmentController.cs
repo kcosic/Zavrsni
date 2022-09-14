@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.DTOs;
 using WebAPI.Models.Exceptions;
-using WebAPI.Models.Helpers;
-using WebAPI.Models.HERE;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
@@ -18,13 +14,13 @@ namespace WebAPI.Controllers
         public AppointmentController() : base(nameof(AppointmentController)) { }
 
         [HttpGet]
-        [Route("api/Appointment/{id}?expanded={expanded:bool=false}")]
-        public BaseResponse RetrieveAppointment(string id, bool expanded)
+        [Route("api/Appointment/{id}")]
+        public BaseResponse RetrieveAppointment(int id, bool expanded = false)
         {
             try
             {
                 var appointment = Db.Appointments.Find(id);
-                if(appointment == null || appointment.Deleted)
+                if (appointment == null || appointment.Deleted)
                 {
                     throw new RecordNotFoundException();
                 }
@@ -40,16 +36,16 @@ namespace WebAPI.Controllers
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
 
-        }        
-        
+        }
+
         [HttpGet]
         [Route("api/Appointment")]
         public BaseResponse RetrieveAppointments()
         {
             try
             {
-                var appointment = Db.Appointments.Where(x=> x.ShopId == AuthShop.Id && !x.Deleted).ToList();
-                if(appointment == null)
+                var appointment = Db.Appointments.Where(x => x.ShopId == AuthShop.Id && !x.Deleted).ToList();
+                if (appointment == null)
                 {
                     throw new RecordNotFoundException();
                 }
@@ -65,11 +61,11 @@ namespace WebAPI.Controllers
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
 
-        }        
+        }
 
         [HttpDelete]
         [Route("api/Appointment/{id}")]
-        public BaseResponse DeleteAppointment(string id)
+        public BaseResponse DeleteAppointment(int id)
         {
             try
             {
@@ -126,7 +122,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Appointment/{id}")]
-        public BaseResponse UpdateAppointment([FromUri]string id, [FromBody] AppointmentDTO appointmentDTO)
+        public BaseResponse UpdateAppointment([FromUri] int id, [FromBody] AppointmentDTO appointmentDTO)
         {
             try
             {
@@ -143,7 +139,7 @@ namespace WebAPI.Controllers
                 appointment.Date = appointmentDTO.Date;
                 appointment.DateModified = DateTime.Now;
                 appointment.IsTaken = appointmentDTO.IsTaken;
-                appointment.ShopId= appointmentDTO.ShopId;
+                appointment.ShopId = appointmentDTO.ShopId;
 
                 Db.SaveChanges();
 
@@ -158,7 +154,7 @@ namespace WebAPI.Controllers
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
         }
-        
+
 
     }
 }

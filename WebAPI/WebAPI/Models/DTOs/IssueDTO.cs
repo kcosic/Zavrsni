@@ -18,7 +18,7 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public bool Deleted { get; set; }
         [JsonProperty]
-        public int ReviewId { get; set; }
+        public int RequestId { get; set; }
         [JsonProperty]
         public DateTime DateOfSubmission { get; set; }
         [JsonProperty]

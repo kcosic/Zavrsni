@@ -17,8 +17,8 @@ namespace WebAPI.Controllers
         public ShopController() : base(nameof(ShopController)) { }
 
         [HttpGet]
-        [Route("api/Shop/{id}?expanded={expanded:bool=false}")]
-        public BaseResponse RetrieveShop(string id, bool expanded)
+        [Route("api/Shop/{id}")]
+        public BaseResponse RetrieveShop(int id, bool expanded = false)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("api/Shop/{id}/Childs")]
-        public BaseResponse RetrieveChildShops(string id)
+        public BaseResponse RetrieveChildShops(int id)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("api/Shop/{id}/Parent")]
-        public BaseResponse RetrieveParentShop(string id)
+        public BaseResponse RetrieveParentShop(int id)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("api/Shop/{id}/Reviews")]
-        public BaseResponse RetrieveShopReviews(string id)
+        public BaseResponse RetrieveShopReviews(int id)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("api/Shop/{id}")]
-        public BaseResponse DeleteShop(string id)
+        public BaseResponse DeleteShop(int id)
         {
             try
             {
@@ -188,7 +188,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Shop/{id}")]
-        public BaseResponse UpdateShop([FromUri] string id, [FromBody] ShopDTO shopDTO)
+        public BaseResponse UpdateShop([FromUri] int id, [FromBody] ShopDTO shopDTO)
         {
             try
             {

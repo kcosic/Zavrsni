@@ -22,8 +22,8 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        [Route("api/Location/{id}?expanded={expanded:bool=false}")]
-        public BaseResponse RetrieveLocation(string id, bool expanded)
+        [Route("api/Location/{id}")]
+        public BaseResponse RetrieveLocation(int id, bool expanded = false)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("api/Location/{id}")]
-        public BaseResponse DeleteLocation(string id)
+        public BaseResponse DeleteLocation(int id)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Location/{id}")]
-        public BaseResponse UpdateLocation([FromUri] string id, [FromBody] LocationDTO locationDTO)
+        public BaseResponse UpdateLocation([FromUri] int id, [FromBody] LocationDTO locationDTO)
         {
             try
             {
@@ -173,6 +173,45 @@ namespace WebAPI.Controllers
             }
         }
 
+
+        [HttpGet]
+        [Route("api/Location/Coordinates/{encodedLatLng}/Radius/{radius}")]
+        public BaseResponse RetrieveLocationByCoordinates(string encodedLatLng, int radius)
+        {
+            try
+            {
+                var latLng = Helper.FromBase64(encodedLatLng);
+                string[] latLngSplit = latLng.Split('!');
+                string rawLat = latLngSplit[0];
+                string rawLng = latLngSplit[1];
+
+                double lat;
+                double lng;
+
+                if (!double.TryParse(rawLat, out lat) || !double.TryParse(rawLng, out lng))
+                {
+                    throw new ArgumentException("Invalid latitude or longitude");
+                }
+
+                var tempLocation = new Location { Latitude = lat, Longitude = lng };
+                var locations = Db.Locations.Where(x => x.UserId == null && !x.Deleted)
+                    .ToList()
+                    .Where(x => Helper.CalculateDistanceBetweenPoints(x,tempLocation) <= radius)
+                    .ToList();
+
+
+                return CreateOkResponse(Location.ToListDTO(locations));
+            }
+            catch (ArgumentException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.InvalidParameter);
+            }            
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+
+        }
 
         [AllowAnonymous]
         [HttpGet]

@@ -16,8 +16,8 @@ namespace WebAPI.Controllers
         public IssueController() : base(nameof(IssueController)) { }
 
         [HttpGet]
-        [Route("api/Issue/{id}?expanded={expanded:bool=false}")]
-        public BaseResponse RetrieveIssue(string id, bool expanded)
+        [Route("api/Issue/{id}")]
+        public BaseResponse RetrieveIssue(int id, bool expanded = false)
         {
             try
             {
@@ -41,12 +41,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("api/Issue")]
-        public BaseResponse RetrieveIssues()
+        [Route("api/Issue/Request/{requestId}")]
+        public BaseResponse RetrieveRequestIssues(int requestId)
         {
             try
             {
-                var issue = Db.Issues.Where(x => x.UserId == AuthUser.Id && !x.Deleted).ToList();
+                var issue = Db.Issues.Where(x => x.RequestId == requestId && !x.Deleted).ToList();
                 if (issue == null)
                 {
                     throw new RecordNotFoundException();
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("api/Issue/{id}")]
-        public BaseResponse DeleteIssue(string id)
+        public BaseResponse DeleteIssue(int id)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace WebAPI.Controllers
                 {
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
-                    UserId = newIssueDTO.UserId,
+                    RequestId = newIssueDTO.RequestId,
                     Summary = newIssueDTO.Summary,
                     DateOfSubmission= newIssueDTO.DateOfSubmission,
                 };
@@ -124,7 +124,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Issue/{id}")]
-        public BaseResponse UpdateIssue([FromUri] string id, [FromBody] IssueDTO issueDTO)
+        public BaseResponse UpdateIssue([FromUri] int id, [FromBody] IssueDTO issueDTO)
         {
             try
             {
@@ -141,7 +141,7 @@ namespace WebAPI.Controllers
                 issue.DateModified = DateTime.Now;
                 issue.DateOfSubmission = issueDTO.DateOfSubmission;
                 issue.Summary = issueDTO.Summary;
-                issue.UserId = issueDTO.UserId;
+                issue.RequestId = issueDTO.RequestId;
 
                 Db.SaveChanges();
 

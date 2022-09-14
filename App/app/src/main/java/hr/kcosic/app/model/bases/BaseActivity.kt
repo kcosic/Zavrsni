@@ -1,18 +1,13 @@
 package hr.kcosic.app.model.bases
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import hr.kcosic.app.dal.ApiService
-import hr.kcosic.app.model.entities.User
-import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.responses.ErrorResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import okhttp3.Response
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -28,29 +23,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     abstract fun initializeComponents()
-    fun Fragment.hideKeyboard() {
-        view?.let { activity?.hideKeyboard(it) }
+    open fun handleApiResponseError(response: ErrorResponse){
+        Helper.showLongToast(this,response.Message!!)
     }
 
-    fun Activity.hideKeyboard() {
-        hideKeyboard(currentFocus ?: View(this))
-    }
-
-    fun Context.hideKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    fun Fragment.showKeyboard() {
-        view?.let { activity?.hideKeyboard(it) }
-    }
-
-    fun Activity.showKeyboard() {
-        hideKeyboard(currentFocus ?: View(this))
-    }
-
-    fun Context.showKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(view, 0)
-    }
 }

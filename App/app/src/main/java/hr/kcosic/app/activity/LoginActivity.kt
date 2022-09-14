@@ -42,9 +42,15 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN)
         val authFor = Helper.retrieveSharedPreference<String>(PreferenceEnum.AUTH_FOR)
-        if (false && token != Helper.NO_VALUE && authFor != Helper.NO_VALUE) {
+        if (token != Helper.NO_VALUE && authFor != Helper.NO_VALUE) {
             Helper.showShortToast(this,getString(R.string.already_logged_in))
-            Helper.openActivity(this,if(authFor == "User")ActivityEnum.HOME_USER else ActivityEnum.HOME_USER)
+            if(authFor == "User"){
+                Helper.setAuthKeyToUser()
+                Helper.openActivity(this,ActivityEnum.HOME_USER)
+            } else {
+                Helper.setAuthKeyToUser()
+                Helper.openActivity(this,ActivityEnum.HOME_USER)
+            }
         }
         setContentView(R.layout.activity_login)
         initializeComponents()

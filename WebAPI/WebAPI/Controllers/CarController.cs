@@ -14,8 +14,8 @@ namespace WebAPI.Controllers
         public CarController() : base(nameof(CarController)) { }
 
         [HttpGet]
-        [Route("api/Car/{id}?expanded={expanded:bool=false}")]
-        public BaseResponse RetrieveCar(string id, bool expanded)
+        [Route("api/Car/{id}")]
+        public BaseResponse RetrieveCar(int id, bool expanded = false)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("api/Car/{id}")]
-        public BaseResponse DeleteCar(string id)
+        public BaseResponse DeleteCar(int id)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Car/{id}")]
-        public BaseResponse UpdateAppointment([FromUri] string id, [FromBody] Models.ORM.Car carDTO)
+        public BaseResponse UpdateAppointment([FromUri] int id, [FromBody] Models.ORM.Car carDTO)
         {
             try
             {

@@ -17,8 +17,8 @@ namespace WebAPI.Controllers
         public ReviewController() : base(nameof(ReviewController)) { }
 
         [HttpGet]
-        [Route("api/Review/{id}?expanded={expanded:bool=false}")]
-        public BaseResponse RetrieveReview(string id, bool expanded)
+        [Route("api/Review/{id}")]
+        public BaseResponse RetrieveReview(int id, bool expanded = false)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("api/Review/{id}")]
-        public BaseResponse DeleteReview(string id)
+        public BaseResponse DeleteReview(int id)
         {
             try
             {
@@ -126,7 +126,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Review/{id}")]
-        public BaseResponse UpdateReview([FromUri] string id, [FromBody] ReviewDTO reviewDTO)
+        public BaseResponse UpdateReview([FromUri] int id, [FromBody] ReviewDTO reviewDTO)
         {
             try
             {

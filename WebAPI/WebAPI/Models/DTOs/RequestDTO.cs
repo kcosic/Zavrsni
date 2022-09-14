@@ -10,6 +10,10 @@ namespace WebAPI.Models.DTOs
     [JsonObject]
     public class RequestDTO
     {
+        public RequestDTO()
+        {
+            Issues = new HashSet<IssueDTO>();
+        }
         [JsonProperty]
         public int Id { get; set; }
         [JsonProperty]
@@ -42,5 +46,7 @@ namespace WebAPI.Models.DTOs
         public UserDTO User { get; set; }        
         [JsonProperty]
         public bool Completed { get; set; }
+        [JsonProperty]
+        public ICollection<IssueDTO> Issues { get; set; }
     }
 }
