@@ -17,8 +17,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import hr.kcosic.app.R
-import hr.kcosic.app.model.OnNegativeButtonClickListener
-import hr.kcosic.app.model.OnPositiveButtonClickListener
+import hr.kcosic.app.model.listeners.OnNegativeButtonClickListener
+import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
 import hr.kcosic.app.model.bases.BaseActivity
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.hideKeyboard
@@ -26,6 +26,7 @@ import hr.kcosic.app.model.entities.Location
 import hr.kcosic.app.model.entities.Shop
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.ListResponse
 import hr.kcosic.app.model.responses.SingleResponse
 import kotlinx.coroutines.CoroutineScope
@@ -150,7 +151,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
-                    handleRegisterException(call, e)
+                    handleApiResponseException(call, e)
                 }
             }
 
@@ -169,18 +170,10 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             Helper.openActivity(this, ActivityEnum.LOGIN)
         } else {
-            handleRegisterError(resp.Message!!)
+            handleApiResponseError(resp as ErrorResponse)
         }
     }
 
-    private fun handleRegisterError(message: String) {
-        Helper.showLongToast(this, message)
-    }
-
-    fun handleRegisterException(call: Call, e: Exception) {
-        call.cancel()
-        Helper.showLongToast(this, e.message.toString())
-    }
 
     private fun isFormValid(): Boolean {
         var isValid = true
@@ -286,13 +279,16 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
 
                                 override fun onFailure(call: Call, e: IOException) {
                                     mainHandler2.post {
-                                        handleRetrieveLocationException(call, e)
+                                        handleApiResponseException(call, e)
+                                        dialogProgressbar.visibility = View.GONE
+
                                     }
                                 }
 
                                 override fun onResponse(call: Call, response: Response) {
                                     mainHandler2.post {
                                         handleRetrieveLocationResponse(response, it)
+                                        dialogProgressbar.visibility = View.GONE
                                     }
                                 }
                             }
@@ -319,34 +315,15 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
                         .title("${location!!.Street} ${location!!.StreetNumber}, ${location!!.City}")
                 )
                 googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-                progressBarHolder.visibility = View.GONE
-
-
             } catch (e: InvalidObjectException) {
-                progressBarHolder.visibility = View.GONE
-
                 Helper.showLongToast(this, e.message.toString())
             }
 
         } else {
-            progressBarHolder.visibility = View.GONE
-
-            handleRetrieveLocationError(resp.Message!!)
+            handleApiResponseError(resp as ErrorResponse)
         }
     }
 
-    private fun handleRetrieveLocationError(message: String) {
-        Helper.showLongToast(this, message)
-        dialogProgressbar.visibility = View.GONE
-
-    }
-
-    fun handleRetrieveLocationException(call: Call, e: Exception) {
-        dialogProgressbar.visibility = View.GONE
-
-        call.cancel()
-        Helper.showLongToast(this, e.message.toString())
-    }
 
     private fun <T> debounce(
         @Suppress("SameParameterValue") waitMs: Long,
@@ -370,7 +347,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
 
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
-                        handleDiscoverAddressException(call, e)
+                        handleApiResponseException(call, e)
                     }
                 }
 
@@ -414,18 +391,10 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
                 Helper.showLongToast(this, e.message.toString())
             }
         } else {
-            handleDiscoverAddressError(resp.Message!!)
+            handleApiResponseError(resp as ErrorResponse)
         }
     }
 
-    private fun handleDiscoverAddressError(message: String) {
-        Helper.showLongToast(this, message)
-    }
-
-    fun handleDiscoverAddressException(call: Call, e: Exception) {
-        call.cancel()
-        Helper.showLongToast(this, e.message.toString())
-    }
 
     private fun setLocationToMap(location: Location) {
         if (location.Latitude != null && location.Longitude != null) {

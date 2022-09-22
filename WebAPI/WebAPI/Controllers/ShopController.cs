@@ -7,6 +7,7 @@ using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.DTOs;
 using WebAPI.Models.Exceptions;
+using WebAPI.Models.Helpers;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
@@ -64,6 +65,51 @@ namespace WebAPI.Controllers
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
 
+        }
+
+        [HttpGet]
+        [Route("api/Shop/{id}/Availability/{dateString}")]
+        public BaseResponse RetrieveAvailabilityForShop(int id, string dateString)
+        {
+            try
+            {
+                if(dateString == null)
+                {
+                    throw new ArgumentNullException();
+                }
+
+                var splitDate = Helper.FromBase64(dateString).Split('.');
+                if(splitDate.Length != 3)
+                {
+                    throw ArgumentOutOfRangeException();
+                }
+
+                var date = new DateTime(int.Parse(splitDate[2]), int.Parse(splitDate[1]), int.Parse(splitDate[0]));
+
+                var shop = Db.Shops.Find(id);
+                if (shop == null)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                var takenDates = shop.Appointments.Where(x => x.Date.Date == date.Date).Select(x => $"{(x.Date.Hour < 10 ? "0" : "")}{x.Date.Hour}:00").ToList();
+
+                return CreateOkResponse(takenDates);
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+
+        }
+
+        private Exception ArgumentOutOfRangeException()
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet]
@@ -192,7 +238,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (id == null || shopDTO == null)
+                if (shopDTO == null)
                 {
                     throw new Exception("Invalid value");
                 }

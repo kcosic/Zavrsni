@@ -44,7 +44,10 @@ namespace WebAPI.Models.DTOs
         public string Password { get; set; }
         [JsonProperty]
         public int? ParentShopId { get; set; }
-
+        [JsonProperty]
+        public string WorkHours { get; set; }
+        [JsonProperty]
+        public string WorkDays { get; set; }
         [JsonProperty]
         public ICollection<AppointmentDTO> Appointments { get; set; }
         [JsonProperty]

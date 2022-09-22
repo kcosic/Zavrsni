@@ -141,6 +141,8 @@
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ParentShopId" Type="int" />
+          <Property Name="WorkHours" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="WorkDays" Type="nvarchar" MaxLength="7" Nullable="false" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -618,6 +620,8 @@
           <NavigationProperty Name="ParentShop" Relationship="DbModel.FK_Shop_Shop" FromRole="Shop1" ToRole="Shop" />
           <NavigationProperty Name="Tokens" Relationship="DbModel.FK_Token_Shop" FromRole="Shop" ToRole="Token" />
           <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_Shop" FromRole="Shop" ToRole="Request" />
+          <Property Name="WorkHours" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="WorkDays" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -970,6 +974,8 @@
           <EntitySetMapping Name="Shops">
             <EntityTypeMapping TypeName="DbModel.Shop">
               <MappingFragment StoreEntitySet="Shop">
+                <ScalarProperty Name="WorkDays" ColumnName="WorkDays" />
+                <ScalarProperty Name="WorkHours" ColumnName="WorkHours" />
                 <ScalarProperty Name="ParentShopId" ColumnName="ParentShopId" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Email" ColumnName="Email" />

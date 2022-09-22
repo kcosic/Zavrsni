@@ -1,4 +1,4 @@
-package hr.kcosic.app.model
+package hr.kcosic.app.model.listeners
 
 import android.content.DialogInterface
 

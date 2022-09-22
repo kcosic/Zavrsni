@@ -113,7 +113,7 @@ namespace WebAPI.Controllers
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
                     UserId = newLocationDTO.UserId,
-                    City= newLocationDTO.City,
+                    City = newLocationDTO.City,
                     Country = newLocationDTO.Country,
                     County = newLocationDTO.County,
                     Latitude = newLocationDTO.Latitude,
@@ -139,7 +139,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (id == null || locationDTO == null)
+                if (locationDTO == null)
                 {
                     throw new Exception("Invalid value");
                 }
@@ -176,7 +176,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("api/Location/Coordinates/{encodedLatLng}/Radius/{radius}")]
-        public BaseResponse RetrieveLocationByCoordinates(string encodedLatLng, int radius)
+        public BaseResponse RetrieveLocationByCoordinates(string encodedLatLng, int radius, DateTime? date = null)
         {
             try
             {
@@ -193,19 +193,31 @@ namespace WebAPI.Controllers
                     throw new ArgumentException("Invalid latitude or longitude");
                 }
 
+                List<Location> locations;
+
                 var tempLocation = new Location { Latitude = lat, Longitude = lng };
-                var locations = Db.Locations.Where(x => x.UserId == null && !x.Deleted)
-                    .ToList()
-                    .Where(x => Helper.CalculateDistanceBetweenPoints(x,tempLocation) <= radius)
+
+                locations = Db.Locations.Where(x =>
+                        x.UserId == null &&
+                        !x.Deleted
+                    )
                     .ToList();
 
+                locations = locations.Where(x => Helper.CalculateDistanceBetweenPoints(x, tempLocation) <= radius)
+                    .ToList();
 
-                return CreateOkResponse(Location.ToListDTO(locations));
+                if (date != null)
+                {
+
+                    locations = locations.Where(x => x.Shops.Count() > 0 && Helper.IsDateInWorkday(x.Shops.First().WorkDays, date.Value)).ToList();
+                }
+
+                return CreateOkResponse(Location.ToListDTO(locations, false));
             }
             catch (ArgumentException e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.InvalidParameter);
-            }            
+            }
             catch (Exception e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
@@ -266,7 +278,7 @@ namespace WebAPI.Controllers
             catch (LocationNotFoundException e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.InvalidParameter);
-            }            
+            }
             catch (Exception e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);

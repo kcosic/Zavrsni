@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -97,5 +98,36 @@ namespace WebAPI.Models.Helpers
         {
             return Encoding.UTF8.GetString(Convert.FromBase64String(base64Address));
         }
+
+        public static List<bool> WorkdaysToBoolArray(string rawWorkDays)
+        {
+
+            List<bool> workDays = new List<bool>();
+
+            foreach(var rawWorkDay in rawWorkDays)
+            {
+                workDays.Add(Convert.ToBoolean(int.Parse(rawWorkDay.ToString())));
+            }
+            return workDays;
+        }
+
+        public static string WorkdaysToString(List<bool> workDays)
+        {
+            string rawWorkDays = "";
+
+            foreach(var workDay in workDays)
+            {
+                rawWorkDays += workDay.ToString();
+            }
+            return rawWorkDays;
+        }
+
+        public static bool IsDateInWorkday(string rawWorkDays, DateTime date)
+        {
+            var workDays = WorkdaysToBoolArray(rawWorkDays);
+
+            return workDays[((int)date.DayOfWeek)];
+
+        } 
     }
 }

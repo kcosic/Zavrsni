@@ -90,13 +90,17 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
-                    handleRetrieveLocationException(call, e)
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = View.GONE
+
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRetrieveLocationResponse(response)
+                    progressBarHolder.visibility = View.GONE
+
                 }
             }
         }
@@ -116,20 +120,14 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
                 mapServiceLocation?.getMapAsync(this)
                 this.data = data
                 populateViewWithData()
-
-                progressBarHolder.visibility = View.GONE
                 showContent(true)
-
-
             } catch (e: Exception) {
                 showContent(false)
-                progressBarHolder.visibility = View.GONE
                 Helper.showLongToast(this, e.message.toString())
             }
         } else {
             showContent(false)
             handleApiResponseError(resp as ErrorResponse)
-            progressBarHolder.visibility = View.GONE
 
         }
     }
@@ -142,12 +140,6 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         txtRequestDescription.text = data?.Issues?.get(0)?.Summary
         txtEstimatedTime.text = Helper.formatDate(data?.EstimatedFinishDate!!)
         txtEstimatedPrice.text = data?.EstimatedPrice?.toString()
-    }
-
-    fun handleRetrieveLocationException(call: Call, e: Exception) {
-        call.cancel()
-        Helper.showLongToast(this, e.message.toString())
-
     }
 
     private fun showContent(hasContent: Boolean) {

@@ -37,7 +37,9 @@ namespace WebAPI.Models.ORM
                 ShortName = item.ShortName,
                 Vat = item.Vat,
                 Email = item.Email,
-                Password = Helper.PASSWORD_PLACEHOLDER
+                Password = Helper.PASSWORD_PLACEHOLDER,
+                WorkDays = item.WorkDays,
+                WorkHours = item.WorkHours
             };
         }
 
@@ -74,6 +76,8 @@ namespace WebAPI.Models.ORM
                 ParentShop = singleLevel ? null : Shop.ToDTO(ParentShop),
                 ParentShopId = ParentShopId,
                 Tokens = singleLevel ? null : Token.ToListDTO(Tokens),
+                WorkDays = WorkDays,
+                WorkHours = WorkHours
             };
         }
     }

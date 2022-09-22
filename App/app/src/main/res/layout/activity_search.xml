@@ -46,57 +46,65 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
-                        <LinearLayout
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/swUseCurrentLocation"
                             android:layout_width="match_parent"
+                            android:theme="@style/switch_theme"
+                            style="@style/switch_style"
+                            android:layout_marginTop="5sp"
+                            android:layout_marginBottom="5sp"
+                            android:layout_marginLeft="10sp"
+                            android:layout_marginRight="10sp"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:id="@+id/swUseCurrentLocation"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/use_current_location" />
-
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
-
-                            <AutoCompleteTextView
-                                android:id="@+id/actvSearchAddress"
-                                style="@style/textField"
-                                android:layout_width="match_parent"
-                                android:layout_height="40sp"
-                                android:hint="@string/search_location"
-                                android:inputType="text"
-                                android:importantForAutofill="no"
-                                tools:ignore="LabelFor" />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
-
-                        <EditText
-                            android:id="@+id/txtDateOfRepair"
+                            android:text="@string/use_current_location" />
+                        <AutoCompleteTextView
+                            android:id="@+id/actvSearchAddress"
                             style="@style/textField"
+                            android:layout_marginTop="5sp"
+                            android:layout_marginBottom="5sp"
+                            android:layout_marginLeft="10sp"
+                            android:layout_marginRight="10sp"
                             android:layout_width="match_parent"
-                            android:autofillHints=""
-                            android:clickable="false"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:hint="@string/select_repair_date"
-                            android:inputType="none"
-                            android:maxLength="50"
-                            tools:ignore="TextFields" />
+                            android:hint="@string/search_location"
+                            android:inputType="text"
+                            android:importantForAutofill="no"
+                            tools:ignore="LabelFor" />
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:weightSum="10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <EditText
+                                android:id="@+id/txtDateOfRepair"
+                                style="@style/textField"
+                                android:layout_marginTop="5sp"
+                                android:layout_marginBottom="5sp"
+                                android:layout_marginLeft="10sp"
+                                android:layout_marginRight="10sp"
+                                android:autofillHints=""
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:focusable="false"
+                                android:layout_weight="10"
+                                android:layout_width="0sp"
+                                android:focusableInTouchMode="false"
+                                android:hint="@string/select_repair_date"
+                                android:inputType="none"
+                                android:maxLength="50"
+                                tools:ignore="TextFields" />
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                style="@style/primaryButton"
+                                android:layout_weight="4"
+                                app:fabSize="mini"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="5sp"
+                                android:layout_marginBottom="5sp"
+                                android:layout_marginLeft="10sp"
+                                android:layout_marginRight="10sp"
+                                android:src="@drawable/magnifying_glass"
+                                android:id="@+id/btnRefreshShops"/>
                         </LinearLayout>
 
                     </LinearLayout>
@@ -139,6 +147,13 @@
                             map:uiZoomControls="true"
                             map:uiZoomGestures="true"
                             tools:ignore="FragmentTagUsage" />
+                        <TextView
+                            android:id="@+id/txtRepairShopName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lorem"
+                            style="@style/textView"
+                            android:layout_margin="10sp"/>
                         <Button
                             android:layout_width="match_parent"
                             android:layout_margin="10sp"

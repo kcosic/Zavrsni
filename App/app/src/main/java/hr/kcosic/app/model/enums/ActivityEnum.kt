@@ -8,14 +8,14 @@ import java.lang.Exception
 import kotlin.reflect.KClass
 
 enum class ActivityEnum(val layoutId: Int, val menuItemId: Int) {
-
-
     HOME_USER(R.layout.activity_home_user, R.id.home) {
         override fun getClass(): KClass<HomeUserActivity> = HomeUserActivity::class
-
     },
     SEARCH(R.layout.activity_search,R.id.search_service) {
         override fun getClass(): KClass<SearchActivity> = SearchActivity::class
+    },
+    NEW_REQUEST(R.layout.activity_new_request,R.id.search_service) {
+        override fun getClass(): KClass<NewRequestActivity> = NewRequestActivity::class
     },
     LOGIN(R.layout.activity_login, -1) {
         override fun getClass(): KClass<LoginActivity> = LoginActivity::class

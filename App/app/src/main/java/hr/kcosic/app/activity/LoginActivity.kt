@@ -19,6 +19,7 @@ import hr.kcosic.app.model.entities.Token
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.Call
 import okhttp3.Callback
@@ -123,7 +124,7 @@ class LoginActivity : BaseActivity() {
 
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
-                        handleLoginException(call, e)
+                        handleApiResponseException(call, e)
                         progressBarHolder.visibility = GONE
 
                     }
@@ -132,6 +133,7 @@ class LoginActivity : BaseActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     mainHandler.post {
                         handleLoginSuccess(response)
+                        progressBarHolder.visibility = GONE
                     }
                 }
             })
@@ -159,28 +161,13 @@ class LoginActivity : BaseActivity() {
                     if(Helper.AUTH_FOR_KEY == "User")PreferenceEnum.USER else PreferenceEnum.SHOP,
                     if(Helper.AUTH_FOR_KEY == "User")Helper.serializeData(data.User) else Helper.serializeData(data.Shop)
                 )
-                progressBarHolder.visibility = GONE
                 Helper.openActivity(this, if(Helper.AUTH_FOR_KEY == "User")ActivityEnum.HOME_USER else ActivityEnum.HOME_USER)
-
             } catch (e: InvalidObjectException) {
-                progressBarHolder.visibility = GONE
                 Helper.showLongToast(this, e.message.toString())
             }
 
         } else {
-            handleLoginError(resp.Message!!)
-            progressBarHolder.visibility =GONE
-
+            handleApiResponseError(resp as ErrorResponse)
         }
-    }
-
-    private fun handleLoginError(message: String) {
-        Helper.showLongToast(this, message)
-    }
-
-    fun handleLoginException(call: Call, e: Exception) {
-        call.cancel()
-        Helper.showLongToast(this, e.message.toString())
-
     }
 }

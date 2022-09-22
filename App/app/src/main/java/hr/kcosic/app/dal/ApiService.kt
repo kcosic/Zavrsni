@@ -10,6 +10,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Duration
+import java.util.*
 
 
 class ApiService private constructor() {
@@ -143,8 +144,8 @@ class ApiService private constructor() {
 
     //#region Location
 
-    fun retrieveLocationByCoordinatesAndRadius(latLng: String, radius: Int):Call {
-        return get("${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}/Radius/$radius")
+    fun retrieveLocationByCoordinatesAndRadius(latLng: String, radius: Int, date: Date? = null):Call {
+        return get("${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}/Radius/$radius${if(date != null) "?date=${Helper.formatIsoDateTime(date)}" else ""}")
     }
     fun retrieveLocationByCoordinates(latLng: String): Call {
         return get("${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}")
@@ -331,6 +332,9 @@ class ApiService private constructor() {
         return get(ApiRoutes.SHOP)
     }
 
+    fun retrieveShopAvailability(shopId: Int, dateOfRepair: String): Call {
+        return get("${ApiRoutes.SHOP}/$shopId/Availability/${Helper.toBase64(dateOfRepair)}")
+    }
     fun deleteShop(shopId: Int): Call {
         return delete("${ApiRoutes.SHOP}/${shopId}")
     }

@@ -129,7 +129,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Request/{id}")]
-        public BaseResponse UpdateAppointment([FromUri] int id, [FromBody] Models.ORM.Request requestDTO)
+        public BaseResponse UpdateRequest([FromUri] int id, [FromBody] Models.ORM.Request requestDTO)
         {
             try
             {

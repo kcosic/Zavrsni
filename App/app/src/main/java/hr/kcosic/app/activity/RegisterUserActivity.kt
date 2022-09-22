@@ -16,6 +16,7 @@ import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.Call
 import okhttp3.Callback
@@ -189,13 +190,16 @@ class RegisterUserActivity : BaseActivity() {
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
-                    handleRegisterException(call, e)
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = View.GONE
+
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRegisterSuccess(response)
+                    progressBarHolder.visibility = View.GONE
                 }
             }
         })
@@ -204,31 +208,14 @@ class RegisterUserActivity : BaseActivity() {
     fun handleRegisterSuccess(response: Response) {
         val resp: BaseResponse = Helper.parseStringResponse<SingleResponse<String>>(response.body!!.string())
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
-            progressBarHolder.visibility = View.GONE
             Helper.openActivity(this, ActivityEnum.LOGIN)
         } else {
-            progressBarHolder.visibility = View.GONE
-            handleRegisterError(resp.Message!!)
+            handleApiResponseError(resp as ErrorResponse)
         }
-    }
-
-    fun handleRegisterError(message: String) {
-        Helper.showLongToast(this, message)
-        progressBarHolder.visibility = View.GONE
-
-    }
-
-    fun handleRegisterException(call: Call, e: Exception) {
-        call.cancel()
-        Helper.showLongToast(this, e.message.toString())
-        progressBarHolder.visibility = View.GONE
-
     }
 
     @SuppressLint("SimpleDateFormat")
     private fun updateLabel() {
-        val myFormat = "dd.MM.yyyy"
-        val dateFormat = SimpleDateFormat(myFormat)
-        txtDob.setText(dateFormat.format(dobCalendar.time))
+        txtDob.setText(Helper.formatDate(dobCalendar.time))
     }
 }

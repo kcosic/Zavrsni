@@ -64,4 +64,6 @@
     <string name="select_repair_date">Select Repair Date</string>
     <string name="create_new_service_request">Create New Service Request</string>
     <string name="map">Map</string>
+    <string name="proceed_with_selected_location">Proceed with selected location</string>
+    <string name="calendar">Calendar</string>
 </resources>

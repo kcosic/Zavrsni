@@ -7,13 +7,8 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.VectorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +22,8 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks.await
 import hr.kcosic.app.R
-import hr.kcosic.app.model.OnNegativeButtonClickListener
-import hr.kcosic.app.model.OnPositiveButtonClickListener
+import hr.kcosic.app.model.listeners.OnNegativeButtonClickListener
+import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ContextInstance
 import hr.kcosic.app.model.enums.ActivityEnum
@@ -52,8 +47,9 @@ class Helper {
         var AUTH_FOR_KEY:String? = null
         val json = Json { explicitNulls = true }
 
-        fun openActivity(context: Activity, activity: ActivityEnum) {
+        fun openActivity(context: Activity, activity: ActivityEnum, baggage: MutableMap< String, String>?  = null, baggageTag: String? = null) {
             val intent = Intent(context, activity.getClass().java)
+            intent.putExtra(baggageTag, serializeData(baggage))
             ContextCompat.startActivity(context, intent, null)
             context.overridePendingTransition(androidx.appcompat.R.anim.abc_fade_in,androidx.appcompat.R.anim.abc_fade_out);
         }
@@ -358,6 +354,13 @@ class Helper {
         @SuppressLint("SimpleDateFormat")
         fun formatDateTime(date: Date): String {
             val myFormat = "dd.MM.yyyy HH:mm"
+            val dateFormat = SimpleDateFormat(myFormat)
+            return dateFormat.format(date)
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        fun formatIsoDateTime(date: Date): String {
+            val myFormat = "yyyy-MM-dd'T'HH:mm:ss"
             val dateFormat = SimpleDateFormat(myFormat)
             return dateFormat.format(date)
         }

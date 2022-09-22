@@ -7,6 +7,7 @@ import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.responses.ErrorResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import okhttp3.Call
 import okhttp3.Response
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -23,8 +24,12 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     abstract fun initializeComponents()
+
     open fun handleApiResponseError(response: ErrorResponse){
         Helper.showLongToast(this,response.Message!!)
     }
-
+    open fun handleApiResponseException(call: Call, e: Exception) {
+        call.cancel()
+        Helper.showLongToast(this, e.message.toString())
+    }
 }

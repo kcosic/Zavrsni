@@ -1,21 +1,25 @@
 package hr.kcosic.app.activity
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.graphics.*
 import android.os.Bundle
 import android.os.Handler
-import android.os.Parcel
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SwitchCompat
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ContextInstance
@@ -35,25 +39,31 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.io.InvalidObjectException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnMapReadyCallback {
+    companion object{
+        const val NEW_REQUEST_KEY = "f23789hui39r278h"
+    }
     private lateinit var swUseCurrentLocation: SwitchCompat
     private lateinit var actvSearchAddress: AutoCompleteTextView
     private lateinit var txtDateOfRepair: EditText
+    private lateinit var txtRepairShopName: TextView
     private lateinit var cardMap: CardView
     private lateinit var vScroll: ScrollView
     private lateinit var btnSelectLocation: Button
-
+    private lateinit var btnRefreshShops: FloatingActionButton
 
     private lateinit var googleMap: GoogleMap
     private var map: SupportMapFragment? = null
 
     private var userMarker: Marker? = null
     private var shopMarkers: MutableList<Marker> = mutableListOf()
-    private var userPosition: LatLng? = null
-    private var locationMarkerMap: MutableMap<Marker, Location> = mutableMapOf()
+    private var locationMarkerMap: MutableMap<String, Location> = mutableMapOf()
     private var selectedLocation: Location? = null
+    private val repairCalendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
 
     val handleAddressSearch = debounce<Unit>(1000, coroutineScope) {
         searchAddress(actvSearchAddress.text?.toString())
@@ -68,14 +78,36 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         swUseCurrentLocation = findViewById(R.id.swUseCurrentLocation)
         actvSearchAddress = findViewById(R.id.actvSearchAddress)
         txtDateOfRepair = findViewById(R.id.txtDateOfRepair)
+        txtRepairShopName = findViewById(R.id.txtRepairShopName)
         cardMap = findViewById(R.id.cardMap)
         vScroll = findViewById(R.id.vScroll)
         btnSelectLocation = findViewById(R.id.btnSelectLocation)
+        btnRefreshShops = findViewById(R.id.btnRefreshShops)
         map = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         map?.getMapAsync(this)
-
-        btnSelectLocation.isEnabled = false
-
+        txtDateOfRepair.setText(Helper.formatDate(Calendar.getInstance().time))
+        btnSelectLocation.visibility = View.GONE
+        txtRepairShopName.visibility = View.GONE
+        val date =
+            DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                repairCalendar.set(Calendar.YEAR, year)
+                repairCalendar.set(Calendar.MONTH, month)
+                repairCalendar.set(Calendar.DAY_OF_MONTH, day)
+                repairCalendar.set(Calendar.HOUR, 0)
+                repairCalendar.set(Calendar.MINUTE, 0)
+                repairCalendar.set(Calendar.SECOND, 0)
+                repairCalendar.set(Calendar.MILLISECOND, 0)
+                updateRepairDateLabel()
+            }
+        txtDateOfRepair.setOnClickListener {
+            DatePickerDialog(
+                this,
+                date,
+                repairCalendar.get(Calendar.YEAR),
+                repairCalendar.get(Calendar.MONTH),
+                repairCalendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
         actvSearchAddress.addTextChangedListener(object : TextWatcher {
             var textBefore: String? = null
 
@@ -92,6 +124,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         })
 
         swUseCurrentLocation.setOnCheckedChangeListener { buttonView, isChecked ->
+            progressBarHolder.visibility = View.VISIBLE
             coroutineScope.launch {
                 val mainHandler = Handler(applicationContext.mainLooper)
                 val actvVisibility: Boolean
@@ -116,37 +149,70 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 mainHandler.post {
                     actvSearchAddress.visibility = if (actvVisibility) View.VISIBLE else View.GONE
                     buttonView.isEnabled = buttonViewActivated
-                    if(latLng != null){
+                    if (latLng != null) {
                         createOrUpdateMarkerFromPosition(latLng, "Your location", true)
                         retrieveLocalShops(latLng)
+                    } else if (!actvVisibility) {
+                        Helper.showLongToast(
+                            ContextInstance.getContext()!!,
+                            "Error occurred while trying to retrieve your live location."
+                        )
+                    } else {
+                        progressBarHolder.visibility = View.GONE
                     }
-                    else if (!actvVisibility) {
-                        Helper.showLongToast(ContextInstance.getContext()!!,"Error occurred while trying to retrieve your live location.")
-                    }
-
-
                 }
             }
-
         }
 
-        swUseCurrentLocation.isEnabled = Helper.hasLocationPermissions()
+        btnRefreshShops.setOnClickListener{
+            if(userMarker != null){
+                @SuppressLint("SimpleDateFormat")
+                val formatter = SimpleDateFormat("dd.MM.yyyy")
+
+                if(txtDateOfRepair.text.toString().isEmpty()){
+                    retrieveLocalShops(userMarker!!.position)
+                }else {
+                    val dateOfRepair = formatter.parse(txtDateOfRepair.text.toString()) ?: null
+                    retrieveLocalShops(userMarker!!.position, dateOfRepair)
+                }
+            }
+        }
+
+        btnSelectLocation.setOnClickListener{
+            if(selectedLocation != null && txtDateOfRepair.text.toString().isNotEmpty()){
+                val baggage: MutableMap<String, String> = mutableMapOf()
+                baggage["selectedLocation"] = Helper.serializeData(selectedLocation)
+                baggage["dateOfRepair"] = txtDateOfRepair.text.toString()
+                Helper.openActivity(this, ActivityEnum.NEW_REQUEST, baggage, NEW_REQUEST_KEY)
+            }
+        }
+
+        swUseCurrentLocation.isChecked = Helper.hasLocationPermissions()
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         googleMap.setOnMarkerClickListener {
-            val location = locationMarkerMap[it]
-            if(location != null){
-                btnSelectLocation.isEnabled = true
+            val test = locationMarkerMap;
+            val location = test[it.id]
+            if (location != null) {
+                txtRepairShopName.visibility = View.VISIBLE
+                txtRepairShopName.text = if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0].ShortName else null
+                btnSelectLocation.visibility = View.VISIBLE
                 selectedLocation = location
             } else {
-                btnSelectLocation.isEnabled = false
+                txtRepairShopName.visibility = View.GONE
+                btnSelectLocation.visibility = View.GONE
                 selectedLocation = null
             }
 
             false
+        }
+        googleMap.setOnMapClickListener {
+            txtRepairShopName.visibility = View.GONE
+            btnSelectLocation.visibility = View.GONE
+            selectedLocation = null
         }
         googleMap.setOnCameraMoveListener {
             vScroll.requestDisallowInterceptTouchEvent(true)
@@ -161,12 +227,14 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleApiResponseException(call, e)
+                        progressBarHolder.visibility = View.GONE
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     mainHandler.post {
                         handleDiscoverAddressResponse(response)
+                        progressBarHolder.visibility = View.GONE
                     }
                 }
             })
@@ -207,21 +275,15 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         } else {
             handleApiResponseError(resp as ErrorResponse)
         }
-        progressBarHolder.visibility = View.GONE
-
-    }
-
-    fun handleApiResponseException(call: Call, e: Exception) {
-        call.cancel()
-        Helper.showLongToast(this, e.message.toString())
-        progressBarHolder.visibility = View.VISIBLE
-
     }
 
     private fun setLocationToMap(location: Location) {
         if (location.Latitude != null && location.Longitude != null) {
             val latLng = LatLng(location.Latitude!!, location.Longitude!!)
-            updateAndRefocusUserMarker(latLng, "${location.Street} ${location.StreetNumber}, ${location.City}")
+            updateAndRefocusUserMarker(
+                latLng,
+                "${location.Street} ${location.StreetNumber}, ${location.City}"
+            )
             actvSearchAddress.clearFocus()
             hideKeyboard(actvSearchAddress.rootView)
             retrieveLocalShops(location)
@@ -229,7 +291,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     }
 
     private fun updateAndRefocusUserMarker(latLng: LatLng, title: String) {
-        if(userMarker != null){
+        if (userMarker != null) {
             userMarker!!.remove()
         }
         userMarker = googleMap.addMarker(
@@ -241,55 +303,66 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             .center(latLng)
             .strokeColor(R.color.tertiary_100)
             .radius(10000.0)
-            .clickable(true)
+            .clickable(false)
             .visible(true)
+
         googleMap.addCircle(mapCircle)
         val cameraPosition2 = CameraPosition.Builder()
             .target(latLng)
             .zoom(10.5F)
-            .build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition2 ))
+            .build()
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition2))
     }
 
-    fun retrieveLocalShops(location:Location){
+    private fun retrieveLocalShops(location: Location, date: Date? = null) {
         progressBarHolder.visibility = View.VISIBLE
 
         apiService.retrieveLocationByCoordinatesAndRadius(
             "${location.Latitude}!${location.Longitude}",
-            10000
+            10000,
+            date
         ).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post{
-                    handleApiResponseException(call, e);
+                mainHandler.post {
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = View.GONE
+
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mainHandler.post{
-                    handleRetrieveLocationByCoordinatesAndRadiusResponse(response);
+                mainHandler.post {
+                    handleRetrieveLocationByCoordinatesAndRadiusResponse(response)
+                    progressBarHolder.visibility = View.GONE
+
                 }
             }
 
         })
     }
 
-    fun retrieveLocalShops(latLng: LatLng){
+    private fun retrieveLocalShops(latLng: LatLng, date: Date? = null) {
         progressBarHolder.visibility = View.VISIBLE
         apiService.retrieveLocationByCoordinatesAndRadius(
             "${latLng.latitude}!${latLng.longitude}",
-            10000
+            10000,
+            date
         ).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post{
-                    handleApiResponseException(call, e);
+                mainHandler.post {
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = View.GONE
+
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mainHandler.post{
-                    handleRetrieveLocationByCoordinatesAndRadiusResponse(response);
+                mainHandler.post {
+                    handleRetrieveLocationByCoordinatesAndRadiusResponse(response)
+                    progressBarHolder.visibility = View.GONE
+
                 }
             }
 
@@ -307,6 +380,9 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 @Suppress("UNCHECKED_CAST")
                 val data = resp.Data as ArrayList<Location>
 
+                shopMarkers.forEach {
+                    it.remove()
+                }
                 shopMarkers = mutableListOf()
                 locationMarkerMap = mutableMapOf()
                 data.filter { location -> location.Latitude != null && location.Longitude != null }
@@ -316,9 +392,9 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                             it.toString(),
                             false,
 
-                        )
-                        if(marker != null){
-                            locationMarkerMap[marker] = it
+                            )
+                        if (marker != null) {
+                            locationMarkerMap[marker.id] = it
                         }
                     }
             } catch (e: InvalidObjectException) {
@@ -327,36 +403,43 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         } else {
             handleApiResponseError(resp as ErrorResponse)
         }
-        progressBarHolder.visibility = View.GONE
-
     }
 
     private fun createOrUpdateMarkerFromPosition(
         position: LatLng? = null,
         markerText: String,
         isUserPosition: Boolean = false,
-        shopMarker: Marker? = null,
-
-        ) : Marker? {
+    ): Marker? {
         if (position == null) {
-            return null;
+            return null
         }
-        var marker : Marker? = null;
+        var marker: Marker? = null
         if (isUserPosition) {
             updateAndRefocusUserMarker(position, markerText)
         } else {
+            val bitmap = AppCompatResources.getDrawable(this, R.drawable.screwdriver_wrench)!!
+                .toBitmap(60, 60)
+            val paint = Paint()
+            val filter: ColorFilter = PorterDuffColorFilter(
+                ContextCompat.getColor(this, R.color.tertiary_900),
+                PorterDuff.Mode.SRC_IN
+            )
+            paint.colorFilter = filter
+            val canvas = Canvas(bitmap)
+            canvas.drawBitmap(bitmap, 0F, 0F, paint)
+
             val newMarker: Marker? = googleMap.addMarker(
                 MarkerOptions()
                     .position(position)
                     .title(markerText)
-                    .icon(BitmapDescriptorFactory.fromBitmap(AppCompatResources.getDrawable(this, R.drawable.screwdriver_wrench)!!.toBitmap(60,60)))
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
             )
             if (newMarker != null) {
                 shopMarkers.add(newMarker)
-                marker = newMarker;
+                marker = newMarker
             }
         }
-        return marker;
+        return marker
     }
 
     private fun <T> debounce(
@@ -374,4 +457,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private fun updateRepairDateLabel() {
+        txtDateOfRepair.setText(Helper.formatDate(repairCalendar.time))
+    }
 }
