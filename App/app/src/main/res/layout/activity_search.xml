@@ -76,7 +76,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <EditText
-                                android:id="@+id/txtDateOfRepair"
+                                android:id="@+id/etDateOfRepair"
                                 style="@style/textField"
                                 android:layout_marginTop="5sp"
                                 android:layout_marginBottom="5sp"
@@ -148,7 +148,7 @@
                             map:uiZoomGestures="true"
                             tools:ignore="FragmentTagUsage" />
                         <TextView
-                            android:id="@+id/txtRepairShopName"
+                            android:id="@+id/tvRepairShopName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/lorem"

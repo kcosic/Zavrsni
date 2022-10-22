@@ -52,6 +52,12 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="bigTextField">
+        <item name="android:background">@drawable/edit_text_border</item>
+        <item name="android:padding">10sp</item>
+
+    </style>
+
     <style name="textView">
         <item name="android:textColor">@color/text_dark_700</item>
     </style>

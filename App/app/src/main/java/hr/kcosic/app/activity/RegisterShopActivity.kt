@@ -45,12 +45,12 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var btnBack: Button
     private lateinit var btnLocation: Button
     private lateinit var actvAddress: AutoCompleteTextView
-    private lateinit var txtVat: EditText
-    private lateinit var txtShortName: EditText
-    private lateinit var txtLegalName: EditText
-    private lateinit var txtEmail: EditText
-    private lateinit var txtPassword: EditText
-    private lateinit var txtRepeatPassword: EditText
+    private lateinit var etVat: EditText
+    private lateinit var etShortName: EditText
+    private lateinit var etLegalName: EditText
+    private lateinit var etEmail: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var etRepeatPassword: EditText
     private lateinit var locationDialog: AlertDialog
     private lateinit var progressBarHolder: FrameLayout
     private lateinit var dialogProgressbar: FrameLayout
@@ -73,12 +73,12 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         btnFinishRegistration = findViewById(R.id.btnFinishRegistration)
         btnLocation = findViewById(R.id.btnLocation)
         btnBack = findViewById(R.id.btnBack)
-        txtVat = findViewById(R.id.txtVat)
-        txtEmail = findViewById(R.id.txtEmail)
-        txtPassword = findViewById(R.id.txtPassword)
-        txtRepeatPassword = findViewById(R.id.txtRepeatPassword)
-        txtShortName = findViewById(R.id.txtShortName)
-        txtLegalName = findViewById(R.id.txtLegalName)
+        etVat = findViewById(R.id.etVat)
+        etEmail = findViewById(R.id.etEmail)
+        etPassword = findViewById(R.id.etPassword)
+        etRepeatPassword = findViewById(R.id.etRepeatPassword)
+        etShortName = findViewById(R.id.etShortName)
+        etLegalName = findViewById(R.id.etLegalName)
         progressBarHolder = findViewById(R.id.progressBarHolder)
 
         btnLocation.setOnClickListener {
@@ -139,11 +139,11 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
     private fun register() {
         val newShop = Shop()
         newShop.Location = location
-        newShop.Email = txtEmail.text.toString()
-        newShop.LegalName = txtLegalName.text.toString()
-        newShop.ShortName = txtShortName.text.toString()
-        newShop.Password = txtPassword.text.toString()
-        newShop.Vat = txtVat.text.toString()
+        newShop.Email = etEmail.text.toString()
+        newShop.LegalName = etLegalName.text.toString()
+        newShop.ShortName = etShortName.text.toString()
+        newShop.Password = etPassword.text.toString()
+        newShop.Vat = etVat.text.toString()
 
         apiService.register(newShop).enqueue(object :
             Callback {
@@ -179,36 +179,36 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         var isValid = true
 
         when {
-            txtVat.text.toString().isEmpty() -> {
-                txtVat.setError(getString(R.string.required_value), Helper.getErrorIcon())
+            etVat.text.toString().isEmpty() -> {
+                etVat.setError(getString(R.string.required_value), Helper.getErrorIcon())
                 isValid = false
             }
-            !Helper.isStringInRange(txtVat.text.toString(), 1, 50) -> {
-                txtVat.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
-                isValid = false
-            }
-
-        }
-
-        when {
-            txtEmail.text.toString().isEmpty() -> {
-                txtEmail.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(txtEmail.text.toString(), 1, 50) -> {
-                txtEmail.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
+            !Helper.isStringInRange(etVat.text.toString(), 1, 50) -> {
+                etVat.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
                 isValid = false
             }
 
         }
 
         when {
-            txtLegalName.text.toString().isEmpty() -> {
-                txtLegalName.setError(getString(R.string.required_value), Helper.getErrorIcon())
+            etEmail.text.toString().isEmpty() -> {
+                etEmail.setError(getString(R.string.required_value), Helper.getErrorIcon())
                 isValid = false
             }
-            !Helper.isStringInRange(txtLegalName.text.toString(), 1, 200) -> {
-                txtLegalName.setError(
+            !Helper.isStringInRange(etEmail.text.toString(), 1, 50) -> {
+                etEmail.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
+                isValid = false
+            }
+
+        }
+
+        when {
+            etLegalName.text.toString().isEmpty() -> {
+                etLegalName.setError(getString(R.string.required_value), Helper.getErrorIcon())
+                isValid = false
+            }
+            !Helper.isStringInRange(etLegalName.text.toString(), 1, 200) -> {
+                etLegalName.setError(
                     getString(R.string.length_between_1_200),
                     Helper.getErrorIcon()
                 )
@@ -218,12 +218,12 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         }
 
         when {
-            txtShortName.text.toString().isEmpty() -> {
-                txtShortName.setError(getString(R.string.required_value), Helper.getErrorIcon())
+            etShortName.text.toString().isEmpty() -> {
+                etShortName.setError(getString(R.string.required_value), Helper.getErrorIcon())
                 isValid = false
             }
-            !Helper.isStringInRange(txtShortName.text.toString(), 1, 50) -> {
-                txtShortName.setError(
+            !Helper.isStringInRange(etShortName.text.toString(), 1, 50) -> {
+                etShortName.setError(
                     getString(R.string.length_between_1_50),
                     Helper.getErrorIcon()
                 )
@@ -237,17 +237,17 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
             isValid = false
         }
 
-        if (txtRepeatPassword.text.isNullOrEmpty()) {
+        if (etRepeatPassword.text.isNullOrEmpty()) {
             isValid = false
-            txtRepeatPassword.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(txtRepeatPassword.text.toString(), 1, 50)) {
+            etRepeatPassword.error = getString(R.string.required_value)
+        } else if (!Helper.isStringInRange(etRepeatPassword.text.toString(), 1, 50)) {
             isValid = false
-            txtRepeatPassword.error = getString(R.string.length_between_1_50)
+            etRepeatPassword.error = getString(R.string.length_between_1_50)
         }
 
-        if (txtRepeatPassword.text.toString() != txtPassword.text.toString()) {
+        if (etRepeatPassword.text.toString() != etPassword.text.toString()) {
             isValid = false
-            txtRepeatPassword.error = getString(R.string.passwords_must_match)
+            etRepeatPassword.error = getString(R.string.passwords_must_match)
         }
 
         return isValid

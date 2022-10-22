@@ -35,13 +35,13 @@ class RegisterUserActivity : BaseActivity() {
 
     private lateinit var btnFinishRegistration: Button
     private lateinit var btnBack: Button
-    private lateinit var txtFirstName: EditText
-    private lateinit var txtLastName: EditText
-    private lateinit var txtEmail: EditText
-    private lateinit var txtUsername: EditText
-    private lateinit var txtDob: EditText
-    private lateinit var txtPassword: EditText
-    private lateinit var txtRepeatPassword: EditText
+    private lateinit var etFirstName: EditText
+    private lateinit var etLastName: EditText
+    private lateinit var etEmail: EditText
+    private lateinit var etUsername: EditText
+    private lateinit var etDob: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var etRepeatPassword: EditText
     private lateinit var progressBarHolder: FrameLayout
     private val dobCalendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
 
@@ -56,24 +56,24 @@ class RegisterUserActivity : BaseActivity() {
     override fun initializeComponents() {
         btnFinishRegistration = findViewById(R.id.btnFinishRegistration)
         btnBack = findViewById(R.id.btnBack)
-        txtDob = findViewById(R.id.txtDob)
-        txtEmail = findViewById(R.id.txtEmail)
-        txtPassword = findViewById(R.id.txtPassword)
-        txtRepeatPassword = findViewById(R.id.txtRepeatPassword)
-        txtFirstName = findViewById(R.id.txtFirstName)
-        txtUsername = findViewById(R.id.txtUserName)
-        txtLastName = findViewById(R.id.txtLastName)
+        etDob = findViewById(R.id.etDob)
+        etEmail = findViewById(R.id.etEmail)
+        etPassword = findViewById(R.id.etPassword)
+        etRepeatPassword = findViewById(R.id.etRepeatPassword)
+        etFirstName = findViewById(R.id.etFirstName)
+        etUsername = findViewById(R.id.etUserName)
+        etLastName = findViewById(R.id.etLastName)
         progressBarHolder = findViewById(R.id.progressBarHolder)
 
 
         //TODO remove, for development only
-        txtFirstName.setText("Testko")
-        txtLastName.setText("Testic")
-        txtDob.setText("09.08.1992")
-        txtUsername.setText("Testko1")
-        txtEmail.setText("test1@mail.com")
-        txtPassword.setText("test1")
-        txtRepeatPassword.setText("test1")
+        etFirstName.setText("Testko")
+        etLastName.setText("Testic")
+        etDob.setText("09.08.1992")
+        etUsername.setText("Testko1")
+        etEmail.setText("test1@mail.com")
+        etPassword.setText("test1")
+        etRepeatPassword.setText("test1")
 
 
         btnBack.setOnClickListener {
@@ -97,7 +97,7 @@ class RegisterUserActivity : BaseActivity() {
                 dobCalendar.set(Calendar.MILLISECOND, 0)
                 updateLabel()
             }
-        txtDob.setOnClickListener {
+        etDob.setOnClickListener {
             DatePickerDialog(
                 this,
                 date,
@@ -110,61 +110,61 @@ class RegisterUserActivity : BaseActivity() {
 
     private fun isFormValid(): Boolean {
         var valid = true
-        if (txtFirstName.text.isNullOrEmpty()) {
+        if (etFirstName.text.isNullOrEmpty()) {
             valid = false
-            txtFirstName.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(txtLastName.text.toString(), 1, 50)) {
+            etFirstName.error = getString(R.string.required_value)
+        } else if (!Helper.isStringInRange(etLastName.text.toString(), 1, 50)) {
             valid = false
-            txtFirstName.error = getString(R.string.length_between_1_50)
+            etFirstName.error = getString(R.string.length_between_1_50)
         }
 
-        if (txtUsername.text.isNullOrEmpty()) {
+        if (etUsername.text.isNullOrEmpty()) {
             valid = false
-            txtUsername.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(txtUsername.text.toString(), 5, 50)) {
+            etUsername.error = getString(R.string.required_value)
+        } else if (!Helper.isStringInRange(etUsername.text.toString(), 5, 50)) {
             valid = false
-            txtUsername.error = getString(R.string.length_between_5_50)
+            etUsername.error = getString(R.string.length_between_5_50)
         }
 
-        if (txtDob.text.isNullOrEmpty()) {
+        if (etDob.text.isNullOrEmpty()) {
             valid = false
-            txtDob.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(txtDob.text.toString(), 1, 50)) {
+            etDob.error = getString(R.string.required_value)
+        } else if (!Helper.isStringInRange(etDob.text.toString(), 1, 50)) {
             valid = false
-            txtDob.error = getString(R.string.length_between_1_50)
+            etDob.error = getString(R.string.length_between_1_50)
         }
 
-        if (txtEmail.text.isNullOrEmpty()) {
+        if (etEmail.text.isNullOrEmpty()) {
             valid = false
-            txtEmail.error = getString(R.string.required_value)
+            etEmail.error = getString(R.string.required_value)
         }
 
-        if (txtLastName.text.isNullOrEmpty()) {
+        if (etLastName.text.isNullOrEmpty()) {
             valid = false
-            txtLastName.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(txtLastName.text.toString(), 1, 50)) {
+            etLastName.error = getString(R.string.required_value)
+        } else if (!Helper.isStringInRange(etLastName.text.toString(), 1, 50)) {
             valid = false
-            txtLastName.error = getString(R.string.length_between_1_50)
+            etLastName.error = getString(R.string.length_between_1_50)
         }
 
-        if (txtPassword.text.isNullOrEmpty()) {
+        if (etPassword.text.isNullOrEmpty()) {
             valid = false
-            txtPassword.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(txtPassword.text.toString(), 1, 50)) {
+            etPassword.error = getString(R.string.required_value)
+        } else if (!Helper.isStringInRange(etPassword.text.toString(), 1, 50)) {
             valid = false
-            txtPassword.error = getString(R.string.length_between_1_50)
+            etPassword.error = getString(R.string.length_between_1_50)
         }
 
-        if (txtRepeatPassword.text.isNullOrEmpty()) {
+        if (etRepeatPassword.text.isNullOrEmpty()) {
             valid = false
-            txtRepeatPassword.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(txtRepeatPassword.text.toString(), 1, 50)) {
+            etRepeatPassword.error = getString(R.string.required_value)
+        } else if (!Helper.isStringInRange(etRepeatPassword.text.toString(), 1, 50)) {
             valid = false
-            txtRepeatPassword.error = getString(R.string.length_between_1_50)
+            etRepeatPassword.error = getString(R.string.length_between_1_50)
         }
-        if (txtRepeatPassword.text.toString() != txtPassword.text.toString()) {
+        if (etRepeatPassword.text.toString() != etPassword.text.toString()) {
             valid = false
-            txtRepeatPassword.error = getString(R.string.passwords_must_match)
+            etRepeatPassword.error = getString(R.string.passwords_must_match)
         }
 
         return valid
@@ -177,12 +177,12 @@ class RegisterUserActivity : BaseActivity() {
         val formatter = SimpleDateFormat("dd.MM.yyyy")
 
         val newUser = User()
-        newUser.FirstName = txtFirstName.text.toString()
-        newUser.LastName = txtLastName.text.toString()
-        newUser.Email = txtEmail.text.toString()
-        newUser.Password = txtPassword.text.toString()
-        newUser.Username = txtUsername.text.toString()
-        newUser.DateOfBirth = formatter.parse(txtDob.text.toString())
+        newUser.FirstName = etFirstName.text.toString()
+        newUser.LastName = etLastName.text.toString()
+        newUser.Email = etEmail.text.toString()
+        newUser.Password = etPassword.text.toString()
+        newUser.Username = etUsername.text.toString()
+        newUser.DateOfBirth = formatter.parse(etDob.text.toString())
 
         apiService.register(newUser).enqueue(object :
             Callback {
@@ -216,6 +216,6 @@ class RegisterUserActivity : BaseActivity() {
 
     @SuppressLint("SimpleDateFormat")
     private fun updateLabel() {
-        txtDob.setText(Helper.formatDate(dobCalendar.time))
+        etDob.setText(Helper.formatDate(dobCalendar.time))
     }
 }

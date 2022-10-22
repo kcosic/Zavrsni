@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        style="@style/modal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="30sp">
+
+        <TextView
+            style="@style/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:text="@string/add_new_car"
+            android:textAlignment="center"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                style="@style/textView"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+
+                android:text="@string/manufacturer"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etManufacturer"
+                style="@style/textField"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                style="@style/textView"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+
+                android:text="@string/model"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etModel"
+                style="@style/textField"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                style="@style/textView"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+
+                android:text="@string/year"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etYear"
+                style="@style/textField"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                style="@style/textView"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:text="@string/odometer"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etOdometer"
+                style="@style/textField"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:inputType="number" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/loading_layout" />
+</RelativeLayout>

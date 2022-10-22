@@ -24,8 +24,8 @@ namespace WebAPI.Models.ORM
         public int CarId { get; set; }
         public int ShopId { get; set; }
     
-        public virtual Car Car { get; set; }
         public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
+        public virtual Car Car { get; set; }
     }
 }

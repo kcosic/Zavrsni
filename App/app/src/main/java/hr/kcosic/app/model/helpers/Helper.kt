@@ -22,12 +22,13 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks.await
 import hr.kcosic.app.R
-import hr.kcosic.app.model.listeners.OnNegativeButtonClickListener
-import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ContextInstance
 import hr.kcosic.app.model.enums.ActivityEnum
+import hr.kcosic.app.model.enums.ErrorCodeEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
+import hr.kcosic.app.model.listeners.OnNegativeButtonClickListener
+import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
 import hr.kcosic.app.model.responses.ErrorResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
@@ -44,25 +45,34 @@ class Helper {
     companion object {
         const val APP_KEY = "My App"
         const val NO_VALUE = "not_found"
-        var AUTH_FOR_KEY:String? = null
+        var AUTH_FOR_KEY: String? = null
         val json = Json { explicitNulls = true }
 
-        fun openActivity(context: Activity, activity: ActivityEnum, baggage: MutableMap< String, String>?  = null, baggageTag: String? = null) {
+        fun openActivity(
+            context: Activity,
+            activity: ActivityEnum,
+            baggage: MutableMap<String, String>? = null,
+            baggageTag: String? = null
+        ) {
             val intent = Intent(context, activity.getClass().java)
             intent.putExtra(baggageTag, serializeData(baggage))
             ContextCompat.startActivity(context, intent, null)
-            context.overridePendingTransition(androidx.appcompat.R.anim.abc_fade_in,androidx.appcompat.R.anim.abc_fade_out);
+            context.overridePendingTransition(
+                androidx.appcompat.R.anim.abc_fade_in,
+                androidx.appcompat.R.anim.abc_fade_out
+            );
         }
+
         fun openActivity(context: Context, activity: ActivityEnum) {
             val intent = Intent(context, activity.getClass().java)
             ContextCompat.startActivity(context, intent, null)
         }
 
-        fun setAuthKeyToUser(){
+        fun setAuthKeyToUser() {
             AUTH_FOR_KEY = "User"
         }
 
-        fun setAuthKeyToShop(){
+        fun setAuthKeyToShop() {
             AUTH_FOR_KEY = "Shop"
         }
 
@@ -139,7 +149,8 @@ class Helper {
             text: String,
             positiveButtonText: String,
             negativeButtonText: String,
-            positiveCallback: OnPositiveButtonClickListener
+            positiveCallback: OnPositiveButtonClickListener,
+            customDialogDismiss: Boolean = false
         ): AlertDialog {
             val dialogBuilder = AlertDialog.Builder(context)
             return dialogBuilder
@@ -149,7 +160,9 @@ class Helper {
                     setPositiveButton(
                         positiveButtonText
                     ) { dialog, _ ->
-                        dialog.dismiss()
+                        if(!customDialogDismiss){
+                            dialog.dismiss()
+                        }
                         positiveCallback.onPositiveBtnClick(dialog)
                     }
                     setNegativeButton(negativeButtonText) { dialog, _ -> dialog.dismiss() }
@@ -164,7 +177,9 @@ class Helper {
             positiveButtonText: String,
             negativeButtonText: String,
             positiveCallback: OnPositiveButtonClickListener,
-            negativeCallback: OnNegativeButtonClickListener? = null
+            negativeCallback: OnNegativeButtonClickListener? = null,
+            customDialogDismiss: Boolean = false
+
         ): AlertDialog {
             val dialogBuilder = AlertDialog.Builder(context)
             return dialogBuilder
@@ -174,12 +189,16 @@ class Helper {
                     setPositiveButton(
                         positiveButtonText
                     ) { dialog, _ ->
-                        dialog.dismiss()
+                        if (!customDialogDismiss) {
+                            dialog.dismiss()
+                        }
                         positiveCallback.onPositiveBtnClick(dialog)
                     }
                     setNegativeButton(negativeButtonText) { dialog, _ ->
-                        dialog.dismiss()
-                        negativeCallback?.onNegativeBtnClick(dialog)
+                        if (!customDialogDismiss) {
+                            dialog.dismiss()
+                        }
+                        negativeCallback?.onNegativeBtnClick (dialog)
                     }
                 }
                 .show()
@@ -274,7 +293,16 @@ class Helper {
             return try {
                 deserializeObject<T>(response)
             } catch (ex: Exception) {
-                deserializeObject<ErrorResponse>(response)
+                try {
+                    deserializeObject<ErrorResponse>(response)
+                }
+                catch (ex2: Exception){
+                    val err = ErrorResponse()
+                    err.ErrorCode = ErrorCodeEnum.UnexpectedError
+                    err.IsSuccess = false
+                    err.Message = "Response parse error: ${ex2.message}"
+                    return err
+                }
             }
         }
 
@@ -301,7 +329,7 @@ class Helper {
             return true
         }
 
-        fun getLocationPermission(){
+        fun getLocationPermission() {
             val arrPerm = ArrayList<String>()
 
             arrPerm.add(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -370,6 +398,16 @@ class Helper {
             val myFormat = "HH:mm"
             val dateFormat = SimpleDateFormat(myFormat)
             return dateFormat.format(date)
+        }
+
+        fun isValueInRange(value: Int, start: Int, end: Int): Boolean {
+            return value in start..end;
+
+        }
+
+        fun isValueInRange(value: Double, start: Double, end: Double): Boolean {
+            return value in start..end;
+
         }
 
     }

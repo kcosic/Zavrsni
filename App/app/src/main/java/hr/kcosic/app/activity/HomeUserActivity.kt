@@ -34,13 +34,13 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
     private lateinit var nextServiceMap: CardView
     private lateinit var nextServiceDescription: CardView
     private lateinit var nextServiceDetails: CardView
-    private lateinit var txtDateOfRepair: TextView
-    private lateinit var txtTimeOfRepair: TextView
-    private lateinit var txtRepairShopName: TextView
-    private lateinit var txtRepairShopVat: TextView
-    private lateinit var txtRequestDescription: TextView
-    private lateinit var txtEstimatedTime: TextView
-    private lateinit var txtEstimatedPrice: TextView
+    private lateinit var tvDateOfRepair: TextView
+    private lateinit var tvTimeOfRepair: TextView
+    private lateinit var tvRepairShopName: TextView
+    private lateinit var tvRepairShopVat: TextView
+    private lateinit var tvRequestDescription: TextView
+    private lateinit var tvEstimatedTime: TextView
+    private lateinit var tvEstimatedPrice: TextView
     private lateinit var googleMap: GoogleMap
     private var data: Request? = null
     private var mapServiceLocation: SupportMapFragment? = null
@@ -58,13 +58,13 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         nextServiceMap = findViewById(R.id.nextServiceMap)
         nextServiceDescription = findViewById(R.id.nextServiceDescription)
         nextServiceDetails = findViewById(R.id.nextServiceDetails)
-        txtDateOfRepair = findViewById(R.id.txtDateOfRepair)
-        txtTimeOfRepair = findViewById(R.id.txtTimeOfRepair)
-        txtRepairShopName = findViewById(R.id.txtRepairShopName)
-        txtRepairShopVat = findViewById(R.id.txtRepairShopVat)
-        txtRequestDescription = findViewById(R.id.txtRequestDescription)
-        txtEstimatedTime = findViewById(R.id.txtEstimatedTime)
-        txtEstimatedPrice = findViewById(R.id.txtEstimatedPrice)
+        tvDateOfRepair = findViewById(R.id.tvDateOfRepair)
+        tvTimeOfRepair = findViewById(R.id.tvTimeOfRepair)
+        tvRepairShopName = findViewById(R.id.tvRepairShopName)
+        tvRepairShopVat = findViewById(R.id.tvRepairShopVat)
+        tvRequestDescription = findViewById(R.id.tvRequestDescription)
+        tvEstimatedTime = findViewById(R.id.tvEstimatedTime)
+        tvEstimatedPrice = findViewById(R.id.tvEstimatedPrice)
     }
 
     override fun onMapReady(map: GoogleMap) {
@@ -133,13 +133,13 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
     }
 
     private fun populateViewWithData() {
-        txtDateOfRepair.text = Helper.formatDate(data?.Issues?.get(0)?.DateOfSubmission!!)
-        txtDateOfRepair.text = Helper.formatTime(data?.Issues?.get(0)?.DateOfSubmission!!)
-        txtRepairShopName.text = data?.Shop?.ShortName
-        txtRepairShopVat.text = data?.Shop?.Vat
-        txtRequestDescription.text = data?.Issues?.get(0)?.Summary
-        txtEstimatedTime.text = Helper.formatDate(data?.EstimatedFinishDate!!)
-        txtEstimatedPrice.text = data?.EstimatedPrice?.toString()
+        tvDateOfRepair.text = Helper.formatDate(data?.Issues?.get(0)?.DateOfSubmission!!)
+        tvDateOfRepair.text = Helper.formatTime(data?.Issues?.get(0)?.DateOfSubmission!!)
+        tvRepairShopName.text = data?.Shop?.ShortName
+        tvRepairShopVat.text = data?.Shop?.Vat
+        tvRequestDescription.text = data?.Issues?.get(0)?.Summary
+        tvEstimatedTime.text = Helper.formatDate(data?.EstimatedFinishDate!!)
+        tvEstimatedPrice.text = data?.EstimatedPrice?.toString()
     }
 
     private fun showContent(hasContent: Boolean) {

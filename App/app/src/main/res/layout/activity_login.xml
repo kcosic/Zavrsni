@@ -33,12 +33,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="3"
-                android:labelFor="@+id/txtEmail"
+                android:labelFor="@+id/etEmail"
                 android:text="@string/login_credential"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/txtEmail"
+                android:id="@+id/etEmail"
                 style="@style/textField"
                 android:layout_width="0dp"
                 android:layout_gravity="center"
@@ -61,12 +61,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="3"
-                android:labelFor="@+id/txtPassword"
+                android:labelFor="@+id/etPassword"
                 android:text="@string/password"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/txtPassword"
+                android:id="@+id/etPassword"
                 style="@style/textField"
                 android:layout_width="0dp"
                 android:layout_gravity="center"

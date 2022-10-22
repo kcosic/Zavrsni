@@ -25,7 +25,9 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public bool Deleted { get; set; }
         [JsonProperty]
-        public int UserId { get; set; }
+        public int UserId { get; set; }        
+        [JsonProperty]
+        public int CarId { get; set; }
         [JsonProperty]
         public int ShopId { get; set; }
         [JsonProperty]
@@ -41,11 +43,15 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public string BillPicture { get; set; }
         [JsonProperty]
-        public ShopDTO Shop { get; set; }
+        public ShopDTO Shop { get; set; }        
+        [JsonProperty]
+        public CarDTO Car { get; set; }
         [JsonProperty]
         public UserDTO User { get; set; }        
         [JsonProperty]
-        public bool Completed { get; set; }
+        public bool Completed { get; set; }        
+        [JsonProperty]
+        public bool Accepted { get; set; }
         [JsonProperty]
         public ICollection<IssueDTO> Issues { get; set; }
     }

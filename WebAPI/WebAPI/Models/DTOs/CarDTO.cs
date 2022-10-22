@@ -28,15 +28,15 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public string Manufacturer { get; set; }
         [JsonProperty]
-        public string Make { get; set; }
-        [JsonProperty]
         public string Model { get; set; }
         [JsonProperty]
         public int Year { get; set; }
         [JsonProperty]
         public decimal Odometer { get; set; }
         [JsonProperty]
-        public ICollection<RepairHistoryDTO> RepairHistories { get; set; }
+        public ICollection<RepairHistoryDTO> RepairHistories { get; set; }        
+        [JsonProperty]
+        public ICollection<RequestDTO> Requests { get; set; }
         [JsonProperty]
         public UserDTO User { get; set; }
     }

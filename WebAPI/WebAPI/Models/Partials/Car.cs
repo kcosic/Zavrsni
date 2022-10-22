@@ -18,7 +18,6 @@ namespace WebAPI.Models.ORM
 
             return new CarDTO
             {
-                Make = item.Make,
                 Manufacturer = item.Manufacturer,
                 DateCreated = item.DateCreated,
                 DateDeleted = item.DateDeleted,
@@ -29,6 +28,7 @@ namespace WebAPI.Models.ORM
                 Odometer = item.Odometer,
                 RepairHistories = singleLevel ? null : RepairHistory.ToListDTO(item.RepairHistories),
                 User = singleLevel ? null : User.ToDTO(item.User),
+                Requests = singleLevel ? null : Request.ToListDTO(item.Requests),
                 UserId = item.UserId,
                 Year = item.Year
 
@@ -49,7 +49,6 @@ namespace WebAPI.Models.ORM
         {
             return new CarDTO
             {
-                Make = Make,
                 Manufacturer = Manufacturer,
                 DateCreated = DateCreated,
                 DateDeleted = DateDeleted,

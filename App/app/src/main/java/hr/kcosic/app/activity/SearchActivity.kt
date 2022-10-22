@@ -49,8 +49,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     }
     private lateinit var swUseCurrentLocation: SwitchCompat
     private lateinit var actvSearchAddress: AutoCompleteTextView
-    private lateinit var txtDateOfRepair: EditText
-    private lateinit var txtRepairShopName: TextView
+    private lateinit var etDateOfRepair: EditText
+    private lateinit var tvRepairShopName: TextView
     private lateinit var cardMap: CardView
     private lateinit var vScroll: ScrollView
     private lateinit var btnSelectLocation: Button
@@ -77,17 +77,17 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     override fun initializeComponents() {
         swUseCurrentLocation = findViewById(R.id.swUseCurrentLocation)
         actvSearchAddress = findViewById(R.id.actvSearchAddress)
-        txtDateOfRepair = findViewById(R.id.txtDateOfRepair)
-        txtRepairShopName = findViewById(R.id.txtRepairShopName)
+        etDateOfRepair = findViewById(R.id.etDateOfRepair)
+        tvRepairShopName = findViewById(R.id.tvRepairShopName)
         cardMap = findViewById(R.id.cardMap)
         vScroll = findViewById(R.id.vScroll)
         btnSelectLocation = findViewById(R.id.btnSelectLocation)
         btnRefreshShops = findViewById(R.id.btnRefreshShops)
         map = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         map?.getMapAsync(this)
-        txtDateOfRepair.setText(Helper.formatDate(Calendar.getInstance().time))
+        etDateOfRepair.setText(Helper.formatDate(Calendar.getInstance().time))
         btnSelectLocation.visibility = View.GONE
-        txtRepairShopName.visibility = View.GONE
+        tvRepairShopName.visibility = View.GONE
         val date =
             DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 repairCalendar.set(Calendar.YEAR, year)
@@ -99,7 +99,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 repairCalendar.set(Calendar.MILLISECOND, 0)
                 updateRepairDateLabel()
             }
-        txtDateOfRepair.setOnClickListener {
+        etDateOfRepair.setOnClickListener {
             DatePickerDialog(
                 this,
                 date,
@@ -169,20 +169,18 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 @SuppressLint("SimpleDateFormat")
                 val formatter = SimpleDateFormat("dd.MM.yyyy")
 
-                if(txtDateOfRepair.text.toString().isEmpty()){
-                    retrieveLocalShops(userMarker!!.position)
-                }else {
-                    val dateOfRepair = formatter.parse(txtDateOfRepair.text.toString()) ?: null
+                if(etDateOfRepair.text.toString().isNotEmpty()){
+                    val dateOfRepair = formatter.parse(etDateOfRepair.text.toString()) ?: null
                     retrieveLocalShops(userMarker!!.position, dateOfRepair)
                 }
             }
         }
 
         btnSelectLocation.setOnClickListener{
-            if(selectedLocation != null && txtDateOfRepair.text.toString().isNotEmpty()){
+            if(selectedLocation != null && etDateOfRepair.text.toString().isNotEmpty()){
                 val baggage: MutableMap<String, String> = mutableMapOf()
                 baggage["selectedLocation"] = Helper.serializeData(selectedLocation)
-                baggage["dateOfRepair"] = txtDateOfRepair.text.toString()
+                baggage["dateOfRepair"] = etDateOfRepair.text.toString()
                 Helper.openActivity(this, ActivityEnum.NEW_REQUEST, baggage, NEW_REQUEST_KEY)
             }
         }
@@ -194,15 +192,15 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         googleMap.setOnMarkerClickListener {
-            val test = locationMarkerMap;
+            val test = locationMarkerMap
             val location = test[it.id]
             if (location != null) {
-                txtRepairShopName.visibility = View.VISIBLE
-                txtRepairShopName.text = if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0].ShortName else null
+                tvRepairShopName.visibility = View.VISIBLE
+                tvRepairShopName.text = if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0].ShortName else null
                 btnSelectLocation.visibility = View.VISIBLE
                 selectedLocation = location
             } else {
-                txtRepairShopName.visibility = View.GONE
+                tvRepairShopName.visibility = View.GONE
                 btnSelectLocation.visibility = View.GONE
                 selectedLocation = null
             }
@@ -210,7 +208,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             false
         }
         googleMap.setOnMapClickListener {
-            txtRepairShopName.visibility = View.GONE
+            tvRepairShopName.visibility = View.GONE
             btnSelectLocation.visibility = View.GONE
             selectedLocation = null
         }
@@ -459,6 +457,6 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
 
     @SuppressLint("SimpleDateFormat")
     private fun updateRepairDateLabel() {
-        txtDateOfRepair.setText(Helper.formatDate(repairCalendar.time))
+        etDateOfRepair.setText(Helper.formatDate(repairCalendar.time))
     }
 }

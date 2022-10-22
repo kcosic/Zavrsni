@@ -27,7 +27,7 @@
                 android:textSize="30sp" />
 
             <EditText
-                android:id="@+id/txtVat"
+                android:id="@+id/etVat"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -37,7 +37,7 @@
                 android:maxLength="50" />
 
             <EditText
-                android:id="@+id/txtShortName"
+                android:id="@+id/etShortName"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -46,7 +46,7 @@
                 android:maxLength="50" />
 
             <EditText
-                android:id="@+id/txtLegalName"
+                android:id="@+id/etLegalName"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -55,7 +55,7 @@
                 android:maxLength="50" />
 
             <EditText
-                android:id="@+id/txtEmail"
+                android:id="@+id/etEmail"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -64,7 +64,7 @@
                 android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/txtPassword"
+                android:id="@+id/etPassword"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -74,7 +74,7 @@
                 android:maxLength="50" />
 
             <EditText
-                android:id="@+id/txtRepeatPassword"
+                android:id="@+id/etRepeatPassword"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"

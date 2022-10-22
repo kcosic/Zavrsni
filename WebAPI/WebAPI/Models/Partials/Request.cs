@@ -33,7 +33,10 @@ namespace WebAPI.Models.ORM
                 EstimatedPrice = item.EstimatedPrice,
                 Price = item.Price,
                 Completed = item.Completed,
+                Accepted = item.Accepted,
                 Issues = singleLevel ? null : Issue.ToListDTO(item.Issues),
+                Car = singleLevel ? null : Car.ToDTO(item.Car),
+                CarId = item.CarId
             };
         }
 
@@ -67,8 +70,10 @@ namespace WebAPI.Models.ORM
                 EstimatedPrice = EstimatedPrice,
                 Price = Price,
                 Completed = Completed,
+                Accepted = Accepted,
                 Issues = singleLevel ? null : Issue.ToListDTO(Issues),
-
+                Car = singleLevel ? null : Car.ToDTO(Car),
+                CarId = CarId
             };
         }
     }

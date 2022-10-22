@@ -113,7 +113,8 @@ namespace WebAPI.Controllers
                     EstimatedFinishDate= newRequestDTO.EstimatedFinishDate,
                     EstimatedPrice= newRequestDTO.EstimatedPrice,
                     Price= newRequestDTO.Price,
-                    UserId= newRequestDTO.UserId
+                    UserId= newRequestDTO.UserId,
+                    CarId = newRequestDTO.CarId
                 };
 
                 Db.Requests.Add(newRequest);
@@ -152,6 +153,7 @@ namespace WebAPI.Controllers
                 request.EstimatedPrice = requestDTO.EstimatedPrice;
                 request.Price = requestDTO.Price;
                 request.UserId = requestDTO.UserId;
+                request.CarId = requestDTO.CarId;
 
                 Db.SaveChanges();
 

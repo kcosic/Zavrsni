@@ -27,7 +27,7 @@
                 android:textSize="30sp" />
 
             <EditText
-                android:id="@+id/txtFirstName"
+                android:id="@+id/etFirstName"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -37,7 +37,7 @@
                 android:maxLength="50" />
 
             <EditText
-                android:id="@+id/txtLastName"
+                android:id="@+id/etLastName"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -47,7 +47,7 @@
                 android:maxLength="50" />
 
             <EditText
-                android:id="@+id/txtDob"
+                android:id="@+id/etDob"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -61,7 +61,7 @@
                 android:maxLength="50" />
 
             <EditText
-                android:id="@+id/txtEmail"
+                android:id="@+id/etEmail"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -70,7 +70,7 @@
                 android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/txtUserName"
+                android:id="@+id/etUserName"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -79,7 +79,7 @@
                 android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/txtPassword"
+                android:id="@+id/etPassword"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"
@@ -89,7 +89,7 @@
                 android:maxLength="50" />
 
             <EditText
-                android:id="@+id/txtRepeatPassword"
+                android:id="@+id/etRepeatPassword"
                 style="@style/textField"
                 android:layout_width="match_parent"
                 android:layout_margin="20sp"

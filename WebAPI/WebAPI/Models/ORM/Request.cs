@@ -34,10 +34,13 @@ namespace WebAPI.Models.ORM
         public decimal ActualPrice { get; set; }
         public string BillPicture { get; set; }
         public bool Completed { get; set; }
+        public bool Accepted { get; set; }
+        public int CarId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Issue> Issues { get; set; }
         public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
+        public virtual Car Car { get; set; }
     }
 }

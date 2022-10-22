@@ -38,21 +38,6 @@
         map:uiZoomControls="true"
         map:uiZoomGestures="true"
         tools:ignore="FragmentTagUsage" />
-<!--    <Button-->
-<!--        android:id="@+id/btnUserRegister"-->
-<!--        style="@style/primaryButton"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="5dp"-->
-<!--        android:text="@string/user" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/btnShopRegister"-->
-<!--        style="@style/primaryButton"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="5dp"-->
-<!--        android:text="@string/repair_shop" />-->
 </LinearLayout>
 
 

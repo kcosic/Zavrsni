@@ -70,7 +70,7 @@
                                 android:text="@string/date_of_repair" />
 
                             <TextView
-                                android:id="@+id/txtDateOfRepair"
+                                android:id="@+id/tvDateOfRepair"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="6"
@@ -90,7 +90,7 @@
                                 android:text="@string/time_of_repair" />
 
                             <TextView
-                                android:id="@+id/txtTimeOfRepair"
+                                android:id="@+id/tvTimeOfRepair"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="6"
@@ -177,7 +177,7 @@
                                 android:text="@string/repair_shop_name" />
 
                             <TextView
-                                android:id="@+id/txtRepairShopName"
+                                android:id="@+id/tvRepairShopName"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="6"
@@ -198,7 +198,7 @@
                                 android:text="@string/repair_shop_vat" />
 
                             <TextView
-                                android:id="@+id/txtRepairShopVat"
+                                android:id="@+id/tvRepairShopVat"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="6"
@@ -219,7 +219,7 @@
                                 android:text="@string/request_description" />
 
                             <TextView
-                                android:id="@+id/txtRequestDescription"
+                                android:id="@+id/tvRequestDescription"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="6"
@@ -264,7 +264,7 @@
                                 android:text="@string/estimated_time" />
 
                             <TextView
-                                android:id="@+id/txtEstimatedTime"
+                                android:id="@+id/tvEstimatedTime"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="6"
@@ -285,7 +285,7 @@
                                 android:text="@string/estimated_price" />
 
                             <TextView
-                                android:id="@+id/txtEstimatedPrice"
+                                android:id="@+id/tvEstimatedPrice"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="6"

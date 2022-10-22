@@ -32,8 +32,8 @@ class LoginActivity : BaseActivity() {
     private lateinit var btnRegister: Button
     private lateinit var btnRegisterUser: Button
     private lateinit var btnRegisterShop: Button
-    private lateinit var txtEmail: EditText
-    private lateinit var txtPassword: EditText
+    private lateinit var etEmail: EditText
+    private lateinit var etPassword: EditText
     private lateinit var registerDialog: AlertDialog
     private lateinit var swLoginAsShop: SwitchCompat
     private lateinit var progressBarHolder: FrameLayout
@@ -63,11 +63,11 @@ class LoginActivity : BaseActivity() {
         btnRegister = findViewById(R.id.btnRegister)
         progressBarHolder = findViewById(R.id.progressBarHolder)
 
-        txtEmail = findViewById(R.id.txtEmail)
-        txtPassword = findViewById(R.id.txtPassword)
+        etEmail = findViewById(R.id.etEmail)
+        etPassword = findViewById(R.id.etPassword)
 
-        txtEmail.setText("menta")               //TODO: remove, for dev purposes only
-        txtPassword.setText("123456")           //TODO: remove, for dev purposes only
+        etEmail.setText("menta")               //TODO: remove, for dev purposes only
+        etPassword.setText("123456")           //TODO: remove, for dev purposes only
 
         swLoginAsShop = findViewById(R.id.sw_login_as_shop)
 
@@ -90,20 +90,20 @@ class LoginActivity : BaseActivity() {
 
         btnLogin.setOnClickListener {
 
-            if (txtEmail.text.isEmpty()) {
-                txtEmail.setError(getString(R.string.invalid_email), Helper.getErrorIcon())
+            if (etEmail.text.isEmpty()) {
+                etEmail.setError(getString(R.string.invalid_email), Helper.getErrorIcon())
             } else {
-                txtEmail.error = null
+                etEmail.error = null
             }
 
-            if (txtPassword.text.isEmpty()) {
-                txtPassword.setError(getString(R.string.invalid_password), Helper.getErrorIcon())
+            if (etPassword.text.isEmpty()) {
+                etPassword.setError(getString(R.string.invalid_password), Helper.getErrorIcon())
 
             } else {
-                txtPassword.error = null
+                etPassword.error = null
             }
 
-            if (txtEmail.text.isNotEmpty() && txtPassword.text.isNotEmpty()) {
+            if (etEmail.text.isNotEmpty() && etPassword.text.isNotEmpty()) {
                 login()
             }
 
@@ -117,7 +117,7 @@ class LoginActivity : BaseActivity() {
         }else {
             Helper.setAuthKeyToUser()
         }
-        apiService.login(txtEmail.text.toString(), txtPassword.text.toString())
+        apiService.login(etEmail.text.toString(), etPassword.text.toString())
             .enqueue(object :
                 Callback {
                 var mainHandler: Handler = Handler(applicationContext.mainLooper)

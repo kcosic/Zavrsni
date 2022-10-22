@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.Exceptions;
+using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
 namespace WebAPI.Controllers
@@ -50,7 +51,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Models.ORM.Car.ToListDTO(car));
+                return CreateOkResponse(Car.ToListDTO(car));
             }
             catch (RecordNotFoundException e)
             {
@@ -92,7 +93,7 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("api/Car")]
-        public BaseResponse CreateCar(Models.ORM.Car newCarDTO)
+        public BaseResponse CreateCar(Car newCarDTO)
         {
             try
             {
@@ -101,15 +102,15 @@ namespace WebAPI.Controllers
                     throw new Exception("Invalid value");
                 }
 
-                var newCar = new Models.ORM.Car
+                var newCar = new Car
                 {
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
-                    Make = newCarDTO.Make,
                     Manufacturer = newCarDTO.Manufacturer,
                     Model= newCarDTO.Model,
                     Odometer= newCarDTO.Odometer,
-                    Year = newCarDTO.Year
+                    Year = newCarDTO.Year,
+                    UserId = AuthUser.Id
                 };
 
                 Db.Cars.Add(newCar);
@@ -129,7 +130,7 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("api/Car/{id}")]
-        public BaseResponse UpdateAppointment([FromUri] int id, [FromBody] Models.ORM.Car carDTO)
+        public BaseResponse UpdateAppointment([FromUri] int id, [FromBody] Car carDTO)
         {
             try
             {
@@ -146,7 +147,6 @@ namespace WebAPI.Controllers
                 car.DateModified = DateTime.Now;
                 car.DateCreated = DateTime.Now;
                 car.DateModified = DateTime.Now;
-                car.Make = carDTO.Make;
                 car.Manufacturer = carDTO.Manufacturer;
                 car.Model = carDTO.Model;
                 car.Odometer = carDTO.Odometer;
