@@ -13,20 +13,23 @@ class Request : BaseEntity() {
     var CarId: Int? = null
     var Price: Double? = null
     var EstimatedPrice: Double? = null
-    var ActualPrice: Double? = null
+    var EstimatedRepairHours: Int? = null
     @Serializable(with = DateSerializer::class)
-    var EstimatedFinishDate: Date? = null
+    var FinishDate: Date? = null
     @Serializable(with = DateSerializer::class)
-    var ActualFinishDate: Date? = null
+    var RepairDate: Date? = null
+    @Serializable(with = DateSerializer::class)
+    var RequestDate: Date? = null
     var Completed: Boolean? = null
-    var Accepted: Boolean? = null
+    var UserAccepted: Boolean? = null
+    var ShopAccepted: Boolean? = null
     var BillPicture: String? = null
+    var IssueDescription: String? = null
     @Serializable
     var Shop: Shop? = null
     @Serializable
     var User: User? = null
     @Serializable
     var Car: Car? = null
-    @Serializable
-    var Issues: MutableList<Issue>? = null
+
 }

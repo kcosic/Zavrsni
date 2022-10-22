@@ -24,7 +24,6 @@ namespace WebAPI.Models.ORM
                 Deleted = item.Deleted,
                 Id = item.Id,
                 Location = singleLevel ? null : Location.ToDTO(item.Location),
-                RepairHistories = singleLevel ? null : RepairHistory.ToListDTO(item.RepairHistories),
                 Requests = singleLevel ? null : Request.ToListDTO(item.Requests),
                 Reviews = singleLevel ? null : Review.ToListDTO(item.Reviews),
                 Appointments = singleLevel ? null : Appointment.ToListDTO(item.Appointments),
@@ -39,7 +38,8 @@ namespace WebAPI.Models.ORM
                 Email = item.Email,
                 Password = Helper.PASSWORD_PLACEHOLDER,
                 WorkDays = item.WorkDays,
-                WorkHours = item.WorkHours
+                WorkHours = item.WorkHours,
+                CarCapacity = item.CarCapacity
             };
         }
 
@@ -62,7 +62,6 @@ namespace WebAPI.Models.ORM
                 Deleted = Deleted,
                 Id = Id,
                 Location = singleLevel ? null : Location.ToDTO(Location),
-                RepairHistories = singleLevel ? null : RepairHistory.ToListDTO(RepairHistories),
                 Requests = singleLevel ? null : Request.ToListDTO(Requests),
                 Reviews = singleLevel ? null : Review.ToListDTO(Reviews),
                 Appointments = singleLevel ? null : Appointment.ToListDTO(Appointments),
@@ -77,7 +76,8 @@ namespace WebAPI.Models.ORM
                 ParentShopId = ParentShopId,
                 Tokens = singleLevel ? null : Token.ToListDTO(Tokens),
                 WorkDays = WorkDays,
-                WorkHours = WorkHours
+                WorkHours = WorkHours,
+                CarCapacity = CarCapacity
             };
         }
     }

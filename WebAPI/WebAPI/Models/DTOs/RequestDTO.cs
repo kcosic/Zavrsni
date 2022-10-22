@@ -10,10 +10,6 @@ namespace WebAPI.Models.DTOs
     [JsonObject]
     public class RequestDTO
     {
-        public RequestDTO()
-        {
-            Issues = new HashSet<IssueDTO>();
-        }
         [JsonProperty]
         public int Id { get; set; }
         [JsonProperty]
@@ -31,15 +27,13 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public int ShopId { get; set; }
         [JsonProperty]
-        public decimal Price { get; set; }
+        public int? EstimatedRepairHours{ get; set; }
         [JsonProperty]
-        public DateTime EstimatedFinishDate { get; set; }
+        public DateTime? FinishDate { get; set; }
         [JsonProperty]
-        public DateTime ActualFinishDate { get; set; }
+        public decimal? EstimatedPrice { get; set; }
         [JsonProperty]
-        public decimal EstimatedPrice { get; set; }
-        [JsonProperty]
-        public decimal ActualPrice { get; set; }
+        public decimal? Price { get; set; }
         [JsonProperty]
         public string BillPicture { get; set; }
         [JsonProperty]
@@ -51,8 +45,15 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public bool Completed { get; set; }        
         [JsonProperty]
-        public bool Accepted { get; set; }
+        public bool ShopAccepted { get; set; }        
         [JsonProperty]
-        public ICollection<IssueDTO> Issues { get; set; }
+        public bool UserAccepted { get; set; }
+
+        [JsonProperty]
+        public DateTime RequestDate { get; set; }
+        [JsonProperty]
+        public DateTime RepairDate { get; set; }
+        [JsonProperty]
+        public string IssueDescription { get; set; }
     }
 }

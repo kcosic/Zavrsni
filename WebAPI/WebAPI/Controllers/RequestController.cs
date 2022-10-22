@@ -107,10 +107,9 @@ namespace WebAPI.Controllers
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
                     ShopId = newRequestDTO.ShopId,
-                    ActualFinishDate = newRequestDTO.ActualFinishDate,
-                    ActualPrice = newRequestDTO.ActualPrice,
+                    FinishDate = newRequestDTO.FinishDate,
                     BillPicture= newRequestDTO.BillPicture,
-                    EstimatedFinishDate= newRequestDTO.EstimatedFinishDate,
+                    EstimatedRepairHours= newRequestDTO.EstimatedRepairHours,
                     EstimatedPrice= newRequestDTO.EstimatedPrice,
                     Price= newRequestDTO.Price,
                     UserId= newRequestDTO.UserId,
@@ -134,7 +133,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (id == null || requestDTO == null)
+                if (requestDTO == null)
                 {
                     throw new Exception("Invalid value");
                 }
@@ -146,10 +145,9 @@ namespace WebAPI.Controllers
                 }
                 request.DateModified = DateTime.Now;
                 request.ShopId = requestDTO.ShopId;
-                request.ActualFinishDate = requestDTO.ActualFinishDate;
-                request.ActualPrice = requestDTO.ActualPrice;
+                request.FinishDate = requestDTO.FinishDate;
                 request.BillPicture = requestDTO.BillPicture;
-                request.EstimatedFinishDate = requestDTO.EstimatedFinishDate;
+                request.EstimatedRepairHours = requestDTO.EstimatedRepairHours;
                 request.EstimatedPrice = requestDTO.EstimatedPrice;
                 request.Price = requestDTO.Price;
                 request.UserId = requestDTO.UserId;

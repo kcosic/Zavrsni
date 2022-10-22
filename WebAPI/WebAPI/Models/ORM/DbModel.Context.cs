@@ -25,16 +25,14 @@ namespace WebAPI.Models.ORM
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Appointment> Appointments { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
-        public virtual DbSet<RepairHistory> RepairHistories { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
-        public virtual DbSet<Shop> Shops { get; set; }
         public virtual DbSet<Token> Tokens { get; set; }
-        public virtual DbSet<Issue> Issues { get; set; }
-        public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Car> Cars { get; set; }
+        public virtual DbSet<Appointment> Appointments { get; set; }
+        public virtual DbSet<Request> Requests { get; set; }
+        public virtual DbSet<Shop> Shops { get; set; }
     }
 }

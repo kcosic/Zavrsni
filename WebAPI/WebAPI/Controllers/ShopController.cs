@@ -92,7 +92,39 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                var takenDates = shop.Appointments.Where(x => x.Date.Date == date.Date).Select(x => $"{(x.Date.Hour < 10 ? "0" : "")}{x.Date.Hour}:00").ToList();
+                var takenAppointments = shop.Appointments
+                    .Where(x => x.DateTimeStart.Date >= date.Date && date.Date >= x.DateTimeEnd.Date)
+                    .ToList();
+
+                var takenDates = new List<string>();
+
+                var workHours = shop.WorkHours.Split('-');
+                var start = int.Parse(workHours[1].Split(':')[1]);
+                var end = int.Parse(workHours[1].Split(':')[0]);
+                takenAppointments.ForEach(appt =>
+                {
+                    if (appt.DateTimeEnd == date.Date)
+                    {
+                        for (int hour = start; hour < appt.DateTimeEnd.Hour; hour++)
+                        {
+                            takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
+                        }
+                    }
+                    else if (appt.DateTimeStart == date.Date)
+                    {
+                        for (int hour = appt.DateTimeStart.Hour; hour < end; hour++)
+                        {
+                            takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
+                        }
+                    }
+                    else
+                    {
+                        for (int hour = start; hour < end; hour++)
+                        {
+                            takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
+                        }
+                    }
+                });
 
                 return CreateOkResponse(takenDates);
             }
@@ -174,6 +206,11 @@ namespace WebAPI.Controllers
 
         }
 
+        /// <summary>
+        /// Endpoint for retrieving <see cref="Shop"/> <see cref="Review"/>s
+        /// </summary>
+        /// <param name="id">Identifier of the <see cref="Shop"/></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/Shop/{id}/Reviews")]
         public BaseResponse RetrieveShopReviews(int id)
@@ -205,6 +242,11 @@ namespace WebAPI.Controllers
 
         }
 
+        /// <summary>
+        /// Endpoint for deleting the <see cref="Shop"/>
+        /// </summary>
+        /// <param name="id">Identifier of the <see cref="Shop"/></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("api/Shop/{id}")]
         public BaseResponse DeleteShop(int id)
@@ -232,6 +274,12 @@ namespace WebAPI.Controllers
         }
 
 
+        /// <summary>
+        /// Endpoint for updating <see cref="Shop"/>.
+        /// </summary>
+        /// <param name="id">Identifier of the <see cref="Shop"/></param>
+        /// <param name="shopDTO"><see cref="Shop"/> object with modified data</param>
+        /// <returns></returns>
         [HttpPut]
         [Route("api/Shop/{id}")]
         public BaseResponse UpdateShop([FromUri] int id, [FromBody] ShopDTO shopDTO)
@@ -266,6 +314,9 @@ namespace WebAPI.Controllers
                 shop.LocationId = shopDTO.LocationId;
                 shop.ParentShopId = shopDTO.ParentShopId;
                 shop.Vat = shopDTO.Vat;
+                shop.WorkDays = shopDTO.WorkDays;
+                shop.WorkHours = shopDTO.WorkHours;
+                shop.CarCapacity = shopDTO.CarCapacity;
 
                 Db.SaveChanges();
 

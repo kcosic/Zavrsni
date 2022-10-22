@@ -24,7 +24,7 @@ namespace WebAPI.Models.ORM
         public string Comment { get; set; }
         public decimal Rating { get; set; }
     
-        public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
+        public virtual Shop Shop { get; set; }
     }
 }

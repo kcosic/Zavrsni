@@ -11,9 +11,10 @@ import kotlin.properties.Delegates
 @Serializable
 class Appointment : BaseEntity() {
     var ShopId: Int? = null
-
     @Serializable(with = DateSerializer::class)
-    var Date: Date? = null
+    var DateTimeStart: Date? = null
+    @Serializable(with = DateSerializer::class)
+    var DateTimeEnd: Date? = null
     var Istaken: Boolean? = null
     @Serializable
     var Shop: Shop? = null

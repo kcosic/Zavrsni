@@ -20,9 +20,10 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public int ShopId { get; set; }
         [JsonProperty]
-        public DateTime Date { get; set; }
+        public DateTime DateTimeStart { get; set; }        
         [JsonProperty]
-        public bool IsTaken { get; set; }
+        public DateTime DateTimeEnd { get; set; }
+
         [JsonProperty]
         public ShopDTO Shop { get; set; }
     }

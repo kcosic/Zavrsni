@@ -20,8 +20,8 @@ namespace WebAPI.Models.ORM
         public Nullable<System.DateTime> DateDeleted { get; set; }
         public bool Deleted { get; set; }
         public int ShopId { get; set; }
-        public System.DateTime Date { get; set; }
-        public bool IsTaken { get; set; }
+        public System.DateTime DateTimeStart { get; set; }
+        public System.DateTime DateTimeEnd { get; set; }
     
         public virtual Shop Shop { get; set; }
     }

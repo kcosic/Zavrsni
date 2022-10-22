@@ -17,7 +17,6 @@ namespace WebAPI.Models.ORM
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Car()
         {
-            this.RepairHistories = new HashSet<RepairHistory>();
             this.Requests = new HashSet<Request>();
         }
     
@@ -33,8 +32,6 @@ namespace WebAPI.Models.ORM
         public decimal Odometer { get; set; }
     
         public virtual User User { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RepairHistory> RepairHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Request> Requests { get; set; }
     }

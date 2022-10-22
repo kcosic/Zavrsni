@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 class Shop : BaseEntity() {
     var LocationId: Int? = null
     var ParentShopId: Int? = null
+    var CarCapacity: Int? = null
     var LegalName: String? = null
     var ShortName: String? = null
     var Vat: String? = null
@@ -18,8 +19,7 @@ class Shop : BaseEntity() {
     var Appointments: MutableList<Appointment>? = null
     @Serializable
     var Location: Location? = null
-    @Serializable
-    var RepairHistories: MutableList<RepairHistory>? = null
+
     @Serializable
     var Requests: MutableList<Request>? = null
     @Serializable

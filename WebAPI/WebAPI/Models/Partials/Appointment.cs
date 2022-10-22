@@ -17,14 +17,14 @@ namespace WebAPI.Models.ORM
 
             return new AppointmentDTO
             {
-                Date = item.Date,
+                DateTimeStart = item.DateTimeStart,
+                DateTimeEnd = item.DateTimeEnd,
                 Shop = singleLevel ? null : Shop.ToDTO(item.Shop),
                 DateCreated = item.DateCreated,
                 DateDeleted = item.DateDeleted,
                 DateModified = item.DateModified,
                 Deleted = item.Deleted,
                 Id = item.Id,
-                IsTaken = item.IsTaken,
                 ShopId = item.ShopId
             };
         }
@@ -43,14 +43,14 @@ namespace WebAPI.Models.ORM
         {
             return new AppointmentDTO
             {
-                Date = Date,
+                DateTimeStart = DateTimeStart,
+                DateTimeEnd = DateTimeEnd,
                 Shop = singleLevel ? null : Shop.ToDTO(Shop),
                 DateCreated = DateCreated,
                 DateDeleted = DateDeleted,
                 DateModified = DateModified,
                 Deleted = Deleted,
                 Id = Id,
-                IsTaken = IsTaken,
                 ShopId = ShopId
             };
         }

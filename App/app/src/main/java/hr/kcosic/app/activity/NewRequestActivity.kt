@@ -16,7 +16,6 @@ import hr.kcosic.app.adapter.TimeAdapter
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ValidatedActivityWithNavigation
 import hr.kcosic.app.model.entities.Car
-import hr.kcosic.app.model.entities.Issue
 import hr.kcosic.app.model.entities.Location
 import hr.kcosic.app.model.entities.Request
 import hr.kcosic.app.model.enums.ActivityEnum
@@ -31,6 +30,8 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.io.InvalidObjectException
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQUEST) {
@@ -126,26 +127,21 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     }
 
     private fun assignDataToRequest(): Request {
-        val newIssue = Issue()
-
-        //newIssue.DateOfSubmission = dateOfRepair
-        //newIssue.DateOfSubmission = dateOfRepair
-
 
         val newRequest = Request()
-        newRequest.Accepted = false
+        newRequest.UserAccepted = false
+        newRequest.ShopAccepted = false
         newRequest.Completed = false
-        newRequest.ActualFinishDate = null
+        newRequest.FinishDate = null
         newRequest.Shop = null
         newRequest.Car = selectedVehicle
         newRequest.BillPicture = null
-        newRequest.EstimatedFinishDate = null
-        newRequest.ActualPrice = null
+        newRequest.RequestDate = Helper.stringToIsoDateTime(dateOfRepair)
+        newRequest.EstimatedRepairHours = null
         newRequest.EstimatedPrice = null
-        newRequest.Issues = null
         newRequest.Price = null
         newRequest.User = null
-        newRequest.UserId = null
+        newRequest.UserId = getUser().Id
 
         return Request()
     }

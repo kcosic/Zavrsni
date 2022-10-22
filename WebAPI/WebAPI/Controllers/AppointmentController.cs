@@ -104,9 +104,10 @@ namespace WebAPI.Controllers
                 {
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
-                    Date = newAppointmentDTO.Date,
-                    IsTaken = newAppointmentDTO.IsTaken,
+                    DateTimeEnd = newAppointmentDTO.DateTimeEnd,
+                    DateTimeStart = newAppointmentDTO.DateTimeStart,
                     ShopId = newAppointmentDTO.ShopId
+                    
                 };
 
                 Db.Appointments.Add(newAppointment);
@@ -126,7 +127,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (id == null || appointmentDTO == null)
+                if (appointmentDTO == null)
                 {
                     throw new Exception("Invalid value");
                 }
@@ -136,9 +137,9 @@ namespace WebAPI.Controllers
                 {
                     throw new RecordNotFoundException();
                 }
-                appointment.Date = appointmentDTO.Date;
+                appointment.DateTimeStart = appointmentDTO.DateTimeStart;
+                appointment.DateTimeEnd = appointmentDTO.DateTimeEnd;
                 appointment.DateModified = DateTime.Now;
-                appointment.IsTaken = appointmentDTO.IsTaken;
                 appointment.ShopId = appointmentDTO.ShopId;
 
                 Db.SaveChanges();

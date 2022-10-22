@@ -14,7 +14,6 @@ namespace WebAPI.Models.DTOs
         {
             Cars = new HashSet<CarDTO>();
             Locations = new HashSet<LocationDTO>();
-            RepairHistories = new HashSet<RepairHistoryDTO>();
             Requests = new HashSet<RequestDTO>();
             Reviews = new HashSet<ReviewDTO>();
         }
@@ -45,8 +44,6 @@ namespace WebAPI.Models.DTOs
         public ICollection<CarDTO> Cars { get; set; }
         [JsonProperty]
         public ICollection<LocationDTO> Locations { get; set; }
-        [JsonProperty]
-        public ICollection<RepairHistoryDTO> RepairHistories { get; set; }
         [JsonProperty]
         public ICollection<RequestDTO> Requests { get; set; }
         [JsonProperty]

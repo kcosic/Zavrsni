@@ -392,6 +392,12 @@ class Helper {
             val dateFormat = SimpleDateFormat(myFormat)
             return dateFormat.format(date)
         }
+        @SuppressLint("SimpleDateFormat")
+        fun stringToIsoDateTime(dateString: String): Date {
+            val myFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            val dateFormat = SimpleDateFormat(myFormat)
+            return dateFormat.parse(dateString)!!
+        }
 
         @SuppressLint("SimpleDateFormat")
         fun formatTime(date: Date): String {

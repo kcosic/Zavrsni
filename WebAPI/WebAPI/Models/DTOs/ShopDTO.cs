@@ -13,7 +13,6 @@ namespace WebAPI.Models.DTOs
         public ShopDTO()
         {
             Appointments = new HashSet<AppointmentDTO>();
-            RepairHistories = new HashSet<RepairHistoryDTO>();
             Requests = new HashSet<RequestDTO>();
             Reviews = new HashSet<ReviewDTO>();
             ChildShops = new HashSet<ShopDTO>();
@@ -47,13 +46,13 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public string WorkHours { get; set; }
         [JsonProperty]
-        public string WorkDays { get; set; }
+        public string WorkDays { get; set; }        
+        [JsonProperty]
+        public int CarCapacity { get; set; }
         [JsonProperty]
         public ICollection<AppointmentDTO> Appointments { get; set; }
         [JsonProperty]
         public LocationDTO Location { get; set; }
-        [JsonProperty]
-        public ICollection<RepairHistoryDTO> RepairHistories { get; set; }
         [JsonProperty]
         public ICollection<RequestDTO> Requests { get; set; }
         [JsonProperty]

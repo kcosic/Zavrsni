@@ -8,11 +8,6 @@ namespace WebAPI.Models.DTOs
     [JsonObject]
     public class CarDTO
     {
-        public CarDTO()
-        {
-            RepairHistories = new HashSet<RepairHistoryDTO>();
-        }
-
         [JsonProperty]
         public int Id { get; set; }
         [JsonProperty]
@@ -33,8 +28,7 @@ namespace WebAPI.Models.DTOs
         public int Year { get; set; }
         [JsonProperty]
         public decimal Odometer { get; set; }
-        [JsonProperty]
-        public ICollection<RepairHistoryDTO> RepairHistories { get; set; }        
+      
         [JsonProperty]
         public ICollection<RequestDTO> Requests { get; set; }
         [JsonProperty]

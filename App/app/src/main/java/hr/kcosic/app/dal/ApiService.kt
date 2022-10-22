@@ -82,7 +82,6 @@ class ApiService private constructor() {
 
 
     private inline fun <reified T> post(url: String, value: T, addAuth: Boolean = true): Call {
-        val data = value;
         val json = Helper.serializeData(value)
         val body: RequestBody = json.toRequestBody(headers)
         val request = Request.Builder()
@@ -98,7 +97,6 @@ class ApiService private constructor() {
     }
 
     private inline fun <reified T> put(url: String, value: T, addAuth: Boolean = true): Call {
-        val data = value;
         val json = Helper.serializeData(value)
         val body: RequestBody = json.toRequestBody(headers)
         val request = Request.Builder()
@@ -220,50 +218,7 @@ class ApiService private constructor() {
     }
 
     //#endregion
-    //#region Issue
-    fun retrieveIssue(issueId: Int, expanded: Boolean = false): Call {
-        return get("${ApiRoutes.ISSUE}/${issueId}${if (expanded) "?expanded=true" else ""}")
-    }
 
-    fun retrieveIssues(): Call {
-        return get(ApiRoutes.ISSUE)
-    }
-
-    fun deleteIssue(issueId: Int): Call {
-        return delete("${ApiRoutes.ISSUE}/${issueId}")
-    }
-
-    fun createIssue(newIssue: Issue): Call {
-        return post(ApiRoutes.ISSUE, newIssue)
-    }
-
-    fun updateIssue(updatedIssue: Issue): Call {
-        return put(ApiRoutes.ISSUE, updatedIssue)
-    }
-
-    //#endregion
-    //#region RepairHistory
-    fun retrieveRepairHistory(repairHistoryId: Int, expanded: Boolean = false): Call {
-        return get("${ApiRoutes.REPAIR_HISTORY}/${repairHistoryId}${if (expanded) "?expanded=true" else ""}")
-    }
-
-    fun retrieveRepairHistories(): Call {
-        return get(ApiRoutes.REPAIR_HISTORY)
-    }
-
-    fun deleteRepairHistory(repairHistoryId: Int): Call {
-        return delete("${ApiRoutes.REPAIR_HISTORY}/${repairHistoryId}")
-    }
-
-    fun createRepairHistory(newRepairHistory: RepairHistory): Call {
-        return post(ApiRoutes.REPAIR_HISTORY, newRepairHistory)
-    }
-
-    fun updateRepairHistory(updatedRepairHistory: RepairHistory): Call {
-        return put(ApiRoutes.REPAIR_HISTORY, updatedRepairHistory)
-    }
-
-    //#endregion
     //#region Request
     fun retrieveRequest(requestId: Int, expanded: Boolean = false): Call {
         return get("${ApiRoutes.REQUEST}/${requestId}${if (expanded) "?expanded=true" else ""}")

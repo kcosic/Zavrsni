@@ -14,8 +14,6 @@ class Car : BaseEntity() {
     @Serializable
     var Requests: MutableList<Request>? = null
     @Serializable
-    var RepairHistories: MutableList<RepairHistory>? = null
-    @Serializable
     var User: User? = null
 
     override fun toString(): String {

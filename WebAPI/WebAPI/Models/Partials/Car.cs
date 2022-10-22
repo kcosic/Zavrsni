@@ -26,7 +26,6 @@ namespace WebAPI.Models.ORM
                 Id = item.Id,
                 Model = item.Model,
                 Odometer = item.Odometer,
-                RepairHistories = singleLevel ? null : RepairHistory.ToListDTO(item.RepairHistories),
                 User = singleLevel ? null : User.ToDTO(item.User),
                 Requests = singleLevel ? null : Request.ToListDTO(item.Requests),
                 UserId = item.UserId,
@@ -57,7 +56,6 @@ namespace WebAPI.Models.ORM
                 Id = Id,
                 Model = Model,
                 Odometer = Odometer,
-                RepairHistories = singleLevel ? null : RepairHistory.ToListDTO(RepairHistories),
                 User = singleLevel ? null : User.ToDTO(User),
                 UserId = UserId,
                 Year = Year

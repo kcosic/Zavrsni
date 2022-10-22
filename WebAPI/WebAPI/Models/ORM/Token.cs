@@ -18,7 +18,7 @@ namespace WebAPI.Models.ORM
         public Nullable<int> UserId { get; set; }
         public Nullable<int> ShopId { get; set; }
     
-        public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
+        public virtual Shop Shop { get; set; }
     }
 }
