@@ -7,12 +7,18 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -160,7 +166,7 @@ class Helper {
                     setPositiveButton(
                         positiveButtonText
                     ) { dialog, _ ->
-                        if(!customDialogDismiss){
+                        if (!customDialogDismiss) {
                             dialog.dismiss()
                         }
                         positiveCallback.onPositiveBtnClick(dialog)
@@ -198,7 +204,7 @@ class Helper {
                         if (!customDialogDismiss) {
                             dialog.dismiss()
                         }
-                        negativeCallback?.onNegativeBtnClick (dialog)
+                        negativeCallback?.onNegativeBtnClick(dialog)
                     }
                 }
                 .show()
@@ -284,6 +290,84 @@ class Helper {
             return icon
         }
 
+        @SuppressLint("PrivateResource")
+        fun getMenuIcon(): VectorDrawable {
+            val icon = AppCompatResources.getDrawable(
+                ContextInstance.getContext()!!,
+                R.drawable.ellipsis_vertical
+            )!! as VectorDrawable
+            DrawableCompat.setTint(icon, Color.parseColor(getColor(R.color.primary_500)))
+            icon.setBounds(0, 0, icon.intrinsicWidth, icon.intrinsicHeight)
+            return icon
+        }
+
+
+        /**
+         * Gets a Bitmap from provided Vector Drawable image
+         *
+         * @param vd VectorDrawable
+         * @return Bitmap
+         */
+        fun createBitmapFromVectorDrawable(vd: Drawable, width: Int?, height: Int?): Bitmap? {
+            return try {
+                val bitmap: Bitmap = Bitmap.createBitmap(
+                    vd.intrinsicWidth,
+                    vd.intrinsicHeight,
+                    Bitmap.Config.ARGB_8888
+                )
+                val canvas = Canvas(bitmap)
+                vd.setBounds(0, 0, width ?: canvas.width, height ?: canvas.height)
+                vd.draw(canvas)
+                bitmap
+            } catch (e: OutOfMemoryError) {
+                return null
+            }
+        }
+
+        /**
+         * Loads vector drawable and apply tint color on it.
+         */
+        fun loadVectorDrawableWithTintColor(
+            @DrawableRes vdRes: Int,
+            @ColorRes clrRes: Int
+        ): Drawable {
+            val drawable = ContextCompat.getDrawable(ContextInstance.getContext()!!, vdRes)
+            DrawableCompat.setTint(
+                drawable!!,
+                ContextInstance.getContext()!!.resources.getColor(clrRes)
+            )
+            return drawable
+        }
+
+        /**
+         * Converts given vector drawable to Bitmap drawable
+         */
+        fun convertVectorDrawableToBitmapDrawable(vd: Drawable, width: Int?, height: Int?): BitmapDrawable {
+            //it is safe to create empty bitmap drawable from null source
+            return BitmapDrawable(createBitmapFromVectorDrawable(vd, width, height))
+        }
+
+        /**
+         * Loads vector drawable , aplys tint on it and returns a wrapped bitmap drawable.
+         * Bitmap drawable can be resized using setBounds method (unlike the VectorDrawable)
+         * @param context Requires view context !
+         */
+        fun loadVectorDrawableWithTint(
+            @DrawableRes vectorDrawableRes: Int, @ColorRes colorRes: Int, width: Int? = null, height: Int? = null
+        ): Drawable {
+            val vd: Drawable = loadVectorDrawableWithTintColor(
+                vectorDrawableRes,
+                colorRes
+            )
+            val bitmapDrawable: BitmapDrawable =
+                convertVectorDrawableToBitmapDrawable(vd, width, height)
+            val tint = ContextCompat.getColorStateList(ContextInstance.getContext()!!, colorRes)
+            val wrappedDrawable = DrawableCompat.wrap(bitmapDrawable)
+            DrawableCompat.setTintList(wrappedDrawable, tint)
+            return wrappedDrawable
+        }
+
+
         fun getColor(color: Int): String {
             //noinspection ResourceType
             return ContextInstance.getContext()!!.resources.getString(color)
@@ -295,8 +379,7 @@ class Helper {
             } catch (ex: Exception) {
                 try {
                     deserializeObject<ErrorResponse>(response)
-                }
-                catch (ex2: Exception){
+                } catch (ex2: Exception) {
                     val err = ErrorResponse()
                     err.ErrorCode = ErrorCodeEnum.UnexpectedError
                     err.IsSuccess = false
@@ -392,9 +475,17 @@ class Helper {
             val dateFormat = SimpleDateFormat(myFormat)
             return dateFormat.format(date)
         }
+
         @SuppressLint("SimpleDateFormat")
-        fun stringToIsoDateTime(dateString: String): Date {
+        fun isoStringToDateTime(dateString: String): Date {
             val myFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            val dateFormat = SimpleDateFormat(myFormat)
+            return dateFormat.parse(dateString)!!
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        fun stringToDateTime(dateString: String): Date {
+            val myFormat = "dd.MM.yyyy HH:mm"
             val dateFormat = SimpleDateFormat(myFormat)
             return dateFormat.parse(dateString)!!
         }

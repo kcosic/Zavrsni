@@ -24,8 +24,15 @@ namespace WebAPI.Controllers
                 {
                     throw new RecordNotFoundException();
                 }
+                var requestDTO = request.ToDTO(!expanded);
+                if (expanded)
+                {
 
-                return CreateOkResponse(request.ToDTO(!expanded));
+                    requestDTO.Shop.Location = request.Shop.Location.ToDTO();
+                    requestDTO.User = request.User.ToDTO();
+                }
+
+                return CreateOkResponse(requestDTO);
             }
             catch (RecordNotFoundException e)
             {
@@ -96,10 +103,9 @@ namespace WebAPI.Controllers
         {
             try
             {
-                throw new NotImplementedException();
                 if (newRequestDTO == null)
                 {
-                    throw new Exception("Invalid value");
+                    throw new ArgumentNullException();
                 }
 
                 var newRequest = new Models.ORM.Request
@@ -113,7 +119,13 @@ namespace WebAPI.Controllers
                     EstimatedPrice= newRequestDTO.EstimatedPrice,
                     Price= newRequestDTO.Price,
                     UserId= newRequestDTO.UserId,
-                    CarId = newRequestDTO.CarId
+                    CarId = newRequestDTO.CarId,
+                    ShopAccepted = newRequestDTO.ShopAccepted,
+                    UserAccepted = newRequestDTO.UserAccepted,
+                    IssueDescription = newRequestDTO.IssueDescription,
+                    RepairDate = newRequestDTO.RepairDate,
+                    RequestDate = newRequestDTO.RequestDate,
+                    Completed = newRequestDTO.Completed
                 };
 
                 Db.Requests.Add(newRequest);
@@ -121,6 +133,10 @@ namespace WebAPI.Controllers
 
                 return CreateOkResponse();
             }
+            catch (ArgumentNullException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.InvalidParameter);
+            }            
             catch (Exception e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
@@ -152,6 +168,12 @@ namespace WebAPI.Controllers
                 request.Price = requestDTO.Price;
                 request.UserId = requestDTO.UserId;
                 request.CarId = requestDTO.CarId;
+                request.ShopAccepted = requestDTO.ShopAccepted;
+                request.UserAccepted = requestDTO.UserAccepted;
+                request.IssueDescription = requestDTO.IssueDescription;
+                request.RepairDate = requestDTO.RepairDate;
+                request.RequestDate = requestDTO.RequestDate;
+                request.Completed = requestDTO.Completed;
 
                 Db.SaveChanges();
 
@@ -170,7 +192,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("api/Request/User/{id}/Active")]
-        public BaseResponse RetrieveActiveUserRequest(int id)
+        public BaseResponse RetrieveActiveUserRequest(int id, bool inFuture)
         {
             try
             {
@@ -180,7 +202,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                var activeRequest = user.Requests.Where(x => !x.Completed && !x.Deleted)?.OrderBy(x => x.DateCreated)?.FirstOrDefault();
+                var activeRequest = user.Requests.Where(x => (!inFuture || (inFuture && x.RepairDate.HasValue && x.RepairDate.Value.Date >= DateTime.Now.Date && x.RepairDate.Value.Date <= DateTime.Now.Date.AddDays(30))) && !x.Completed && !x.Deleted)?.OrderBy(x => x.DateCreated)?.FirstOrDefault();
                 if (activeRequest == null || activeRequest.Deleted)
                 {
                     throw new RecordNotFoundException();

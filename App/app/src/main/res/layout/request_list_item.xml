@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60sp"
+    android:layout_margin="5sp"
+    style="@style/row_item_style"
+    android:orientation="horizontal"
+    android:weightSum="10">
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:textSize="20sp"
+        android:textFontWeight="1000"
+        android:text="22.2.2022"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:text="Meha 1" />
+
+    <CheckBox
+        android:id="@+id/cbUserAccepted"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:textSize="11sp" />
+
+    <CheckBox
+        android:id="@+id/cbShopAccepted"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:textSize="11sp" />
+
+    <CheckBox
+        android:id="@+id/cbCompleted"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:textSize="11sp" />
+
+    <ImageButton
+        android:id="@+id/btnMenu"
+        android:background="@color/text_dark_100"
+        android:layout_width="0sp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:src="@drawable/eye_small_primary"
+        tools:src="@drawable/eye_small_primary"
+        android:contentDescription="@string/menu" />
+
+</LinearLayout>

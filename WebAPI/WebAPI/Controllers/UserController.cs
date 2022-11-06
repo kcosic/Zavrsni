@@ -38,6 +38,31 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("api/User/Requests")]
+        public BaseResponse RetrieveUserRequests()
+        {
+            try
+            {
+                var requests = Db.Requests.Where(request=> request.UserId == AuthUser.Id && !request.Deleted).ToList();
+                if (requests == null)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                return CreateOkResponse(Models.ORM.Request.ToListDTO(requests, false));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }            
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+
+        }
+
+        [HttpGet]
         [Route("api/User")]
         public BaseResponse RetrieveUsers()
         {

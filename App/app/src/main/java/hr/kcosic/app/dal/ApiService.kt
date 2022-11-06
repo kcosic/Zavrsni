@@ -142,9 +142,22 @@ class ApiService private constructor() {
 
     //#region Location
 
-    fun retrieveLocationByCoordinatesAndRadius(latLng: String, radius: Int, date: Date? = null):Call {
-        return get("${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}/Radius/$radius${if(date != null) "?date=${Helper.formatIsoDateTime(date)}" else ""}")
+    fun retrieveLocationByCoordinatesAndRadius(
+        latLng: String,
+        radius: Int,
+        date: Date? = null
+    ): Call {
+        return get(
+            "${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}/Radius/$radius${
+                if (date != null) "?date=${
+                    Helper.formatIsoDateTime(
+                        date
+                    )
+                }" else ""
+            }"
+        )
     }
+
     fun retrieveLocationByCoordinates(latLng: String): Call {
         return get("${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}")
     }
@@ -223,8 +236,9 @@ class ApiService private constructor() {
     fun retrieveRequest(requestId: Int, expanded: Boolean = false): Call {
         return get("${ApiRoutes.REQUEST}/${requestId}${if (expanded) "?expanded=true" else ""}")
     }
-    fun retrieveActiveUserRequest(userId: Int): Call {
-        return get("${ApiRoutes.REQUEST}/User/${userId}/Active")
+
+    fun retrieveActiveUserRequest(userId: Int, inFuture: Boolean = false): Call {
+        return get("${ApiRoutes.REQUEST}/User/${userId}/Active${if (inFuture) "?inFuture=true" else ""}")
     }
 
     fun retrieveRequests(): Call {
@@ -235,11 +249,11 @@ class ApiService private constructor() {
         return delete("${ApiRoutes.REQUEST}/${requestId}")
     }
 
-    fun createRequest(newRequest: Request): Call {
+    fun createRequest(newRequest: hr.kcosic.app.model.entities.Request): Call {
         return post(ApiRoutes.REQUEST, newRequest)
     }
 
-    fun updateRequest(updatedRequest: Request): Call {
+    fun updateRequest(updatedRequest: hr.kcosic.app.model.entities.Request): Call {
         return put(ApiRoutes.REQUEST, updatedRequest)
     }
 
@@ -290,6 +304,7 @@ class ApiService private constructor() {
     fun retrieveShopAvailability(shopId: Int, dateOfRepair: String): Call {
         return get("${ApiRoutes.SHOP}/$shopId/Availability/${Helper.toBase64(dateOfRepair)}")
     }
+
     fun deleteShop(shopId: Int): Call {
         return delete("${ApiRoutes.SHOP}/${shopId}")
     }
@@ -322,6 +337,10 @@ class ApiService private constructor() {
 
     fun updateUser(updatedUser: User): Call {
         return put(ApiRoutes.USER, updatedUser)
+    }
+
+    fun retrieveUserRequests(): Call {
+        return get("${ApiRoutes.USER}/Requests")
     }
 
     //#endregion

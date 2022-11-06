@@ -88,4 +88,7 @@
     <color name="text_dark_700">#232626</color>
     <color name="text_dark_800">#1f2122</color>
     <color name="text_dark_900">#1a1c1d</color>
+
+    <color name="transparent">#00000000</color>
+
 </resources>

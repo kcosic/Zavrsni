@@ -35,16 +35,17 @@
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="length_between_1_200">Length must be between 1 and 200</string>
+    <string name="length_between_1_2000">Length must be between 1 and 2000</string>
     <string name="location_required">Location is required</string>
     <string name="remember_me">Remember me</string>
-    <string name="login_as_shop">Login as car shop</string>
+    <string name="login_as_shop">Login as car repair shop</string>
     <string name="already_logged_in">Already logged in</string>
     <string name="car_service_in_next_30_days">Car service in next 30 days</string>
     <string name="description">Description</string>
     <string name="repair_shop_name">Repair shop name</string>
     <string name="repair_shop_vat">Repair Shop VAT</string>
     <string name="request_description">Request Description</string>
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</string>
+    <string name="lorem" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</string>
     <string name="no_requests">You have no car repair requests in next 30 days</string>
     <string name="to_find_mechanic_shop_in_your_vicinity_go_to_search">To find mechanic shop in your vicinity, go to Search</string>
     <string name="date_of_next_service">Date</string>
@@ -71,7 +72,7 @@
     <string name="describe_the_issue">Describe the Issue</string>
     <string name="next">Next</string>
     <string name="add">Add</string>
-    <string name="add_new_car">Add New Car</string>
+    <string name="add_new_car">Add New Vehicle</string>
     <string name="manufacturer">Manufacturer</string>
     <string name="make">Make</string>
     <string name="model">Model</string>
@@ -79,4 +80,14 @@
     <string name="odometer">Odometer</string>
     <string name="value_between_1960_today">Value must be between 1960 and this year</string>
     <string name="vehicle_created_successfuly">Vehicle created successfully</string>
+    <string name="request_submitted">Request Submitted</string>
+    <string name="date">Date</string>
+    <string name="name">Name</string>
+    <string name="user_accepted">User Accepted</string>
+    <string name="shop_accepted">Shop Accepted</string>
+    <string name="completed">Completed</string>
+    <string name="menu">menu</string>
+    <string name="consents">Consents</string>
+    <string name="actual_date_of_finish">Actual Date of Finish</string>
+    <string name="actual_price">Actual Price</string>
 </resources>

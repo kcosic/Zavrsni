@@ -3,11 +3,8 @@ package hr.kcosic.app.activity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.CheckBox
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -28,13 +25,9 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 
-class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER), OnMapReadyCallback {
-    private lateinit var homeContentView: ScrollView
-    private lateinit var homeNoContentView: LinearLayout
-    private lateinit var nextServiceDate: CardView
-    private lateinit var nextServiceMap: CardView
-    private lateinit var nextServiceDescription: CardView
-    private lateinit var nextServiceDetails: CardView
+class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST_VIEW),
+    OnMapReadyCallback {
+
     private lateinit var tvDateOfRepair: TextView
     private lateinit var tvTimeOfRepair: TextView
     private lateinit var tvRepairShopName: TextView
@@ -42,23 +35,26 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
     private lateinit var tvRequestDescription: TextView
     private lateinit var tvEstimatedTime: TextView
     private lateinit var tvEstimatedPrice: TextView
+    private lateinit var tvVehicle: TextView
+    private lateinit var tvDateOfFinish: TextView
+    private lateinit var tvActualPrice: TextView
+    private lateinit var ckbUserAccepted: CheckBox
+    private lateinit var ckbShopAccepted: CheckBox
+    private lateinit var ckbCompleted: CheckBox
     private lateinit var googleMap: GoogleMap
-    private var data: Request? = null
+    private var request: Request? = null
+    private var requestId: Int? = null
     private var mapServiceLocation: SupportMapFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeComponents()
-        retrieveActiveUserRequest()
+        retrieveDataFromIntent()
+        retrieveRequest()
     }
 
     override fun initializeComponents() {
-        homeContentView = findViewById(R.id.homeContentView)
-        homeNoContentView = findViewById(R.id.homeNoContentView)
-        nextServiceDate = findViewById(R.id.nextServiceDate)
-        nextServiceMap = findViewById(R.id.nextServiceMap)
-        nextServiceDescription = findViewById(R.id.nextServiceDescription)
-        nextServiceDetails = findViewById(R.id.nextServiceDetails)
+
         tvDateOfRepair = findViewById(R.id.tvDateOfRepair)
         tvTimeOfRepair = findViewById(R.id.tvTimeOfRepair)
         tvRepairShopName = findViewById(R.id.tvRepairShopName)
@@ -66,11 +62,23 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         tvRequestDescription = findViewById(R.id.tvRequestDescription)
         tvEstimatedTime = findViewById(R.id.tvEstimatedTime)
         tvEstimatedPrice = findViewById(R.id.tvEstimatedPrice)
+        ckbUserAccepted = findViewById(R.id.ckbUserAccepted)
+        ckbShopAccepted = findViewById(R.id.ckbShopAccepted)
+        ckbCompleted = findViewById(R.id.ckbCompleted)
+        tvVehicle = findViewById(R.id.tvVehicle)
+        tvDateOfFinish = findViewById(R.id.tvDateOfFinish)
+        tvActualPrice = findViewById(R.id.tvActualPrice)
+    }
+
+    private fun retrieveDataFromIntent() {
+        val stringMap = intent.getStringExtra(RequestListActivity.REQUEST_VIEW_KEY)
+        val map = Helper.deserializeObject<Map<String, String>>(stringMap!!)
+        requestId = map["requestId"]!!.toInt()
     }
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        val shopLocation = data?.Shop?.Location
+        val shopLocation = request?.Shop?.Location
         val myPosition = LatLng(shopLocation?.Latitude!!, shopLocation.Longitude!!)
 
         googleMap.addMarker(
@@ -83,14 +91,11 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
             .zoom(10.5F)
             .build()
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition2))
-        //googleMap.animateCamera(CameraUpdateFactory.newLatLng(myPosition))
     }
 
-    private fun retrieveActiveUserRequest() {
+    private fun retrieveRequest() {
         progressBarHolder.visibility = View.VISIBLE
-        homeContentView.visibility = View.INVISIBLE
-        homeNoContentView.visibility = View.GONE
-        apiService.retrieveActiveUserRequest(getUser().Id!!, true).enqueue((object :
+        apiService.retrieveRequest(requestId!!, true).enqueue((object :
             Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
 
@@ -104,61 +109,48 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
-                    handleretrieveActiveUserRequestResponse(response)
+                    handleRetrieveRequestResponse(response)
                     progressBarHolder.visibility = View.GONE
-
                 }
             }
         }
-                ))
+     ))
     }
 
-    fun handleretrieveActiveUserRequestResponse(response: Response) {
+    fun handleRetrieveRequestResponse(response: Response) {
 
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<Request>>(response.body!!.string())
 
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             try {
-                val data = resp.Data as Request
+                this.request = resp.Data as Request
                 mapServiceLocation =
                     supportFragmentManager.findFragmentById(R.id.mapServiceLocation) as? SupportMapFragment
                 mapServiceLocation?.getMapAsync(this)
-                this.data = data
                 populateViewWithData()
-                showContent(true)
             } catch (e: Exception) {
-                showContent(false)
                 Helper.showLongToast(this, e.message.toString())
             }
         } else {
-            showContent(false)
             handleApiResponseError(resp as ErrorResponse)
 
         }
     }
 
     private fun populateViewWithData() {
-        tvDateOfRepair.text = Helper.formatDate(data?.RepairDate!!)
-        tvTimeOfRepair.text = Helper.formatTime(data?.RepairDate!!)
-        tvRepairShopName.text = data?.Shop?.ShortName
-        tvRepairShopVat.text = data?.Shop?.Vat
-        tvRequestDescription.text = data?.IssueDescription
-        tvEstimatedTime.text = data?.EstimatedRepairHours.toString()
-        tvEstimatedPrice.text = data?.EstimatedPrice?.toString()
+        tvDateOfRepair.text = Helper.formatDate(request?.RequestDate!!)
+        tvTimeOfRepair.text = Helper.formatTime(request?.RequestDate!!)
+        tvRepairShopName.text = request?.Shop?.ShortName
+        tvRepairShopVat.text = request?.Shop?.Vat
+        tvRequestDescription.text = request?.IssueDescription
+        tvEstimatedTime.text = if(request?.EstimatedRepairHours != null) request?.EstimatedRepairHours.toString() else "N/A"
+        tvEstimatedPrice.text = request?.EstimatedPrice?.toString()
+        ckbShopAccepted.isChecked = request?.ShopAccepted == true
+        ckbUserAccepted.isChecked = request?.UserAccepted == true
+        ckbCompleted.isChecked = request?.Completed == true
+        tvVehicle.text = request?.Car!!.toString()
+        tvActualPrice.text = if(request?.Price != null) request?.Price!!.toString() else "N/A"
+        tvDateOfFinish.text = if(request?.FinishDate != null) Helper.formatDate(request?.FinishDate!!) else "N/A"
     }
-
-    private fun showContent(hasContent: Boolean) {
-        if (hasContent) {
-            homeContentView.visibility = View.VISIBLE
-            homeNoContentView.visibility = View.GONE
-        } else {
-            homeContentView.visibility = View.GONE
-            homeNoContentView.visibility = View.VISIBLE
-        }
-
-    }
-
-
-
 }

@@ -7,13 +7,13 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import hr.kcosic.app.R
-import hr.kcosic.app.model.listeners.RadioButtonClickListener
+import hr.kcosic.app.model.listeners.ButtonClickListener
 
 
 class TimeAdapter(
     var issues: List<String>,
     var workHours: String,
-    private var radioButtonClickListener: RadioButtonClickListener
+    private var radioButtonClickListener: ButtonClickListener
 ) : RecyclerView.Adapter<TimeAdapter.ViewHolder>() {
 
     var times: MutableList<String> = mutableListOf()
@@ -50,7 +50,7 @@ class TimeAdapter(
                 selectedPosition = holder.adapterPosition
                 // Call listener
                 radioButtonClickListener.onClick(
-                    holder.rbTime.text.toString()
+                    holder.tvTime.text.toString()
                 )
             }
         }

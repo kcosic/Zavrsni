@@ -101,31 +101,34 @@ namespace WebAPI.Controllers
                 var workHours = shop.WorkHours.Split('-');
                 var start = int.Parse(workHours[1].Split(':')[1]);
                 var end = int.Parse(workHours[1].Split(':')[0]);
-                takenAppointments.ForEach(appt =>
-                {
-                    if (appt.DateTimeEnd == date.Date)
-                    {
-                        for (int hour = start; hour < appt.DateTimeEnd.Hour; hour++)
-                        {
-                            takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
-                        }
-                    }
-                    else if (appt.DateTimeStart == date.Date)
-                    {
-                        for (int hour = appt.DateTimeStart.Hour; hour < end; hour++)
-                        {
-                            takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
-                        }
-                    }
-                    else
-                    {
-                        for (int hour = start; hour < end; hour++)
-                        {
-                            takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
-                        }
-                    }
-                });
 
+                if(takenAppointments.Count >= shop.CarCapacity)
+                {
+                    takenAppointments.ForEach(appt =>
+                    {
+                        if (appt.DateTimeEnd == date.Date)
+                        {
+                            for (int hour = start; hour < appt.DateTimeEnd.Hour; hour++)
+                            {
+                                takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
+                            }
+                        }
+                        else if (appt.DateTimeStart == date.Date)
+                        {
+                            for (int hour = appt.DateTimeStart.Hour; hour < end; hour++)
+                            {
+                                takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
+                            }
+                        }
+                        else
+                        {
+                            for (int hour = start; hour < end; hour++)
+                            {
+                                takenDates.Add($"{(hour < 10 ? "0" : "")}{hour}:00");
+                            }
+                        }
+                    });
+                }
                 return CreateOkResponse(takenDates);
             }
             catch (RecordNotFoundException e)

@@ -16,7 +16,7 @@ abstract class ValidatedActivity : BaseActivity() {
         validateUser()
     }
 
-    fun validateUser() {
+    private fun validateUser() {
         try {
             val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN)
             val authFor = Helper.retrieveSharedPreference<String>(PreferenceEnum.AUTH_FOR)

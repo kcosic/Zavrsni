@@ -4,26 +4,34 @@ import androidx.appcompat.app.AppCompatActivity
 import hr.kcosic.app.R
 import hr.kcosic.app.activity.*
 import hr.kcosic.app.model.helpers.Helper
-import java.lang.Exception
 import kotlin.reflect.KClass
 
 enum class ActivityEnum(val layoutId: Int, val menuItemId: Int) {
     HOME_USER(R.layout.activity_home_user, R.id.home) {
         override fun getClass(): KClass<HomeUserActivity> = HomeUserActivity::class
     },
-    SEARCH(R.layout.activity_search,R.id.search_service) {
+    SEARCH(R.layout.activity_search, R.id.search_service) {
         override fun getClass(): KClass<SearchActivity> = SearchActivity::class
     },
-    NEW_REQUEST(R.layout.activity_new_request,R.id.search_service) {
+    NEW_REQUEST(R.layout.activity_new_request, R.id.search_service) {
         override fun getClass(): KClass<NewRequestActivity> = NewRequestActivity::class
+    },
+    REQUEST_LIST(R.layout.activity_request_list, R.id.requests) {
+        override fun getClass(): KClass<RequestListActivity> = RequestListActivity::class
+    },
+    REQUEST_VIEW(R.layout.activity_request_view, R.id.requests) {
+        override fun getClass(): KClass<RequestViewActivity> = RequestViewActivity::class
+    },
+    SETTINGS_USER(R.layout.activity_settings_user, R.id.settings) {
+        override fun getClass(): KClass<SettingsUserActivity> = SettingsUserActivity::class
     },
     LOGIN(R.layout.activity_login, -1) {
         override fun getClass(): KClass<LoginActivity> = LoginActivity::class
     },
-    REGISTER_USER(R.layout.activity_register_user,-1) {
+    REGISTER_USER(R.layout.activity_register_user, -1) {
         override fun getClass(): KClass<RegisterUserActivity> = RegisterUserActivity::class
     },
-    REGISTER_SHOP(R.layout.activity_register_shop,-1) {
+    REGISTER_SHOP(R.layout.activity_register_shop, -1) {
         override fun getClass(): KClass<RegisterShopActivity> = RegisterShopActivity::class
     },
 
@@ -38,6 +46,8 @@ enum class ActivityEnum(val layoutId: Int, val menuItemId: Int) {
                 when (resId) {
                     R.id.home -> return HOME_USER
                     R.id.search_service -> return SEARCH
+                    R.id.requests -> return REQUEST_LIST
+                    R.id.settings -> return SETTINGS_USER
                 }
             }
 

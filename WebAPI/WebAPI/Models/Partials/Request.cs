@@ -35,7 +35,10 @@ namespace WebAPI.Models.ORM
                 ShopAccepted = item.ShopAccepted,
                 UserAccepted = item.UserAccepted,
                 Car = singleLevel ? null : Car.ToDTO(item.Car),
-                CarId = item.CarId
+                CarId = item.CarId,
+                IssueDescription = item.IssueDescription,
+                RepairDate = item.RepairDate,
+                RequestDate = item.RequestDate
             };
         }
 
@@ -71,7 +74,10 @@ namespace WebAPI.Models.ORM
                 ShopAccepted = ShopAccepted,
                 UserAccepted = UserAccepted,
                 Car = singleLevel ? null : Car.ToDTO(Car),
-                CarId = CarId
+                CarId = CarId,
+                IssueDescription = IssueDescription,
+                RepairDate = RepairDate,
+                RequestDate = RequestDate
             };
         }
     }

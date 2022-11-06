@@ -12,7 +12,6 @@
         tools:context=".activity.HomeUserActivity">
 
         <ScrollView
-            android:id="@+id/homeContentView"
             style="@style/home"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -24,14 +23,104 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <androidx.cardview.widget.CardView
+                    style="@style/card_style"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/car_service_in_next_30_days"
-                    android:textAlignment="center"
-                    android:textColor="#212121"
-                    android:textSize="30sp" />
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="@string/consents"
+                            android:textAlignment="center" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+
+                                android:layout_weight="4"
+                                android:text="@string/user_accepted" />
+
+                            <CheckBox
+                                android:id="@+id/ckbUserAccepted"
+                                android:layout_width="wrap_content"
+                                android:layout_gravity="center"
+
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                android:textAlignment="center" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10"
+                            >
+
+                            <TextView
+                                android:layout_width="0sp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="4"
+                                android:text="@string/shop_accepted" />
+
+                            <CheckBox
+                                android:id="@+id/ckbShopAccepted"
+                                android:layout_gravity="center"
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                android:textAlignment="center" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+
+                                android:layout_weight="4"
+                                android:text="@string/completed" />
+
+                            <CheckBox
+                                android:id="@+id/ckbCompleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+
+                                android:clickable="false"
+                                android:textAlignment="center" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/nextServiceDate"
@@ -225,6 +314,26 @@
                                 android:layout_weight="6"
                                 android:text="@string/lorem" />
                         </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:text="@string/vehicle" />
+
+                            <TextView
+                                android:id="@+id/tvVehicle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                android:text="@string/lorem" />
+                        </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -291,50 +400,51 @@
                                 android:layout_weight="6"
                                 android:text="@string/lorem" />
                         </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:text="@string/actual_date_of_finish" />
+
+                            <TextView
+                                android:id="@+id/tvDateOfFinish"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                android:text="@string/lorem" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:text="@string/actual_price" />
+
+                            <TextView
+                                android:id="@+id/tvActualPrice"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                android:text="@string/lorem" />
+                        </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
         </ScrollView>
-
-        <LinearLayout
-            android:id="@+id/homeNoContentView"
-            style="@style/home"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="100"
-            android:visibility="gone">
-
-            <androidx.cardview.widget.CardView
-                style="@style/card_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="@string/no_requests"
-                        android:textAlignment="center" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="@string/to_find_mechanic_shop_in_your_vicinity_go_to_search"
-                        android:textAlignment="center" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
 
         <include layout="@layout/bottom_navigation" />
     </LinearLayout>

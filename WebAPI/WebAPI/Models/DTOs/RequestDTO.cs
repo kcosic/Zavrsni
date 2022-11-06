@@ -52,7 +52,7 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public DateTime RequestDate { get; set; }
         [JsonProperty]
-        public DateTime RepairDate { get; set; }
+        public DateTime? RepairDate { get; set; }
         [JsonProperty]
         public string IssueDescription { get; set; }
     }

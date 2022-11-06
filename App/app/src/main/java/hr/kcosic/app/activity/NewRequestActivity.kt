@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.*
-import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.kcosic.app.R
@@ -21,7 +21,7 @@ import hr.kcosic.app.model.entities.Request
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
-import hr.kcosic.app.model.listeners.RadioButtonClickListener
+import hr.kcosic.app.model.listeners.ButtonClickListener
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.ListResponse
 import hr.kcosic.app.model.responses.SingleResponse
@@ -30,8 +30,6 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.io.InvalidObjectException
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQUEST) {
@@ -52,15 +50,14 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     private lateinit var dateOfRepair: String
 
     private var selectedVehicle: Car? = null
-    private var issueDescription: String? = null
     private var timeOfRepair: String? = null
+    private var shopId: Int? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_request)
         retrieveDataFromIntent()
-        retrieveIssues()
+        retrieveAvailability()
         retrieveMyVehicles()
         initializeComponents()
     }
@@ -71,6 +68,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
         val map = Helper.deserializeObject<Map<String, String>>(stringMap!!)
         selectedLocation = Helper.deserializeObject(map["selectedLocation"]!!)
         dateOfRepair = map["dateOfRepair"]!!
+        shopId = selectedLocation.Shops?.get(0)?.Id!!
     }
 
 
@@ -80,6 +78,8 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
         btnAddVehicle = findViewById(R.id.btnNewVehicle)
         btnNext = findViewById(R.id.btnNext)
         etIssueDescription = findViewById(R.id.etIssueDescription)
+
+        etIssueDescription.doOnTextChanged { _, _, _, _ -> validateNextButton() }
 
         ddMyVehicles.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -121,29 +121,92 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
         }
 
         btnNext.setOnClickListener {
-            //createNewRequest(assignDataToRequest())
+            createNewRequest(assignDataToRequest())
         }
 
+    }
+
+    private fun isRequestValid(): Boolean {
+        var isValid = true
+        when (ddMyVehicles.selectedItem) {
+            null -> {
+                (ddMyVehicles.selectedView as TextView).setError(
+                    getString(R.string.required_value),
+                    Helper.getErrorIcon()
+                )
+                isValid = false
+            }
+        }
+
+        when {
+            etIssueDescription.text == null -> {
+                etIssueDescription.setError(
+                    getString(R.string.required_value),
+                    Helper.getErrorIcon()
+                )
+                isValid = false
+            }
+            !Helper.isStringInRange(etIssueDescription.text.toString(), 1, 2000) -> {
+                etIssueDescription.setError(
+                    getString(R.string.length_between_1_2000),
+                    Helper.getErrorIcon()
+                )
+                isValid = false
+            }
+
+        }
+
+        when (timeOfRepair) {
+            null -> {
+                isValid = false
+            }
+        }
+
+        return isValid
+    }
+
+    private fun createNewRequest(newRequest: Request) {
+        progressBarHolder.visibility = View.VISIBLE
+        apiService.createRequest(newRequest).enqueue(object : Callback {
+            val mainHandler = Handler(applicationContext.mainLooper)
+            override fun onFailure(call: Call, e: IOException) {
+                mainHandler.post {
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = View.GONE
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                mainHandler.post {
+                    handleCreateRequestResponse(response)
+                    progressBarHolder.visibility = View.GONE
+                }
+            }
+        })
+    }
+
+    fun handleCreateRequestResponse(response: Response) {
+
+        val resp: BaseResponse =
+            Helper.parseStringResponse<SingleResponse<Car>>(response.body!!.string())
+
+        if (resp.IsSuccess!!) {
+            Helper.showLongToast(this, getString(R.string.request_submitted))
+        } else {
+            handleApiResponseError(resp as ErrorResponse)
+        }
     }
 
     private fun assignDataToRequest(): Request {
 
         val newRequest = Request()
-        newRequest.UserAccepted = false
-        newRequest.ShopAccepted = false
-        newRequest.Completed = false
-        newRequest.FinishDate = null
-        newRequest.Shop = null
-        newRequest.Car = selectedVehicle
-        newRequest.BillPicture = null
-        newRequest.RequestDate = Helper.stringToIsoDateTime(dateOfRepair)
-        newRequest.EstimatedRepairHours = null
-        newRequest.EstimatedPrice = null
-        newRequest.Price = null
-        newRequest.User = null
+        newRequest.CarId = selectedVehicle?.Id
+        newRequest.RepairDate = Helper.stringToDateTime("$dateOfRepair $timeOfRepair")
+        newRequest.RequestDate = java.util.Calendar.getInstance().time
         newRequest.UserId = getUser().Id
-
-        return Request()
+        newRequest.ShopId = shopId
+        newRequest.IssueDescription = etIssueDescription.text.toString()
+        return newRequest
     }
 
 
@@ -194,7 +257,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     }
 
     private fun isFormValid(): Boolean {
-        var isValid = true;
+        var isValid = true
         when {
             etManufacturer.text.toString().isEmpty() -> {
                 etManufacturer.setError(getString(R.string.required_value), Helper.getErrorIcon())
@@ -293,9 +356,10 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
         }
     }
 
-    private fun retrieveIssues() {
+    private fun retrieveAvailability() {
         progressBarHolder.visibility = View.VISIBLE
-        apiService.retrieveShopAvailability(selectedLocation.Shops?.get(0)?.Id!!, dateOfRepair)
+        //TODO: fix when multiple shops are in  the same location
+        apiService.retrieveShopAvailability(shopId!!, dateOfRepair)
             .enqueue(object : Callback {
                 val mainHandler = Handler(applicationContext.mainLooper)
                 override fun onFailure(call: Call, e: IOException) {
@@ -307,7 +371,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
 
                 override fun onResponse(call: Call, response: Response) {
                     mainHandler.post {
-                        handleRetrieveIssuesResponse(response)
+                        handleRetrieveAvailabilityResponse(response)
                         progressBarHolder.visibility = View.GONE
                     }
                 }
@@ -315,7 +379,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun handleRetrieveIssuesResponse(response: Response) {
+    fun handleRetrieveAvailabilityResponse(response: Response) {
 
         val resp: BaseResponse =
             Helper.parseStringResponse<ListResponse<String>>(response.body!!.string())
@@ -324,7 +388,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
 
             try {
                 @Suppress("UNCHECKED_CAST") val data = resp.Data as ArrayList<String>
-                val radioButtonClickListener = object : RadioButtonClickListener {
+                val radioButtonClickListener = object : ButtonClickListener {
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onClick(s: String) {
                         // Notify adapter
@@ -353,7 +417,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     }
 
     private fun validateNextButton() {
-        if(!timeOfRepair.isNullOrEmpty() && !issueDescription.isNullOrEmpty() && selectedVehicle != null){
+        if (isRequestValid()) {
             btnNext.visibility = View.VISIBLE
         } else {
             btnNext.visibility = View.GONE
