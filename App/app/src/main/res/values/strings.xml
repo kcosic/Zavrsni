@@ -90,4 +90,8 @@
     <string name="consents">Consents</string>
     <string name="actual_date_of_finish">Actual Date of Finish</string>
     <string name="actual_price">Actual Price</string>
+    <string name="personal_info">Personal Information</string>
+    <string name="account_info">Account Information</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="vehicles">Vehicles</string>
 </resources>
