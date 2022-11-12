@@ -1,6 +1,7 @@
 package hr.kcosic.app.dal
 
 import android.util.Base64
+import hr.kcosic.app.model.ResetPassword
 import hr.kcosic.app.model.bases.ApiRoutes
 import hr.kcosic.app.model.entities.*
 import hr.kcosic.app.model.enums.PreferenceEnum
@@ -227,7 +228,7 @@ class ApiService private constructor() {
     }
 
     fun updateCar(updatedCar: Car): Call {
-        return put(ApiRoutes.CAR, updatedCar)
+        return put("${ApiRoutes.CAR}/${updatedCar.Id}", updatedCar)
     }
 
     //#endregion
@@ -254,7 +255,7 @@ class ApiService private constructor() {
     }
 
     fun updateRequest(updatedRequest: hr.kcosic.app.model.entities.Request): Call {
-        return put(ApiRoutes.REQUEST, updatedRequest)
+        return put("${ApiRoutes.REQUEST}/${updatedRequest.Id}", updatedRequest)
     }
 
     //#endregion
@@ -276,7 +277,7 @@ class ApiService private constructor() {
     }
 
     fun updateReview(updatedReview: Review): Call {
-        return put(ApiRoutes.REVIEW, updatedReview)
+        return put("${ApiRoutes.REVIEW}/${updatedReview.Id}", updatedReview)
     }
 
     //#endregion
@@ -314,7 +315,7 @@ class ApiService private constructor() {
     }
 
     fun updateShop(updatedShop: Shop): Call {
-        return put(ApiRoutes.SHOP, updatedShop)
+        return put("${ApiRoutes.SHOP}/${updatedShop.Id}", updatedShop)
     }
 
     //#endregion
@@ -336,11 +337,19 @@ class ApiService private constructor() {
     }
 
     fun updateUser(updatedUser: User): Call {
-        return put(ApiRoutes.USER, updatedUser)
+        return put("${ApiRoutes.USER}/${updatedUser.Id}", updatedUser)
     }
 
     fun retrieveUserRequests(): Call {
         return get("${ApiRoutes.USER}/Requests")
+    }
+
+    fun resetPassword(userId: Int, oldPassword: String, newPassword: String): Call {
+        val data = ResetPassword(
+            Helper.toBase64(oldPassword),
+            Helper.toBase64(newPassword)
+        )
+        return post("${ApiRoutes.USER}/${userId}/ResetPassword", data)
     }
 
     //#endregion

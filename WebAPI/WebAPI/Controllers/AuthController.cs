@@ -164,15 +164,5 @@ namespace WebAPI.Controllers
                 return CreateErrorResponse(e, ErrorCodeEnum.UnexpectedError);
             }
         }
-
-        //// PUT: api/Auth/5
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
-
-        //// DELETE: api/Auth/5
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

@@ -20,6 +20,8 @@ import hr.kcosic.app.model.entities.Location
 import hr.kcosic.app.model.entities.Request
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.helpers.IconHelper
+import hr.kcosic.app.model.helpers.ValidationHelper
 import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
 import hr.kcosic.app.model.listeners.ButtonClickListener
 import hr.kcosic.app.model.responses.ErrorResponse
@@ -112,7 +114,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
                 getString(R.string.cancel),
                 object : OnPositiveButtonClickListener {
                     override fun onPositiveBtnClick(dialog: DialogInterface?) {
-                        if (isFormValid()) {
+                        if (ValidationHelper.validateCar(etManufacturer, etModel, etYear, etOdometer)) {
                             createVehicle(assignFormToVehicle(), dialog)
                         }
                     }
@@ -132,7 +134,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
             null -> {
                 (ddMyVehicles.selectedView as TextView).setError(
                     getString(R.string.required_value),
-                    Helper.getErrorIcon()
+                    IconHelper.getErrorIcon()
                 )
                 isValid = false
             }
@@ -142,14 +144,14 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
             etIssueDescription.text == null -> {
                 etIssueDescription.setError(
                     getString(R.string.required_value),
-                    Helper.getErrorIcon()
+                    IconHelper.getErrorIcon()
                 )
                 isValid = false
             }
-            !Helper.isStringInRange(etIssueDescription.text.toString(), 1, 2000) -> {
+            !ValidationHelper.isStringInRange(etIssueDescription.text.toString(), 1, 2000) -> {
                 etIssueDescription.setError(
                     getString(R.string.length_between_1_2000),
-                    Helper.getErrorIcon()
+                    IconHelper.getErrorIcon()
                 )
                 isValid = false
             }
@@ -256,63 +258,6 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
         return car
     }
 
-    private fun isFormValid(): Boolean {
-        var isValid = true
-        when {
-            etManufacturer.text.toString().isEmpty() -> {
-                etManufacturer.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etManufacturer.text.toString(), 1, 50) -> {
-                etManufacturer.setError(
-                    getString(R.string.length_between_1_50),
-                    Helper.getErrorIcon()
-                )
-                isValid = false
-            }
-        }
-        when {
-            etModel.text.toString().isEmpty() -> {
-                etModel.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etModel.text.toString(), 1, 50) -> {
-                etModel.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
-                isValid = false
-            }
-        }
-        when {
-            etYear.text.toString().isEmpty() -> {
-                etYear.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isValueInRange(
-                etYear.text.toString().toInt(),
-                1960,
-                Calendar.getInstance().get(Calendar.YEAR)
-            ) -> {
-                etYear.setError(getString(R.string.value_between_1960_today), Helper.getErrorIcon())
-                isValid = false
-            }
-        }
-        when {
-            etOdometer.text.toString().isEmpty() -> {
-                etOdometer.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-        }
-        when {
-            etModel.text.toString().isEmpty() -> {
-                etModel.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etModel.text.toString(), 1, 50) -> {
-                etModel.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
-                isValid = false
-            }
-        }
-        return isValid
-    }
 
     private fun retrieveMyVehicles() {
         progressBarHolder.visibility = View.VISIBLE

@@ -26,6 +26,7 @@ import hr.kcosic.app.model.entities.Location
 import hr.kcosic.app.model.entities.Shop
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.helpers.ValidationHelper
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.ListResponse
 import hr.kcosic.app.model.responses.SingleResponse
@@ -130,7 +131,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
         }
 
         btnFinishRegistration.setOnClickListener {
-            if (isFormValid()) {
+            if (ValidationHelper.validateShop(location, etVat, etEmail, etLegalName, etShortName, etPassword, etRepeatPassword)) {
                 register()
             }
         }
@@ -175,83 +176,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
     }
 
 
-    private fun isFormValid(): Boolean {
-        var isValid = true
 
-        when {
-            etVat.text.toString().isEmpty() -> {
-                etVat.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etVat.text.toString(), 1, 50) -> {
-                etVat.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
-                isValid = false
-            }
-
-        }
-
-        when {
-            etEmail.text.toString().isEmpty() -> {
-                etEmail.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etEmail.text.toString(), 1, 50) -> {
-                etEmail.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
-                isValid = false
-            }
-
-        }
-
-        when {
-            etLegalName.text.toString().isEmpty() -> {
-                etLegalName.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etLegalName.text.toString(), 1, 200) -> {
-                etLegalName.setError(
-                    getString(R.string.length_between_1_200),
-                    Helper.getErrorIcon()
-                )
-                isValid = false
-            }
-
-        }
-
-        when {
-            etShortName.text.toString().isEmpty() -> {
-                etShortName.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etShortName.text.toString(), 1, 50) -> {
-                etShortName.setError(
-                    getString(R.string.length_between_1_50),
-                    Helper.getErrorIcon()
-                )
-                isValid = false
-            }
-
-        }
-
-        if (location == null) {
-            Helper.showLongToast(this, getString(R.string.location_required))
-            isValid = false
-        }
-
-        if (etRepeatPassword.text.isNullOrEmpty()) {
-            isValid = false
-            etRepeatPassword.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(etRepeatPassword.text.toString(), 1, 50)) {
-            isValid = false
-            etRepeatPassword.error = getString(R.string.length_between_1_50)
-        }
-
-        if (etRepeatPassword.text.toString() != etPassword.text.toString()) {
-            isValid = false
-            etRepeatPassword.error = getString(R.string.passwords_must_match)
-        }
-
-        return isValid
-    }
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map

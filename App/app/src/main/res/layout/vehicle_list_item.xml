@@ -44,7 +44,7 @@
                 style="@style/row_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@string/model" />
+                android:text="@string/model" />
 
             <TextView
                 android:id="@+id/tvModel"
@@ -90,7 +90,7 @@
                 style="@style/row_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@string/odometer" />
+                android:text="@string/odometer" />
 
             <TextView
                 android:id="@+id/tvOdometer"

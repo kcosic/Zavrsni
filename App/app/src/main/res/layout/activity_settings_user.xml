@@ -34,6 +34,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
+                            android:id="@+id/llAccountSection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
@@ -48,10 +49,9 @@
                                 android:layout_margin="10dp"
                                 android:text="@string/account_info"
                                 android:textAlignment="center" />
-
-                            <ImageButton
-                                android:id="@+id/btnAccountInfoExpand"
-                                android:layout_width="wrap_content"
+                            <ImageView
+                                android:id="@+id/ivAccountInfoExpand"
+                                android:layout_width="15sp"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
                                 android:contentDescription="@string/content_toggle"
@@ -59,9 +59,9 @@
                                 android:visibility="gone"
                                 tools:src="@drawable/chevron_down_small_primary" />
 
-                            <ImageButton
-                                android:id="@+id/btnAccountInfoCollapse"
-                                android:layout_width="wrap_content"
+                            <ImageView
+                                android:id="@+id/ivAccountInfoCollapse"
+                                android:layout_width="15sp"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
 
@@ -70,9 +70,9 @@
                                 android:visibility="visible"
                                 tools:src="@drawable/chevron_up_small_primary" />
 
-                            <ImageButton
-                                android:id="@+id/btnAccountInfoSave"
-                                android:layout_width="wrap_content"
+                            <ImageView
+                                android:id="@+id/ivAccountInfoSave"
+                                android:layout_width="15sp"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
                                 android:contentDescription="@string/content_toggle"
@@ -218,6 +218,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
+                            android:id="@+id/llPersonalInfoSection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
@@ -233,8 +234,8 @@
                                 android:text="@string/personal_info"
                                 android:textAlignment="center" />
 
-                            <ImageButton
-                                android:id="@+id/btnPersonalInfoExpand"
+                            <ImageView
+                                android:id="@+id/ivPersonalInfoExpand"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -245,8 +246,8 @@
                                 tools:ignore="TouchTargetSizeCheck"
                                 tools:src="@drawable/chevron_down_small_primary" />
 
-                            <ImageButton
-                                android:id="@+id/btnPersonalInfoCollapse"
+                            <ImageView
+                                android:id="@+id/ivPersonalInfoCollapse"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -255,8 +256,8 @@
                                 android:src="@drawable/chevron_up_small_primary"
                                 android:visibility="visible"
                                 tools:src="@drawable/chevron_up_small_primary" />
-                            <ImageButton
-                                android:id="@+id/btnPersonalInfoSave"
+                            <ImageView
+                                android:id="@+id/ivPersonalInfoSave"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -422,6 +423,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
+                            android:id="@+id/llVehiclesSection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
@@ -437,8 +439,8 @@
                                 android:text="@string/vehicles"
                                 android:textAlignment="center" />
 
-                            <ImageButton
-                                android:id="@+id/btnVehiclesExpand"
+                            <ImageView
+                                android:id="@+id/ivVehiclesExpand"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -449,8 +451,8 @@
                                 tools:ignore="TouchTargetSizeCheck"
                                 tools:src="@drawable/chevron_down_small_primary" />
 
-                            <ImageButton
-                                android:id="@+id/btnVehiclesCollapse"
+                            <ImageView
+                                android:id="@+id/ivVehiclesCollapse"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -507,6 +509,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
+                            android:id="@+id/llSystemSection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
@@ -522,8 +525,8 @@
                                 android:text="@string/system"
                                 android:textAlignment="center" />
 
-                            <ImageButton
-                                android:id="@+id/btnSystemExpand"
+                            <ImageView
+                                android:id="@+id/ivSystemExpand"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -534,8 +537,8 @@
                                 tools:ignore="TouchTargetSizeCheck"
                                 tools:src="@drawable/chevron_down_small_primary" />
 
-                            <ImageButton
-                                android:id="@+id/btnSystemCollapse"
+                            <ImageView
+                                android:id="@+id/ivSystemCollapse"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -551,7 +554,7 @@
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
-                            android:id="@+id/settingsContent"
+                            android:id="@+id/systemContent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"

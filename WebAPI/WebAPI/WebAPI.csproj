@@ -187,6 +187,7 @@
     </Compile>
     <Compile Include="Models\Bases\BaseController.cs" />
     <Compile Include="Models\Bases\BaseException.cs" />
+    <Compile Include="Models\PasswordReset.cs" />
     <Compile Include="Models\DTOs\UserDTO.cs" />
     <Compile Include="Models\DTOs\TokenDTO.cs" />
     <Compile Include="Models\DTOs\ShopDTO.cs" />

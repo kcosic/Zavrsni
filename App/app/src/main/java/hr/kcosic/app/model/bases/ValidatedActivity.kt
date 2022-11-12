@@ -2,6 +2,7 @@ package hr.kcosic.app.model.bases
 
 import android.os.Bundle
 import hr.kcosic.app.R
+import hr.kcosic.app.model.entities.Shop
 import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.ErrorCodeEnum
@@ -31,14 +32,29 @@ abstract class ValidatedActivity : BaseActivity() {
     }
 
     fun getUser(): User {
-        return Helper.deserializeObject(
-            Helper.retrieveSharedPreference(PreferenceEnum.USER)
-        )
+        lateinit var user:User
+        try{
+            user = Helper.deserializeObject(
+                Helper.retrieveSharedPreference(PreferenceEnum.USER)
+            )
+        } catch (e: Exception){
+            Helper.showShortToast(this,e.message ?: getString(R.string.unknown_error))
+            logoutUser()
+        }
+        return user;
     }
-    fun getShop(): User {
-        return Helper.deserializeObject(
-            Helper.retrieveSharedPreference(PreferenceEnum.SHOP)
-        )
+    fun getShop(): Shop {
+        lateinit var shop:Shop
+
+        try{
+            shop = return Helper.deserializeObject(
+                Helper.retrieveSharedPreference(PreferenceEnum.SHOP)
+            )
+        } catch (e: Exception){
+            Helper.showShortToast(this,e.message ?: getString(R.string.unknown_error))
+            logoutShop()
+        }
+        return shop;
     }
 
     override fun handleApiResponseError(response: ErrorResponse){
@@ -52,6 +68,14 @@ abstract class ValidatedActivity : BaseActivity() {
         Helper.showLongToast(this,getString(R.string.token_error))
         Helper.deleteSharedPreference(PreferenceEnum.TOKEN)
         Helper.deleteSharedPreference(PreferenceEnum.AUTH_FOR)
+        Helper.deleteSharedPreference(PreferenceEnum.USER)
+        Helper.openActivity(this,ActivityEnum.LOGIN)
+    }
+    fun logoutShop(){
+        Helper.showLongToast(this,getString(R.string.token_error))
+        Helper.deleteSharedPreference(PreferenceEnum.TOKEN)
+        Helper.deleteSharedPreference(PreferenceEnum.AUTH_FOR)
+        Helper.deleteSharedPreference(PreferenceEnum.SHOP)
         Helper.openActivity(this,ActivityEnum.LOGIN)
     }
 }

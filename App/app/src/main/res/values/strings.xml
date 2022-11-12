@@ -98,4 +98,10 @@
     <string name="system">System</string>
     <string name="logout">Log out</string>
     <string name="edit_row">Edit row</string>
+    <string name="vehicle_deleted_successfuly">Vehicle Deleted Successfully</string>
+    <string name="vehicle_edited_successfuly">Vehicle Edited Successfully</string>
+    <string name="save">Save</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="repeat_new_password">Repeat New Password</string>
 </resources>

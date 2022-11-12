@@ -1,22 +1,29 @@
 package hr.kcosic.app.activity
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.DialogInterface
-import android.icu.util.Calendar
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.kcosic.app.R
-import hr.kcosic.app.adapter.TimeAdapter
+import hr.kcosic.app.adapter.VehiclesAdapter
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ValidatedActivityWithNavigation
 import hr.kcosic.app.model.entities.Car
-import hr.kcosic.app.model.entities.Location
+import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.helpers.ValidationHelper
+import hr.kcosic.app.model.listeners.ButtonClickListener
 import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.ListResponse
@@ -26,13 +33,16 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.io.InvalidObjectException
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTINGS_USER) {
 
     //#region Account
-    private lateinit var btnAccountInfoExpand: ImageButton
-    private lateinit var btnAccountInfoCollapse: ImageButton
-    private lateinit var btnAccountInfoSave: ImageButton
+    private lateinit var llAccountSection: LinearLayout
+    private lateinit var ivAccountInfoExpand: ImageView
+    private lateinit var ivAccountInfoCollapse: ImageView
+    private lateinit var ivAccountInfoSave: ImageView
     private lateinit var accountInfoContent: LinearLayout
     private lateinit var etUserName: EditText
     private lateinit var btnEditUserName: ImageButton
@@ -42,9 +52,10 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     //#endregion
 
     //#region Personal
-    private lateinit var btnPersonalInfoExpand: ImageButton
-    private lateinit var btnPersonalInfoCollapse: ImageButton
-    private lateinit var btnPersonalInfoSave: ImageButton
+    private lateinit var llPersonalInfoSection: LinearLayout
+    private lateinit var ivPersonalInfoExpand: ImageView
+    private lateinit var ivPersonalInfoCollapse: ImageView
+    private lateinit var ivPersonalInfoSave: ImageView
     private lateinit var personalInfoContent: LinearLayout
     private lateinit var etFirstName: EditText
     private lateinit var btnEditFirstName: ImageButton
@@ -55,8 +66,9 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     //#endregion Personal
 
     //#region Vehicles
-    private lateinit var btnVehiclesExpand: ImageButton
-    private lateinit var btnVehiclesCollapse: ImageButton
+    private lateinit var llVehiclesSection: LinearLayout
+    private lateinit var ivVehiclesExpand: ImageView
+    private lateinit var ivVehiclesCollapse: ImageView
     private lateinit var vehiclesContent: LinearLayout
     private lateinit var rvVehicles: RecyclerView
     private lateinit var btnNewVehicle: Button
@@ -69,18 +81,26 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private lateinit var etOdometer: EditText
     private lateinit var dialogProgressbar: FrameLayout
     private lateinit var newVehicleDialog: Dialog
+
     //#endregion Vehicle dialog
     //#region System
-    private lateinit var btnSystemExpand: ImageButton
-    private lateinit var btnSystemCollapse: ImageButton
-    private lateinit var settingsContent: LinearLayout
+    private lateinit var llSystemSection: LinearLayout
+    private lateinit var ivSystemExpand: ImageView
+    private lateinit var ivSystemCollapse: ImageView
+    private lateinit var systemContent: LinearLayout
     private lateinit var btnLogout: Button
+
     //#endregion System
+    private var userData: User? = null
+    private lateinit var vehiclesAdapter: VehiclesAdapter
+    private val dobCalendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
 
     //#region Init
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeComponents()
+        retrieveUser()
+        retrieveMyVehicles()
     }
 
     override fun initializeComponents() {
@@ -91,55 +111,41 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     }
 
     private fun initializeSystemSection() {
-        btnSystemExpand = findViewById(R.id.btnSystemExpand)
-        btnSystemCollapse = findViewById(R.id.btnSystemCollapse)
-        settingsContent = findViewById(R.id.settingsContent)
+        llSystemSection = findViewById(R.id.llSystemSection)
+        ivSystemExpand = findViewById(R.id.ivSystemExpand)
+        ivSystemCollapse = findViewById(R.id.ivSystemCollapse)
+        systemContent = findViewById(R.id.systemContent)
         btnLogout = findViewById(R.id.btnLogout)
 
-        btnSystemExpand.setOnClickListener {
-            btnSystemExpand.visibility = View.GONE
-            btnSystemCollapse.visibility = View.VISIBLE
-            settingsContent.visibility = View.VISIBLE
-        }
-
-        btnSystemCollapse.setOnClickListener {
-            btnSystemExpand.visibility = View.VISIBLE
-            btnSystemCollapse.visibility = View.GONE
-            settingsContent.visibility = View.GONE
+        llSystemSection.setOnClickListener {
+            toggleHeader(systemContent, ivSystemExpand, ivSystemCollapse) {}
         }
 
         btnLogout.setOnClickListener {
-            clearUserData()
-            redirectToLogin()
+            logoutUser()
         }
     }
 
     private fun initializeVehiclesSection() {
-        btnVehiclesExpand = findViewById(R.id.btnVehiclesExpand)
-        btnVehiclesCollapse = findViewById(R.id.btnVehiclesCollapse)
+        llVehiclesSection = findViewById(R.id.llVehiclesSection)
+        ivVehiclesExpand = findViewById(R.id.ivVehiclesExpand)
+        ivVehiclesCollapse = findViewById(R.id.ivVehiclesCollapse)
         vehiclesContent = findViewById(R.id.vehiclesContent)
         rvVehicles = findViewById(R.id.rvVehicles)
         btnNewVehicle = findViewById(R.id.btnNewVehicle)
 
-        btnVehiclesExpand.setOnClickListener {
-            btnVehiclesExpand.visibility = View.GONE
-            btnVehiclesCollapse.visibility = View.VISIBLE
-            vehiclesContent.visibility = View.VISIBLE
+        llVehiclesSection.setOnClickListener {
+            toggleHeader(vehiclesContent, ivVehiclesExpand, ivVehiclesCollapse) {}
         }
 
-        btnVehiclesCollapse.setOnClickListener {
-            btnVehiclesExpand.visibility = View.VISIBLE
-            btnVehiclesCollapse.visibility = View.GONE
-            vehiclesContent.visibility = View.GONE
-        }
         btnNewVehicle.setOnClickListener {
             val dialogView = Helper.inflateView(R.layout.new_vehicle_layout)
-            etManufacturer = dialogView.findViewById(R.id.etManufacturer)
-            etModel = dialogView.findViewById(R.id.etModel)
-            etYear = dialogView.findViewById(R.id.etYear)
-            etOdometer = dialogView.findViewById(R.id.etOdometer)
-            dialogProgressbar = dialogView.findViewById(R.id.progressBarHolder)
-            newVehicleDialog = Helper.showConfirmDialog(
+            val etManufacturer: EditText = dialogView.findViewById(R.id.etManufacturer)
+            val etModel: EditText = dialogView.findViewById(R.id.etModel)
+            val etYear: EditText = dialogView.findViewById(R.id.etYear)
+            val etOdometer: EditText = dialogView.findViewById(R.id.etOdometer)
+            val dialogProgressbar: ProgressBar = dialogView.findViewById(R.id.progressBarHolder)
+            Helper.showConfirmDialog(
                 this,
                 "",
                 dialogView,
@@ -147,7 +153,14 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
                 getString(R.string.cancel),
                 object : OnPositiveButtonClickListener {
                     override fun onPositiveBtnClick(dialog: DialogInterface?) {
-                        if (isFormValid()) {
+                        if (ValidationHelper.validateCar(
+                                etManufacturer,
+                                etModel,
+                                etYear,
+                                etOdometer
+                            )
+                        ) {
+                            dialogProgressbar.visibility = VISIBLE
                             createVehicle(assignFormToVehicle(), dialog)
                         }
                     }
@@ -157,9 +170,10 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     }
 
     private fun initializePersonalInfoSection() {
-        btnPersonalInfoExpand = findViewById(R.id.btnPersonalInfoExpand)
-        btnPersonalInfoCollapse = findViewById(R.id.btnPersonalInfoCollapse)
-        btnPersonalInfoSave = findViewById(R.id.btnPersonalInfoSave)
+        llPersonalInfoSection = findViewById(R.id.llPersonalInfoSection)
+        ivPersonalInfoExpand = findViewById(R.id.ivPersonalInfoExpand)
+        ivPersonalInfoCollapse = findViewById(R.id.ivPersonalInfoCollapse)
+        ivPersonalInfoSave = findViewById(R.id.ivPersonalInfoSave)
         personalInfoContent = findViewById(R.id.personalInfoContent)
         etFirstName = findViewById(R.id.etFirstName)
         btnEditFirstName = findViewById(R.id.btnEditFirstName)
@@ -168,51 +182,74 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         etDob = findViewById(R.id.etDob)
         btnEditDob = findViewById(R.id.btnEditDob)
 
-        btnPersonalInfoExpand.setOnClickListener {
-            btnPersonalInfoExpand.visibility = View.GONE
-            btnPersonalInfoCollapse.visibility = View.VISIBLE
-            personalInfoContent.visibility = View.VISIBLE
+        val date =
+            DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                dobCalendar.set(Calendar.YEAR, year)
+                dobCalendar.set(Calendar.MONTH, month)
+                dobCalendar.set(Calendar.DAY_OF_MONTH, day)
+                dobCalendar.set(Calendar.HOUR, 0)
+                dobCalendar.set(Calendar.MINUTE, 0)
+                dobCalendar.set(Calendar.SECOND, 0)
+                dobCalendar.set(Calendar.MILLISECOND, 0)
+                updateLabel()
+            }
+        etDob.setOnClickListener {
+            DatePickerDialog(
+                this,
+                date,
+                dobCalendar.get(Calendar.YEAR),
+                dobCalendar.get(Calendar.MONTH),
+                dobCalendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
         }
 
-        btnPersonalInfoCollapse.setOnClickListener {
-            btnPersonalInfoExpand.visibility = View.VISIBLE
-            btnPersonalInfoCollapse.visibility = View.GONE
-            personalInfoContent.visibility = View.GONE
+        etDob.setOnFocusChangeListener { _, inFocus ->
+            if(inFocus){
+                DatePickerDialog(
+                    this,
+                    date,
+                    dobCalendar.get(Calendar.YEAR),
+                    dobCalendar.get(Calendar.MONTH),
+                    dobCalendar.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+
         }
-        btnPersonalInfoSave.setOnClickListener {
-            savePersonalInfo()
-            btnPersonalInfoExpand.visibility = View.GONE
-            btnPersonalInfoCollapse.visibility = View.VISIBLE
-            personalInfoContent.visibility = View.VISIBLE
+
+        llPersonalInfoSection.setOnClickListener {
+            toggleHeader(
+                personalInfoContent,
+                ivPersonalInfoExpand,
+                ivPersonalInfoCollapse,
+                ivPersonalInfoSave
+            ) { savePersonalInfo() }
+
         }
 
         btnEditFirstName.setOnClickListener {
-            etFirstName.isEnabled = true
-            btnEditFirstName.visibility = View.INVISIBLE
-            if (btnPersonalInfoCollapse.visibility != View.GONE) {
-                btnPersonalInfoCollapse.visibility = View.GONE
-            }
+            enableEditField(
+                etFirstName,
+                btnEditFirstName,
+                ivPersonalInfoSave,
+                ivPersonalInfoCollapse
+            )
+
         }
         btnEditLastName.setOnClickListener {
-            etLastName.isEnabled = true
-            btnEditLastName.visibility = View.INVISIBLE
-            if (btnPersonalInfoCollapse.visibility != View.GONE) {
-                btnPersonalInfoCollapse.visibility = View.GONE
-            }
+            enableEditField(etLastName, btnEditLastName, ivPersonalInfoSave, ivPersonalInfoCollapse)
+
         }
         btnEditDob.setOnClickListener {
-            etDob.isEnabled = true
-            btnEditDob.visibility = View.INVISIBLE
-            if (btnPersonalInfoCollapse.visibility != View.GONE) {
-                btnPersonalInfoCollapse.visibility = View.GONE
-            }
+            enableEditField(etDob, btnEditDob, ivPersonalInfoSave, ivPersonalInfoCollapse)
+
         }
     }
 
     private fun initializeAccountSection() {
-        btnAccountInfoExpand = findViewById(R.id.btnAccountInfoExpand)
-        btnAccountInfoCollapse = findViewById(R.id.btnAccountInfoCollapse)
-        btnAccountInfoSave = findViewById(R.id.btnAccountInfoSave)
+        llAccountSection = findViewById(R.id.llAccountSection)
+        ivAccountInfoExpand = findViewById(R.id.ivAccountInfoExpand)
+        ivAccountInfoCollapse = findViewById(R.id.ivAccountInfoCollapse)
+        ivAccountInfoSave = findViewById(R.id.ivAccountInfoSave)
         accountInfoContent = findViewById(R.id.accountInfoContent)
         etUserName = findViewById(R.id.etUserName)
         btnEditUserName = findViewById(R.id.btnEditUserName)
@@ -220,78 +257,474 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         btnEditEmail = findViewById(R.id.btnEditEmail)
         btnResetPassword = findViewById(R.id.btnResetPassword)
 
-        btnAccountInfoExpand.setOnClickListener {
-            btnAccountInfoExpand.visibility = View.GONE
-            btnAccountInfoCollapse.visibility = View.VISIBLE
-            accountInfoContent.visibility = View.VISIBLE
-        }
 
-        btnAccountInfoCollapse.setOnClickListener {
-            btnAccountInfoExpand.visibility = View.VISIBLE
-            btnAccountInfoCollapse.visibility = View.GONE
-            accountInfoContent.visibility = View.GONE
-        }
-
-        btnAccountInfoSave.setOnClickListener {
-            saveAccountInfo()
-            btnAccountInfoExpand.visibility = View.GONE
-            btnAccountInfoCollapse.visibility = View.VISIBLE
-            accountInfoContent.visibility = View.VISIBLE
+        llAccountSection.setOnClickListener {
+            toggleHeader(
+                accountInfoContent,
+                ivAccountInfoExpand,
+                ivAccountInfoCollapse,
+                ivAccountInfoSave
+            ) { saveAccountInfo() }
         }
 
         btnEditUserName.setOnClickListener {
-            etUserName.isEnabled = true
-            btnEditUserName.visibility = View.INVISIBLE
-            if (btnAccountInfoCollapse.visibility != View.GONE) {
-                btnAccountInfoCollapse.visibility = View.GONE
-            }
+            enableEditField(etUserName, btnEditUserName, ivAccountInfoSave, ivAccountInfoCollapse)
         }
 
         btnEditEmail.setOnClickListener {
-            etEmail.isEnabled = true
-            btnEditEmail.visibility = View.INVISIBLE
-            if (btnAccountInfoCollapse.visibility != View.GONE) {
-                btnAccountInfoCollapse.visibility = View.GONE
-            }
+            enableEditField(etEmail, btnEditEmail, ivAccountInfoSave, ivAccountInfoCollapse)
         }
 
         btnResetPassword.setOnClickListener {
-            //toggle reset password dialog
+            val passwordDialogView = Helper.inflateView(R.layout.password_reset_layout)
+            val etOldPassword: EditText = passwordDialogView.findViewById(R.id.etOldPassword)
+            val etNewPassword: EditText = passwordDialogView.findViewById(R.id.etNewPassword)
+            val etNewPasswordRepeat: EditText =
+                passwordDialogView.findViewById(R.id.etNewPasswordRepeat)
+            val passwordDialogProgressBar: FrameLayout =
+                passwordDialogView.findViewById(R.id.progressBarHolder)
+
+            newVehicleDialog = Helper.showConfirmDialog(
+                this,
+                "",
+                passwordDialogView,
+                getString(R.string.save),
+                getString(R.string.cancel),
+                object : OnPositiveButtonClickListener {
+                    override fun onPositiveBtnClick(dialog: DialogInterface?) {
+                        if (ValidationHelper.validateResetPassword(
+                                etOldPassword,
+                                etNewPassword,
+                                etNewPasswordRepeat
+                            )
+                        ) {
+                            resetPassword(
+                                etOldPassword.text.toString(),
+                                etNewPassword.text.toString(),
+                                dialog,
+                                passwordDialogProgressBar
+                            )
+                        }
+                    }
+                }, null, true
+            )
+        }
+    }
+
+    private fun resetPassword(
+        oldPassword: String,
+        newPassword: String,
+        dialog: DialogInterface?,
+        progressBar: FrameLayout
+    ) {
+        apiService.resetPassword(getUser().Id!!, oldPassword, newPassword)
+            .enqueue(object : Callback {
+                val mainHandler = Handler(applicationContext.mainLooper)
+                override fun onFailure(call: Call, e: IOException) {
+                    mainHandler.post {
+                        handleApiResponseException(call, e)
+                        progressBar.visibility = GONE
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    mainHandler.post {
+                        handleResetPasswordResponse(response, dialog)
+                        progressBar.visibility = GONE
+                    }
+                }
+            })
+    }
+
+    fun handleResetPasswordResponse(response: Response, dialog: DialogInterface?) {
+
+        val resp: BaseResponse =
+            Helper.parseStringResponse<SingleResponse<User>>(response.body!!.string())
+
+        if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+
+            try {
+                Helper.showLongToast(this, "Password Successfully Changed")
+                dialog!!.dismiss()
+            } catch (e: InvalidObjectException) {
+                Helper.showLongToast(this, e.message.toString())
+            }
+        } else {
+            handleApiResponseError(resp as ErrorResponse)
+        }
+    }
+
+    private fun toggleHeader(
+        llContent: LinearLayout,
+        ivExpand: ImageView,
+        ivCollapse: ImageView,
+        ivSave: ImageView? = null,
+        saveFn: () -> Unit
+    ) {
+        when {
+            ivSave != null && ivSave.visibility == VISIBLE -> {
+                saveFn()
+                ivSave.visibility = GONE
+                ivExpand.visibility = GONE
+                ivCollapse.visibility = VISIBLE
+            }
+            ivExpand.visibility == VISIBLE -> {
+                ivExpand.visibility = GONE
+                ivCollapse.visibility = VISIBLE
+                llContent.visibility = VISIBLE
+            }
+            ivCollapse.visibility == VISIBLE -> {
+                ivExpand.visibility = VISIBLE
+                ivCollapse.visibility = GONE
+                llContent.visibility = GONE
+            }
+        }
+    }
+
+    private fun enableEditField(
+        field: EditText,
+        btnField: ImageButton,
+        ivSave: ImageView,
+        ivCollapse: ImageView
+    ) {
+        field.isEnabled = true
+        btnField.visibility = View.INVISIBLE
+        if (ivSave.visibility != VISIBLE) {
+            ivCollapse.visibility = GONE
+            ivSave.visibility = VISIBLE
         }
     }
 
     //#endregion Init
-    private fun redirectToLogin() {
-        Helper.openActivity(this, ActivityEnum.LOGIN)
+
+    //#region Retrieve User
+    private fun retrieveUser() {
+        progressBarHolder.visibility = VISIBLE
+        apiService.retrieveUser(getUser().Id!!).enqueue(object : Callback {
+            val mainHandler = Handler(applicationContext.mainLooper)
+            override fun onFailure(call: Call, e: IOException) {
+                mainHandler.post {
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = GONE
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                mainHandler.post {
+                    handleRetrieveUserResponse(response)
+                    progressBarHolder.visibility = GONE
+                }
+            }
+        })
     }
 
-    private fun clearUserData() {
-        Helper.deleteSharedPreference(PreferenceEnum.USER)
-        Helper.deleteSharedPreference(PreferenceEnum.TOKEN)
-        Helper.deleteSharedPreference(PreferenceEnum.AUTH_FOR)
+    fun handleRetrieveUserResponse(response: Response) {
+
+        val resp: BaseResponse =
+            Helper.parseStringResponse<SingleResponse<User>>(response.body!!.string())
+
+        if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+
+            try {
+                userData = resp.Data as User
+                Helper.createOrEditSharedPreference(PreferenceEnum.USER,Helper.serializeData(userData))
+
+                populateAccountSection(userData!!)
+                populatePersonalInformationSection(userData!!)
+
+            } catch (e: InvalidObjectException) {
+                Helper.showLongToast(this, e.message.toString())
+            }
+        } else {
+            handleApiResponseError(resp as ErrorResponse)
+        }
     }
+
+    private fun populatePersonalInformationSection(user: User) {
+        etFirstName.setText(user.FirstName)
+        etLastName.setText(user.LastName)
+        etDob.setText(Helper.formatDate(user.DateOfBirth!!))
+    }
+
+    private fun populateAccountSection(user: User) {
+        etEmail.setText(user.Email)
+        etUserName.setText(user.Username)
+    }
+
+    //#region Update User
+    private fun updateUser(user: User) {
+        progressBarHolder.visibility = VISIBLE
+        apiService.updateUser(user).enqueue(object : Callback {
+            val mainHandler = Handler(applicationContext.mainLooper)
+            override fun onFailure(call: Call, e: IOException) {
+                mainHandler.post {
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = GONE
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                mainHandler.post {
+                    handleUpdateUserResponse(response)
+                    progressBarHolder.visibility = GONE
+                }
+            }
+        })
+    }
+
+    fun handleUpdateUserResponse(response: Response) {
+
+        val resp: BaseResponse =
+            Helper.parseStringResponse<SingleResponse<User>>(response.body!!.string())
+
+        if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+
+            try {
+                retrieveUser()
+            } catch (e: InvalidObjectException) {
+                Helper.showLongToast(this, e.message.toString())
+            }
+        } else {
+            handleApiResponseError(resp as ErrorResponse)
+        }
+    }
+    @SuppressLint("SimpleDateFormat")
+    private fun updateLabel() {
+        etDob.setText(Helper.formatDate(dobCalendar.time))
+    }
+    //#endregion Update User
+
+    //#endregion Retrieve User
+
+    //#region Retrieve Vehicles
+    private fun retrieveMyVehicles() {
+        progressBarHolder.visibility = VISIBLE
+        apiService.retrieveCars().enqueue(object : Callback {
+            val mainHandler = Handler(applicationContext.mainLooper)
+            override fun onFailure(call: Call, e: IOException) {
+                mainHandler.post {
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = GONE
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                mainHandler.post {
+                    handleRetrieveCarsResponse(response)
+                    progressBarHolder.visibility = GONE
+                }
+            }
+        })
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun handleRetrieveCarsResponse(response: Response) {
+
+        val resp: BaseResponse =
+            Helper.parseStringResponse<ListResponse<Car>>(response.body!!.string())
+
+        if (resp.IsSuccess!! && resp is ListResponse<*>) {
+
+            try {
+                @Suppress("UNCHECKED_CAST") val data = resp.Data as ArrayList<Car>
+                val editButtonClick = object : ButtonClickListener {
+                    @SuppressLint("NotifyDataSetChanged")
+                    override fun onClick(o: Car) {
+                        rvVehicles.post {
+                            editVehicleDialog(o)
+                        }
+                    }
+                }
+
+                val deleteButtonClick = object : ButtonClickListener {
+                    @SuppressLint("NotifyDataSetChanged")
+                    override fun onClick(o: Car) {
+                        rvVehicles.post {
+                            deleteVehicle(o)
+                        }
+                    }
+                }
+                vehiclesAdapter = VehiclesAdapter(
+                    data,
+                    editButtonClick,
+                    deleteButtonClick
+                )
+
+                rvVehicles.layoutManager = LinearLayoutManager(this)
+                rvVehicles.adapter = vehiclesAdapter
+                vehiclesAdapter.notifyDataSetChanged()
+
+
+            } catch (e: InvalidObjectException) {
+                Helper.showLongToast(this, e.message.toString())
+            }
+        } else {
+            handleApiResponseError(resp as ErrorResponse)
+        }
+    }
+
+    //#region Delete Vehicle
+    private fun deleteVehicle(vehicle: Car) {
+        progressBarHolder.visibility = VISIBLE
+        apiService.deleteCar(vehicle.Id!!).enqueue(object : Callback {
+            val mainHandler = Handler(applicationContext.mainLooper)
+
+            override fun onFailure(call: Call, e: IOException) {
+                mainHandler.post {
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = GONE
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                mainHandler.post {
+                    progressBarHolder.visibility = GONE
+                    handleDeleteVehicleResponse(response)
+                }
+            }
+        })
+    }
+
+    fun handleDeleteVehicleResponse(response: Response) {
+
+        val resp: BaseResponse =
+            Helper.parseStringResponse<SingleResponse<Car>>(response.body!!.string())
+
+        if (resp.IsSuccess!!) {
+            Helper.showLongToast(this, getString(R.string.vehicle_deleted_successfuly))
+            retrieveMyVehicles()
+        } else {
+            handleApiResponseError(resp as ErrorResponse)
+        }
+    }
+    //#endregion Delete Vehicle
+
+    //#region Edit Vehicle
+    private fun editVehicleDialog(vehicle: Car) {
+        val dialogView = Helper.inflateView(R.layout.new_vehicle_layout)
+        etManufacturer = dialogView.findViewById(R.id.etManufacturer)
+        etModel = dialogView.findViewById(R.id.etModel)
+        etYear = dialogView.findViewById(R.id.etYear)
+        etOdometer = dialogView.findViewById(R.id.etOdometer)
+        dialogProgressbar = dialogView.findViewById(R.id.progressBarHolder)
+
+        etManufacturer.setText(vehicle.Manufacturer)
+        etModel.setText(vehicle.Model)
+        etYear.setText(vehicle.Year.toString())
+        etOdometer.setText(vehicle.Odometer.toString())
+
+        newVehicleDialog = Helper.showConfirmDialog(
+            this,
+            "",
+            dialogView,
+            getString(R.string.save),
+            getString(R.string.cancel),
+            object : OnPositiveButtonClickListener {
+                override fun onPositiveBtnClick(dialog: DialogInterface?) {
+                    if (ValidationHelper.validateCar(etManufacturer, etModel, etYear, etOdometer)) {
+                        editVehicle(assignFormToVehicle(vehicle), dialog)
+                    }
+                }
+            }, null, true
+        )
+    }
+
+
+    private fun editVehicle(vehicle: Car, dialog: DialogInterface?) {
+        progressBarHolder.visibility = VISIBLE
+        apiService.updateCar(vehicle).enqueue(object : Callback {
+            val mainHandler = Handler(applicationContext.mainLooper)
+
+            override fun onFailure(call: Call, e: IOException) {
+                mainHandler.post {
+                    handleApiResponseException(call, e)
+                    progressBarHolder.visibility = GONE
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                mainHandler.post {
+                    progressBarHolder.visibility = GONE
+                    handleEditVehicleResponse(response, dialog)
+                }
+            }
+
+        })
+    }
+
+    fun handleEditVehicleResponse(response: Response, dialog: DialogInterface?) {
+
+        val resp: BaseResponse =
+            Helper.parseStringResponse<SingleResponse<Car>>(response.body!!.string())
+
+        if (resp.IsSuccess!!) {
+            Helper.showLongToast(this, getString(R.string.vehicle_edited_successfuly))
+            retrieveMyVehicles()
+            dialog!!.dismiss()
+        } else {
+            handleApiResponseError(resp as ErrorResponse)
+        }
+    }
+    //#endregion Edit Vehicle
+
+
+    //#endregion Retrieve Vehicles
 
     private fun savePersonalInfo() {
+        val user = getUser()
+        if( etFirstName.isEnabled){
+            user.FirstName = etFirstName.text.toString()
+            etFirstName.isEnabled = false
+            btnEditFirstName.visibility = VISIBLE
+
+        }
+        if( etLastName.isEnabled){
+            user.LastName = etLastName.text.toString()
+            etLastName.isEnabled = false
+            btnEditLastName.visibility = VISIBLE
 
 
+        }
+        if( etDob.isEnabled){
+            user.DateOfBirth = Helper.stringToDate(etDob.text.toString())
+            etDob.isEnabled = false
+            btnEditDob.visibility = VISIBLE
+
+        }
+
+        updateUser(user)
     }
 
     private fun saveAccountInfo() {
 
+        val user = getUser()
+        if( etUserName.isEnabled){
+            user.Username = etUserName.text.toString()
+            etUserName.isEnabled = false
+            btnEditEmail.visibility = VISIBLE
 
+        }
+
+        if( etEmail.isEnabled){
+            user.Email = etEmail.text.toString()
+            etEmail.isEnabled = false
+            btnEditEmail.visibility = VISIBLE
+        }
+
+        updateUser(user)
     }
 
     //#region Vehicles
 
 
     private fun createVehicle(newVehicle: Car, dialog: DialogInterface?) {
-        dialogProgressbar.visibility = View.VISIBLE
+        dialogProgressbar.visibility = VISIBLE
         apiService.createCar(newVehicle).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    dialogProgressbar.visibility = View.GONE
+                    dialogProgressbar.visibility = GONE
 
                 }
             }
@@ -299,7 +732,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleCreateCarResponse(response, dialog)
-                    dialogProgressbar.visibility = View.GONE
+                    dialogProgressbar.visibility = GONE
                 }
             }
 
@@ -321,113 +754,24 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         }
     }
 
-    private fun assignFormToVehicle(): Car {
-        val car = Car()
-        car.Manufacturer = etManufacturer.text.toString()
-        car.Model = etModel.text.toString()
-        car.Odometer = etOdometer.text.toString().toDouble()
-        car.Year = etYear.text.toString().toInt()
-        return car
-    }
-
-    private fun isFormValid(): Boolean {
-        var isValid = true
-        when {
-            etManufacturer.text.toString().isEmpty() -> {
-                etManufacturer.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etManufacturer.text.toString(), 1, 50) -> {
-                etManufacturer.setError(
-                    getString(R.string.length_between_1_50),
-                    Helper.getErrorIcon()
-                )
-                isValid = false
-            }
-        }
-        when {
-            etModel.text.toString().isEmpty() -> {
-                etModel.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etModel.text.toString(), 1, 50) -> {
-                etModel.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
-                isValid = false
-            }
-        }
-        when {
-            etYear.text.toString().isEmpty() -> {
-                etYear.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isValueInRange(
-                etYear.text.toString().toInt(),
-                1960,
-                Calendar.getInstance().get(Calendar.YEAR)
-            ) -> {
-                etYear.setError(getString(R.string.value_between_1960_today), Helper.getErrorIcon())
-                isValid = false
-            }
-        }
-        when {
-            etOdometer.text.toString().isEmpty() -> {
-                etOdometer.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-        }
-        when {
-            etModel.text.toString().isEmpty() -> {
-                etModel.setError(getString(R.string.required_value), Helper.getErrorIcon())
-                isValid = false
-            }
-            !Helper.isStringInRange(etModel.text.toString(), 1, 50) -> {
-                etModel.setError(getString(R.string.length_between_1_50), Helper.getErrorIcon())
-                isValid = false
-            }
-        }
-        return isValid
-    }
-    private fun retrieveMyVehicles() {
-        progressBarHolder.visibility = View.VISIBLE
-        apiService.retrieveCars().enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
-            override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post {
-                    handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                mainHandler.post {
-                    handleRetrieveCarsResponse(response)
-                    progressBarHolder.visibility = View.GONE
-                }
-            }
-        })
-    }
-
-    fun handleRetrieveCarsResponse(response: Response) {
-
-        val resp: BaseResponse =
-            Helper.parseStringResponse<ListResponse<Car>>(response.body!!.string())
-
-        if (resp.IsSuccess!! && resp is ListResponse<*>) {
-
-            try {
-                @Suppress("UNCHECKED_CAST") val data = resp.Data as ArrayList<Car>
-
-                /*ddMyVehicles.adapter =
-                    ArrayAdapter(this, android.R.layout.simple_spinner_item, data)*/
-
-
-            } catch (e: InvalidObjectException) {
-                Helper.showLongToast(this, e.message.toString())
-            }
+    private fun assignFormToVehicle(existingCar: Car? = null): Car {
+        return if (existingCar != null) {
+            existingCar.Manufacturer = etManufacturer.text.toString()
+            existingCar.Model = etModel.text.toString()
+            existingCar.Odometer = etOdometer.text.toString().toDouble()
+            existingCar.Year = etYear.text.toString().toInt()
+            existingCar
         } else {
-            handleApiResponseError(resp as ErrorResponse)
+            val car = Car()
+            car.Manufacturer = etManufacturer.text.toString()
+            car.Model = etModel.text.toString()
+            car.Odometer = etOdometer.text.toString().toDouble()
+            car.Year = etYear.text.toString().toInt()
+            car
         }
+
     }
+
 
     //#endregion Vehicles
 }

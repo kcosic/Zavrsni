@@ -4,6 +4,7 @@ using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.DTOs;
 using WebAPI.Models.Exceptions;
+using WebAPI.Models.Helpers;
 using WebAPI.Models.Responses;
 
 namespace WebAPI.Controllers
@@ -29,7 +30,7 @@ namespace WebAPI.Controllers
             catch (RecordNotFoundException e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
-            }            
+            }
             catch (Exception e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
@@ -43,7 +44,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var requests = Db.Requests.Where(request=> request.UserId == AuthUser.Id && !request.Deleted).ToList();
+                var requests = Db.Requests.Where(request => request.UserId == AuthUser.Id && !request.Deleted).ToList();
                 if (requests == null)
                 {
                     throw new RecordNotFoundException();
@@ -54,7 +55,7 @@ namespace WebAPI.Controllers
             catch (RecordNotFoundException e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
-            }            
+            }
             catch (Exception e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
@@ -140,8 +141,8 @@ namespace WebAPI.Controllers
                 }
                 user.DateModified = DateTime.Now;
                 user.Email = userDTO.Email;
-                user.DateOfBirth =userDTO.DateOfBirth;
-                user.FirstName=userDTO.FirstName;
+                user.DateOfBirth = userDTO.DateOfBirth;
+                user.FirstName = userDTO.FirstName;
                 user.LastName = userDTO.LastName;
                 user.Username = userDTO.Username;
 
@@ -159,5 +160,48 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("api/User/{id}/ResetPassword")]
+        public BaseResponse ResetPassword([FromUri] int id, [FromBody] PasswordReset request)
+        {
+            try
+            {
+
+                if ( request == null || request.OldPassword == null || request.NewPassword == null)
+                {
+                    throw new Exception("Invalid value");
+                }
+                var oldPassword = Helper.FromBase64(request.OldPassword);
+                var newPassword = Helper.FromBase64(request.NewPassword);
+
+
+                var user = Db.Users.Find(id);
+
+                if (user == null || user.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+
+                if (Helper.Hash(oldPassword) != user.Password)
+                {
+                    throw new Exception("Invalid value");
+                }
+
+                user.Password = Helper.Hash(newPassword);
+
+                Db.SaveChanges();
+
+                return CreateOkResponse();
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+        }
     }
 }

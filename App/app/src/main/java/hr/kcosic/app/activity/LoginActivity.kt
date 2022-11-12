@@ -19,6 +19,7 @@ import hr.kcosic.app.model.entities.Token
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.helpers.IconHelper
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.Call
@@ -91,13 +92,13 @@ class LoginActivity : BaseActivity() {
         btnLogin.setOnClickListener {
 
             if (etEmail.text.isEmpty()) {
-                etEmail.setError(getString(R.string.invalid_email), Helper.getErrorIcon())
+                etEmail.setError(getString(R.string.invalid_email), IconHelper.getErrorIcon())
             } else {
                 etEmail.error = null
             }
 
             if (etPassword.text.isEmpty()) {
-                etPassword.setError(getString(R.string.invalid_password), Helper.getErrorIcon())
+                etPassword.setError(getString(R.string.invalid_password), IconHelper.getErrorIcon())
 
             } else {
                 etPassword.error = null

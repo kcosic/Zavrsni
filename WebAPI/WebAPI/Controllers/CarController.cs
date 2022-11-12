@@ -145,8 +145,6 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
                 car.DateModified = DateTime.Now;
-                car.DateCreated = DateTime.Now;
-                car.DateModified = DateTime.Now;
                 car.Manufacturer = carDTO.Manufacturer;
                 car.Model = carDTO.Model;
                 car.Odometer = carDTO.Odometer;

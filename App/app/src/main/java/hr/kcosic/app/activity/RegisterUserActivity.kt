@@ -16,6 +16,7 @@ import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.helpers.ValidationHelper
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.Call
@@ -81,7 +82,7 @@ class RegisterUserActivity : BaseActivity() {
         }
 
         btnFinishRegistration.setOnClickListener {
-            if (isFormValid()) {
+            if (ValidationHelper.validateUser(etFirstName, etUsername, etDob, etEmail, etLastName, etPassword, etRepeatPassword)) {
                 register()
             }
         }
@@ -108,67 +109,7 @@ class RegisterUserActivity : BaseActivity() {
         }
     }
 
-    private fun isFormValid(): Boolean {
-        var valid = true
-        if (etFirstName.text.isNullOrEmpty()) {
-            valid = false
-            etFirstName.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(etLastName.text.toString(), 1, 50)) {
-            valid = false
-            etFirstName.error = getString(R.string.length_between_1_50)
-        }
 
-        if (etUsername.text.isNullOrEmpty()) {
-            valid = false
-            etUsername.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(etUsername.text.toString(), 5, 50)) {
-            valid = false
-            etUsername.error = getString(R.string.length_between_5_50)
-        }
-
-        if (etDob.text.isNullOrEmpty()) {
-            valid = false
-            etDob.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(etDob.text.toString(), 1, 50)) {
-            valid = false
-            etDob.error = getString(R.string.length_between_1_50)
-        }
-
-        if (etEmail.text.isNullOrEmpty()) {
-            valid = false
-            etEmail.error = getString(R.string.required_value)
-        }
-
-        if (etLastName.text.isNullOrEmpty()) {
-            valid = false
-            etLastName.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(etLastName.text.toString(), 1, 50)) {
-            valid = false
-            etLastName.error = getString(R.string.length_between_1_50)
-        }
-
-        if (etPassword.text.isNullOrEmpty()) {
-            valid = false
-            etPassword.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(etPassword.text.toString(), 1, 50)) {
-            valid = false
-            etPassword.error = getString(R.string.length_between_1_50)
-        }
-
-        if (etRepeatPassword.text.isNullOrEmpty()) {
-            valid = false
-            etRepeatPassword.error = getString(R.string.required_value)
-        } else if (!Helper.isStringInRange(etRepeatPassword.text.toString(), 1, 50)) {
-            valid = false
-            etRepeatPassword.error = getString(R.string.length_between_1_50)
-        }
-        if (etRepeatPassword.text.toString() != etPassword.text.toString()) {
-            valid = false
-            etRepeatPassword.error = getString(R.string.passwords_must_match)
-        }
-
-        return valid
-    }
 
     @SuppressLint("SimpleDateFormat")
     private fun register() {
