@@ -94,4 +94,8 @@
     <string name="account_info">Account Information</string>
     <string name="reset_password">Reset Password</string>
     <string name="vehicles">Vehicles</string>
+    <string name="content_toggle">content toggle</string>
+    <string name="system">System</string>
+    <string name="logout">Log out</string>
+    <string name="edit_row">Edit row</string>
 </resources>

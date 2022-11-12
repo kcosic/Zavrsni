@@ -52,6 +52,10 @@
         <item name="android:background">@color/text_dark_100</item>
         <item name="android:radius">5sp</item>
     </style>
+    <style name="row_item_title" parent="Theme.App">
+        <item name="android:color">@color/text_dark_700</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
     <style name="textField">
         <item name="android:background">@drawable/edit_text_border</item>

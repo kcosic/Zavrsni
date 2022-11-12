@@ -15,7 +15,7 @@
         android:theme="@style/Theme.App"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".SettingsUserActivity"
+            android:name=".activity.SettingsUserActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
