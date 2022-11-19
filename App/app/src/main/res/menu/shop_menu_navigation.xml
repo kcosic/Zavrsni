@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:title="@string/home"
+        android:icon="@drawable/house"/>
+    <item
+        android:id="@+id/current_repair"
+        android:title="@string/current_repair"
+        android:icon="@drawable/magnifying_glass"/>
+
+    <item
+        android:id="@+id/repair_requests"
+        android:title="@string/repair_requests"
+        android:icon="@drawable/file_lines"/>
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        android:icon="@drawable/gear"/>
+
+</menu>

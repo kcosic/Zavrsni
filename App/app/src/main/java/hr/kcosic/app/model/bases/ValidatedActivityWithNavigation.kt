@@ -19,7 +19,7 @@ abstract class ValidatedActivityWithNavigation(val activity: ActivityEnum) : Val
         setContentView(activity.layoutId)
         progressBarHolder = findViewById(R.id.progressBarHolder)
 
-        bottomNavigation = findViewById(R.id.bottom_navigation)
+        bottomNavigation = findViewById(activity.navigationId)
         bottomNavigation.selectedItemId = activity.menuItemId
         bottomNavigation.menu.forEach { item ->
                 item.setOnMenuItemClickListener {
@@ -35,6 +35,12 @@ abstract class ValidatedActivityWithNavigation(val activity: ActivityEnum) : Val
 
                 }
         }
+    }
 
+    protected fun showSpinner(){
+        progressBarHolder.visibility = View.VISIBLE
+    }
+    protected fun hideSpinner(){
+        progressBarHolder.visibility = View.GONE
     }
 }

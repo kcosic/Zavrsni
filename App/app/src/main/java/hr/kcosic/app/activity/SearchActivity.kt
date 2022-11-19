@@ -124,7 +124,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         })
 
         swUseCurrentLocation.setOnCheckedChangeListener { buttonView, isChecked ->
-            progressBarHolder.visibility = View.VISIBLE
+            showSpinner()
             coroutineScope.launch {
                 val mainHandler = Handler(applicationContext.mainLooper)
                 val actvVisibility: Boolean
@@ -158,7 +158,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                             "Error occurred while trying to retrieve your live location."
                         )
                     } else {
-                        progressBarHolder.visibility = View.GONE
+                        hideSpinner()
                     }
                 }
             }
@@ -225,14 +225,14 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleApiResponseException(call, e)
-                        progressBarHolder.visibility = View.GONE
+                        hideSpinner()
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     mainHandler.post {
                         handleDiscoverAddressResponse(response)
-                        progressBarHolder.visibility = View.GONE
+                        hideSpinner()
                     }
                 }
             })
@@ -313,7 +313,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     }
 
     private fun retrieveLocalShops(location: Location, date: Date? = null) {
-        progressBarHolder.visibility = View.VISIBLE
+        showSpinner()
 
         apiService.retrieveLocationByCoordinatesAndRadius(
             "${location.Latitude}!${location.Longitude}",
@@ -324,7 +324,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
+                    hideSpinner()
 
                 }
             }
@@ -332,7 +332,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRetrieveLocationByCoordinatesAndRadiusResponse(response)
-                    progressBarHolder.visibility = View.GONE
+                    hideSpinner()
 
                 }
             }
@@ -341,7 +341,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     }
 
     private fun retrieveLocalShops(latLng: LatLng, date: Date? = null) {
-        progressBarHolder.visibility = View.VISIBLE
+        showSpinner()
         apiService.retrieveLocationByCoordinatesAndRadius(
             "${latLng.latitude}!${latLng.longitude}",
             10000,
@@ -351,19 +351,16 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
-
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRetrieveLocationByCoordinatesAndRadiusResponse(response)
-                    progressBarHolder.visibility = View.GONE
-
+                    hideSpinner()
                 }
             }
-
         })
     }
 

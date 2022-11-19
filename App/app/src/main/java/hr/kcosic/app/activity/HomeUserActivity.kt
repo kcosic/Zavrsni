@@ -87,7 +87,7 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
     }
 
     private fun retrieveActiveUserRequest() {
-        progressBarHolder.visibility = View.VISIBLE
+        showSpinner()
         homeContentView.visibility = View.INVISIBLE
         homeNoContentView.visibility = View.GONE
         apiService.retrieveActiveUserRequest(getUser().Id!!, true).enqueue((object :
@@ -97,20 +97,17 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
-
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleretrieveActiveUserRequestResponse(response)
-                    progressBarHolder.visibility = View.GONE
-
+                    hideSpinner()
                 }
             }
-        }
-                ))
+        }))
     }
 
     fun handleretrieveActiveUserRequestResponse(response: Response) {

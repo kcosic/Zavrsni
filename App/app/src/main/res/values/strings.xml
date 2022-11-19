@@ -104,4 +104,6 @@
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
     <string name="repeat_new_password">Repeat New Password</string>
+    <string name="current_repair">Current Repair</string>
+    <string name="repair_requests">Repair Requests</string>
 </resources>

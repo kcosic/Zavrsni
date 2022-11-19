@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -34,7 +33,6 @@ import okhttp3.Response
 import java.io.IOException
 import java.io.InvalidObjectException
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTINGS_USER) {
 
@@ -204,7 +202,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         }
 
         etDob.setOnFocusChangeListener { _, inFocus ->
-            if(inFocus){
+            if (inFocus) {
                 DatePickerDialog(
                     this,
                     date,
@@ -399,20 +397,20 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
 
     //#region Retrieve User
     private fun retrieveUser() {
-        progressBarHolder.visibility = VISIBLE
+        showSpinner()
         apiService.retrieveUser(getUser().Id!!).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRetrieveUserResponse(response)
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                 }
             }
         })
@@ -427,7 +425,10 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
 
             try {
                 userData = resp.Data as User
-                Helper.createOrEditSharedPreference(PreferenceEnum.USER,Helper.serializeData(userData))
+                Helper.createOrEditSharedPreference(
+                    PreferenceEnum.USER,
+                    Helper.serializeData(userData)
+                )
 
                 populateAccountSection(userData!!)
                 populatePersonalInformationSection(userData!!)
@@ -453,20 +454,20 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
 
     //#region Update User
     private fun updateUser(user: User) {
-        progressBarHolder.visibility = VISIBLE
+        showSpinner()
         apiService.updateUser(user).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleUpdateUserResponse(response)
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                 }
             }
         })
@@ -488,6 +489,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
             handleApiResponseError(resp as ErrorResponse)
         }
     }
+
     @SuppressLint("SimpleDateFormat")
     private fun updateLabel() {
         etDob.setText(Helper.formatDate(dobCalendar.time))
@@ -498,20 +500,20 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
 
     //#region Retrieve Vehicles
     private fun retrieveMyVehicles() {
-        progressBarHolder.visibility = VISIBLE
+        showSpinner()
         apiService.retrieveCars().enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRetrieveCarsResponse(response)
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                 }
             }
         })
@@ -565,20 +567,20 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
 
     //#region Delete Vehicle
     private fun deleteVehicle(vehicle: Car) {
-        progressBarHolder.visibility = VISIBLE
+        showSpinner()
         apiService.deleteCar(vehicle.Id!!).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                     handleDeleteVehicleResponse(response)
                 }
             }
@@ -631,20 +633,20 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
 
 
     private fun editVehicle(vehicle: Car, dialog: DialogInterface?) {
-        progressBarHolder.visibility = VISIBLE
+        showSpinner()
         apiService.updateCar(vehicle).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
-                    progressBarHolder.visibility = GONE
+                    hideSpinner()
                     handleEditVehicleResponse(response, dialog)
                 }
             }
@@ -672,24 +674,22 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
 
     private fun savePersonalInfo() {
         val user = getUser()
-        if( etFirstName.isEnabled){
+        if (etFirstName.isEnabled) {
             user.FirstName = etFirstName.text.toString()
             etFirstName.isEnabled = false
             btnEditFirstName.visibility = VISIBLE
-
         }
-        if( etLastName.isEnabled){
+
+        if (etLastName.isEnabled) {
             user.LastName = etLastName.text.toString()
             etLastName.isEnabled = false
             btnEditLastName.visibility = VISIBLE
-
-
         }
-        if( etDob.isEnabled){
+
+        if (etDob.isEnabled) {
             user.DateOfBirth = Helper.stringToDate(etDob.text.toString())
             etDob.isEnabled = false
             btnEditDob.visibility = VISIBLE
-
         }
 
         updateUser(user)
@@ -698,14 +698,14 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private fun saveAccountInfo() {
 
         val user = getUser()
-        if( etUserName.isEnabled){
+        if (etUserName.isEnabled) {
             user.Username = etUserName.text.toString()
             etUserName.isEnabled = false
             btnEditEmail.visibility = VISIBLE
 
         }
 
-        if( etEmail.isEnabled){
+        if (etEmail.isEnabled) {
             user.Email = etEmail.text.toString()
             etEmail.isEnabled = false
             btnEditEmail.visibility = VISIBLE

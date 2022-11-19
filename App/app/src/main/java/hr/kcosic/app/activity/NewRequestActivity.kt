@@ -168,20 +168,20 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     }
 
     private fun createNewRequest(newRequest: Request) {
-        progressBarHolder.visibility = View.VISIBLE
+        showSpinner()
         apiService.createRequest(newRequest).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleCreateRequestResponse(response)
-                    progressBarHolder.visibility = View.GONE
+                    hideSpinner()
                 }
             }
         })
@@ -260,20 +260,20 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
 
 
     private fun retrieveMyVehicles() {
-        progressBarHolder.visibility = View.VISIBLE
+        showSpinner()
         apiService.retrieveCars().enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRetrieveCarsResponse(response)
-                    progressBarHolder.visibility = View.GONE
+                    hideSpinner()
                 }
             }
         })
@@ -302,7 +302,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     }
 
     private fun retrieveAvailability() {
-        progressBarHolder.visibility = View.VISIBLE
+        showSpinner()
         //TODO: fix when multiple shops are in  the same location
         apiService.retrieveShopAvailability(shopId!!, dateOfRepair)
             .enqueue(object : Callback {
@@ -310,14 +310,14 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleApiResponseException(call, e)
-                        progressBarHolder.visibility = View.GONE
+                        hideSpinner()
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     mainHandler.post {
                         handleRetrieveAvailabilityResponse(response)
-                        progressBarHolder.visibility = View.GONE
+                        hideSpinner()
                     }
                 }
             })

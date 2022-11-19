@@ -39,7 +39,7 @@ class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
     }
 
     private fun retrieveRequests() {
-        progressBarHolder.visibility = View.VISIBLE
+        showSpinner()
         apiService.retrieveUserRequests().enqueue((object :
             Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
@@ -47,20 +47,17 @@ class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
-
+                    hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRetrieveRequestsResponse(response)
-                    progressBarHolder.visibility = View.GONE
-
+                    hideSpinner()
                 }
             }
-        }
-                ))
+        }))
     }
 
     @SuppressLint("NotifyDataSetChanged")

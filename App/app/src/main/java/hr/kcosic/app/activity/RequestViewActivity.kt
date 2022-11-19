@@ -94,7 +94,7 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
     }
 
     private fun retrieveRequest() {
-        progressBarHolder.visibility = View.VISIBLE
+        showSpinner()
         apiService.retrieveRequest(requestId!!, true).enqueue((object :
             Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
@@ -102,7 +102,7 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
+                    hideSpinner()
 
                 }
             }
@@ -110,7 +110,7 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRetrieveRequestResponse(response)
-                    progressBarHolder.visibility = View.GONE
+                    hideSpinner()
                 }
             }
         }

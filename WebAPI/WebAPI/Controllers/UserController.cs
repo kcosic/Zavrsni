@@ -120,7 +120,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (id == null || userDTO == null)
+                if (userDTO == null)
                 {
                     throw new Exception("Invalid value");
                 }

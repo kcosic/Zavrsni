@@ -50,33 +50,26 @@ class LoginActivity : BaseActivity() {
                 Helper.setAuthKeyToUser()
                 Helper.openActivity(this,ActivityEnum.HOME_USER)
             } else {
-                Helper.setAuthKeyToUser()
-                Helper.openActivity(this,ActivityEnum.HOME_USER)
+                Helper.setAuthKeyToShop()
+                Helper.openActivity(this,ActivityEnum.HOME_SHOP)
             }
         }
         setContentView(R.layout.activity_login)
         initializeComponents()
     }
 
-    @SuppressLint("SetTextI18n")             //TODO remove, for dev purposes
     override fun initializeComponents() {
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
         progressBarHolder = findViewById(R.id.progressBarHolder)
-
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
-
-        etEmail.setText("menta")               //TODO: remove, for dev purposes only
-        etPassword.setText("123456")           //TODO: remove, for dev purposes only
-
         swLoginAsShop = findViewById(R.id.sw_login_as_shop)
 
         btnRegister.setOnClickListener {
             val dialogView = Helper.inflateView(R.layout.register_dialog)
             btnRegisterUser = dialogView.findViewById(R.id.btnUserRegister)
             btnRegisterShop = dialogView.findViewById(R.id.btnShopRegister)
-
 
             btnRegisterUser.setOnClickListener {
                 Helper.openActivity(this, ActivityEnum.REGISTER_USER)
@@ -99,7 +92,6 @@ class LoginActivity : BaseActivity() {
 
             if (etPassword.text.isEmpty()) {
                 etPassword.setError(getString(R.string.invalid_password), IconHelper.getErrorIcon())
-
             } else {
                 etPassword.error = null
             }
@@ -107,7 +99,6 @@ class LoginActivity : BaseActivity() {
             if (etEmail.text.isNotEmpty() && etPassword.text.isNotEmpty()) {
                 login()
             }
-
         }
     }
 
@@ -127,7 +118,6 @@ class LoginActivity : BaseActivity() {
                     mainHandler.post {
                         handleApiResponseException(call, e)
                         progressBarHolder.visibility = GONE
-
                     }
                 }
 
@@ -162,7 +152,7 @@ class LoginActivity : BaseActivity() {
                     if(Helper.AUTH_FOR_KEY == "User")PreferenceEnum.USER else PreferenceEnum.SHOP,
                     if(Helper.AUTH_FOR_KEY == "User")Helper.serializeData(data.User) else Helper.serializeData(data.Shop)
                 )
-                Helper.openActivity(this, if(Helper.AUTH_FOR_KEY == "User")ActivityEnum.HOME_USER else ActivityEnum.HOME_USER)
+                Helper.openActivity(this, if(Helper.AUTH_FOR_KEY == "User")ActivityEnum.HOME_USER else ActivityEnum.HOME_SHOP)
             } catch (e: InvalidObjectException) {
                 Helper.showLongToast(this, e.message.toString())
             }
