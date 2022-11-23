@@ -45,9 +45,13 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public bool Completed { get; set; }        
         [JsonProperty]
-        public bool ShopAccepted { get; set; }        
+        public bool? ShopAccepted { get; set; }
         [JsonProperty]
-        public bool UserAccepted { get; set; }
+        public DateTime? ShopAcceptedDate { get; set; }
+        [JsonProperty]
+        public bool? UserAccepted { get; set; }
+        [JsonProperty]
+        public DateTime? UserAcceptedDate { get; set; }
 
         [JsonProperty]
         public DateTime RequestDate { get; set; }

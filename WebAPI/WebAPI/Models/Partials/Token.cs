@@ -8,9 +8,9 @@ namespace WebAPI.Models.ORM
 {
     partial class Token
     {
-        public static TokenDTO ToDTO(Token item, bool singleLevel = true)
+        public static TokenDTO ToDTO(Token item,int level)
         {
-            if (item == null)
+            if (item == null || level <= 0)
             {
                 return null;
             }
@@ -18,29 +18,29 @@ namespace WebAPI.Models.ORM
             return new TokenDTO
             {
                 TokenValue = item.TokenValue,
-                User = singleLevel ? null : User.ToDTO(item.User),
+                User = User.ToDTO(item.User, level - 1),
                 UserId = item.UserId
             };
         }
 
-        public static ICollection<TokenDTO> ToListDTO(ICollection<Token> list, bool singleLevel = true)
+        public static ICollection<TokenDTO> ToListDTO(ICollection<Token> list,int level)
         {
-            if (list == null)
+            if (list == null || level <= 0)
             {
                 return null;
             }
 
-            return list.Select(x => x.ToDTO(singleLevel)).ToList();
+            return list.Select(x => x.ToDTO(level)).ToList();
         }
 
-        public TokenDTO ToDTO(bool singleLevel = true)
+        public TokenDTO ToDTO(int level)
         {
-            return new TokenDTO
+            return level > 0 ? new TokenDTO
             {
                 TokenValue = TokenValue,
-                User = singleLevel ? null : User.ToDTO(User),
+                User = User.ToDTO(User, level - 1),
                 UserId = UserId
-            };
+            } : null;
         }
     }
 }

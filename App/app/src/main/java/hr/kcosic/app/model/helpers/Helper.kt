@@ -7,22 +7,12 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.VectorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
@@ -66,7 +56,7 @@ class Helper {
             context.overridePendingTransition(
                 androidx.appcompat.R.anim.abc_fade_in,
                 androidx.appcompat.R.anim.abc_fade_out
-            );
+            )
         }
 
         fun openActivity(context: Context, activity: ActivityEnum) {
@@ -298,7 +288,7 @@ class Helper {
 
         fun inflateView(viewId: Int, viewGroup: ViewGroup? = null): View {
             val inflater = LayoutInflater.from(ContextInstance.getContext())
-            return inflater.inflate(viewId, viewGroup);
+            return inflater.inflate(viewId, viewGroup)
         }
 
 
@@ -335,7 +325,7 @@ class Helper {
         }
 
         @SuppressLint("MissingPermission")
-        fun retrievePhoneLocation(): LatLng? {
+        fun retrievePhoneLocation(): LatLng {
             @SuppressWarnings("VisibleForTests")
             val locationProvider = FusedLocationProviderClient(ContextInstance.getContext()!!)
             if (hasLocationPermissions()) {

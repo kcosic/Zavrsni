@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(review.ToDTO(!expanded));
+                return CreateOkResponse(review.ToDTO(expanded ? 3 : 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Review.ToListDTO(review));
+                return CreateOkResponse(Review.ToListDTO(review, 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -130,7 +130,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (id == null || reviewDTO == null)
+                if (reviewDTO == null)
                 {
                     throw new Exception("Invalid value");
                 }

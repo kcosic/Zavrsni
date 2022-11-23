@@ -24,13 +24,13 @@ namespace WebAPI.Controllers
                 {
                     throw new RecordNotFoundException();
                 }
-                var requestDTO = request.ToDTO(!expanded);
-                if (expanded)
-                {
+                var requestDTO = request.ToDTO(expanded ? 3 : 2);
+                //if (expanded)
+                //{
 
-                    requestDTO.Shop.Location = request.Shop.Location.ToDTO();
-                    requestDTO.User = request.User.ToDTO();
-                }
+                //    requestDTO.Shop.Location = request.Shop.Location.ToDTO();
+                //    requestDTO.User = request.User.ToDTO();
+                //}
 
                 return CreateOkResponse(requestDTO);
             }
@@ -57,7 +57,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Models.ORM.Request.ToListDTO(request));
+                return CreateOkResponse(Models.ORM.Request.ToListDTO(request, 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -67,7 +67,73 @@ namespace WebAPI.Controllers
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
+        }
 
+        [HttpGet]
+        [Route("api/Request/Current")]
+        public BaseResponse RetrieveCurrentShopRequest()
+        {
+            try
+            {
+                var request = Db.Requests.Where(x => 
+                        x.RepairDate.HasValue && 
+                        x.RepairDate.Value.Date <= DateTime.Now.Date && 
+                        !x.Completed && 
+                        x.ShopAccepted.HasValue && 
+                        x.ShopAccepted.Value && 
+                        x.UserAccepted.HasValue && 
+                        x.UserAccepted.Value && 
+                        !x.Deleted)
+                    .FirstOrDefault();
+                if (request == null)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                return CreateOkResponse(Models.ORM.Request.ToDTO(request, 3));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/Request/Next")]
+        public BaseResponse RetrieveNextShopRequest()
+        {
+            try
+            {
+                var request = Db.Requests.Where(x => 
+                        x.RepairDate.HasValue && 
+                        x.RepairDate.Value.Date >= DateTime.Now.Date && 
+                        !x.Completed &&
+                        x.ShopAccepted.HasValue &&
+                        x.ShopAccepted.Value &&
+                        x.UserAccepted.HasValue &&
+                        x.UserAccepted.Value &&
+                        !x.Deleted)
+                    .OrderBy(x=> x.RepairDate.Value.Date)
+                    .FirstOrDefault();
+                if (request == null)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                return CreateOkResponse(Models.ORM.Request.ToDTO(request, 3));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
         }
 
         [HttpDelete]
@@ -208,9 +274,9 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                var activeRequestDTO = activeRequest.ToDTO(false);
-                activeRequestDTO.Shop.Location = activeRequest.Shop.Location.ToDTO();
-                activeRequestDTO.User = user.ToDTO(false);
+                var activeRequestDTO = activeRequest.ToDTO(3);
+                //activeRequestDTO.Shop.Location = activeRequest.Shop.Location.ToDTO();
+                //activeRequestDTO.User = user.ToDTO(false);
 
                 return CreateOkResponse(activeRequestDTO);
             }
@@ -243,7 +309,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Models.ORM.Request.ToListDTO(activeRequests));
+                return CreateOkResponse(Models.ORM.Request.ToListDTO(activeRequests, 2));
             }
             catch (RecordNotFoundException e)
             {

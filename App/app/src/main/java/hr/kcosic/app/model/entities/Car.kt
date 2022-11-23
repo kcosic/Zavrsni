@@ -2,7 +2,6 @@ package hr.kcosic.app.model.entities
 
 import hr.kcosic.app.model.bases.BaseEntity
 import kotlinx.serialization.Serializable
-import kotlin.properties.Delegates
 
 @Serializable
 class Car : BaseEntity() {

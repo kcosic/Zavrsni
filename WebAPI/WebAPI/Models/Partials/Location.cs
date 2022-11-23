@@ -8,9 +8,9 @@ namespace WebAPI.Models.ORM
 {
 
     partial class Location {
-        public static LocationDTO ToDTO(Location item, bool singleLevel = true)
+        public static LocationDTO ToDTO(Location item, int level)
         {
-            if (item == null)
+            if (item == null || level <= 0)
             {
                 return null;
             }
@@ -22,8 +22,8 @@ namespace WebAPI.Models.ORM
                 DateModified = item.DateModified,
                 Deleted = item.Deleted,
                 Id = item.Id,
-                Shops = singleLevel ? null : Shop.ToListDTO(item.Shops),
-                User = singleLevel ? null : User.ToDTO(item.User),
+                Shops = Shop.ToListDTO(item.Shops, level - 1),
+                User = User.ToDTO(item.User, level - 1),
                 UserId = item.UserId,
                 City = item.City,
                 Country = item.Country,
@@ -36,19 +36,19 @@ namespace WebAPI.Models.ORM
             };
         }
 
-        public static ICollection<LocationDTO> ToListDTO(ICollection<Location> list, bool singleLevel = true)
+        public static ICollection<LocationDTO> ToListDTO(ICollection<Location> list, int level)
         {
-            if (list == null)
+            if (list == null || level <= 0)
             {
                 return null;
             }
 
-            return list.Select(x => x.ToDTO(singleLevel)).ToList();
+            return list.Select(x => x.ToDTO(level)).ToList();
         }
 
-        public LocationDTO ToDTO(bool singleLevel = true)
+        public LocationDTO ToDTO(int level)
         {
-            return new LocationDTO
+            return level > 0 ? new LocationDTO
             {
 
                 DateCreated = DateCreated,
@@ -56,8 +56,8 @@ namespace WebAPI.Models.ORM
                 DateModified = DateModified,
                 Deleted = Deleted,
                 Id = Id,
-                Shops = singleLevel ? null : Shop.ToListDTO(Shops),
-                User = singleLevel ? null : User.ToDTO(User),
+                Shops = Shop.ToListDTO(Shops, level),
+                User = User.ToDTO(User, level),
                 UserId = UserId,
                 City = City,
                 Country= Country,
@@ -67,7 +67,7 @@ namespace WebAPI.Models.ORM
                 Street= Street,
                 StreetNumber= StreetNumber,
 
-            };
+            } : null;
         }
     }
 

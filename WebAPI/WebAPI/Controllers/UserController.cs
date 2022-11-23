@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(user.ToDTO(!expanded));
+                return CreateOkResponse(user.ToDTO(expanded ? 3 : 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Models.ORM.Request.ToListDTO(requests, false));
+                return CreateOkResponse(Models.ORM.Request.ToListDTO(requests, 3));
             }
             catch (RecordNotFoundException e)
             {
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Models.ORM.User.ToListDTO(user));
+                return CreateOkResponse(Models.ORM.User.ToListDTO(user, 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -120,6 +120,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+
                 if (userDTO == null)
                 {
                     throw new Exception("Invalid value");

@@ -2,7 +2,6 @@ package hr.kcosic.app.activity
 
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory

@@ -2,13 +2,9 @@ package hr.kcosic.app.model.bases
 
 import android.app.Activity
 import android.content.Context
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import com.google.android.gms.maps.SupportMapFragment
-import java.text.SimpleDateFormat
-import java.util.Date
 
 fun Fragment.hideKeyboard() {
     view?.let { activity?.hideKeyboard(it) }

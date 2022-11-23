@@ -69,7 +69,7 @@ namespace WebAPI.Services.HERE
         /// <returns><see cref="LocationDTO"></returns>
         public LocationDTO RetrieveLocationDTOInformation(double latitude, double longitude)
         {
-            return RetrieveLocationInformation(latitude, longitude).ToDTO();
+            return RetrieveLocationInformation(latitude, longitude).ToDTO(2);
         }
 
         public List<WebAPI.Models.ORM.Location> DiscoverLocationByAddress(string address)
@@ -114,7 +114,7 @@ namespace WebAPI.Services.HERE
         }
         public List<LocationDTO> DiscoverLocationDTOByAddress(string address)
         {
-            return WebAPI.Models.ORM.Location.ToListDTO(DiscoverLocationByAddress(address))?.ToList();
+            return WebAPI.Models.ORM.Location.ToListDTO(DiscoverLocationByAddress(address), 1)?.ToList();
 
         }
 
@@ -163,7 +163,7 @@ namespace WebAPI.Services.HERE
         /// <returns><see cref="LocationDTO"></returns>
         public LocationDTO RetrieveLocationDTOInformation(string address)
         {
-            return RetrieveLocationInformation(address).ToDTO();
+            return RetrieveLocationInformation(address).ToDTO(2);
         }
     }
 }

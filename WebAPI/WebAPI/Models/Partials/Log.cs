@@ -6,7 +6,7 @@ using WebAPI.Models.DTOs;
 
 namespace WebAPI.Models.ORM
 {    partial class Log {
-        public static LogDTO ToDTO(Log item, bool singleLevel = true)
+        public static LogDTO ToDTO(Log item)
         {
             if (item == null)
             {
@@ -26,17 +26,17 @@ namespace WebAPI.Models.ORM
             };
         }
 
-        public static ICollection<LogDTO> ToListDTO(ICollection<Log> list, bool singleLevel = true)
+        public static ICollection<LogDTO> ToListDTO(ICollection<Log> list)
         {
             if (list == null)
             {
                 return null;
             }
 
-            return list.Select(x => x.ToDTO(singleLevel)).ToList();
+            return list.Select(x => x.ToDTO()).ToList();
         }
 
-        public LogDTO ToDTO(bool singleLevel = true)
+        public LogDTO ToDTO()
         {
             return new LogDTO
             {

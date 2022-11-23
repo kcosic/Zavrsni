@@ -40,6 +40,7 @@
             <EditText
                 android:id="@+id/etManufacturer"
                 style="@style/textField"
+                android:inputType="text"
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
                 android:layout_weight="6" />
@@ -64,6 +65,7 @@
 
             <EditText
                 android:id="@+id/etModel"
+                android:inputType="text"
                 style="@style/textField"
                 android:layout_width="0sp"
                 android:layout_height="match_parent"

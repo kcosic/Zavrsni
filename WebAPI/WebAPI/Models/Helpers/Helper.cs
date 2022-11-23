@@ -62,7 +62,7 @@ namespace WebAPI.Models.Helpers
         /// <returns>Distance in meters</returns>
         public static double CalculateDistanceBetweenPoints(Location location1, Location location2)
         {
-            return CalculateDistanceBetweenPoints(location1.ToDTO(), location2.ToDTO());
+            return CalculateDistanceBetweenPoints(location1.ToDTO(1), location2.ToDTO(1));
         }
 
         /// <summary>

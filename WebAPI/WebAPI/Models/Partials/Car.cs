@@ -9,9 +9,9 @@ namespace WebAPI.Models.ORM
     partial class Car
     {
 
-        public static CarDTO ToDTO(Car item, bool singleLevel = true)
+        public static CarDTO ToDTO(Car item, int level)
         {
-            if (item == null)
+            if (item == null || level <= 0)
             {
                 return null;
             }
@@ -26,27 +26,27 @@ namespace WebAPI.Models.ORM
                 Id = item.Id,
                 Model = item.Model,
                 Odometer = item.Odometer,
-                User = singleLevel ? null : User.ToDTO(item.User),
-                Requests = singleLevel ? null : Request.ToListDTO(item.Requests),
+                User =User.ToDTO(item.User, level - 1),
+                Requests = Request.ToListDTO(item.Requests, level - 1),
                 UserId = item.UserId,
                 Year = item.Year
 
             };
         }
 
-        public static ICollection<CarDTO> ToListDTO(ICollection<Car> list, bool singleLevel = true)
+        public static ICollection<CarDTO> ToListDTO(ICollection<Car> list, int level)
         {
-            if (list == null)
+            if (list == null || level <= 0)
             {
                 return null;
             }
 
-            return list.Select(x => x.ToDTO(singleLevel)).ToList();
+            return list.Select(x => x.ToDTO(level)).ToList();
         }
 
-        public CarDTO ToDTO(bool singleLevel = true)
+        public CarDTO ToDTO(int level)
         {
-            return new CarDTO
+            return level > 0 ? new CarDTO
             {
                 Manufacturer = Manufacturer,
                 DateCreated = DateCreated,
@@ -56,11 +56,11 @@ namespace WebAPI.Models.ORM
                 Id = Id,
                 Model = Model,
                 Odometer = Odometer,
-                User = singleLevel ? null : User.ToDTO(User),
+                User = User.ToDTO(User, level - 1),
                 UserId = UserId,
                 Year = Year
 
-            };
+            } : null;
         }
     }
 }

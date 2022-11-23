@@ -1,10 +1,8 @@
 package hr.kcosic.app.model.bases
 
-import hr.kcosic.app.model.serializer.DateSerializer
 import hr.kcosic.app.model.serializer.TimestampSerializer
 import kotlinx.serialization.Serializable
 import java.util.*
-import kotlin.properties.Delegates
 
 @Serializable
 open class BaseResponse {

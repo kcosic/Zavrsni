@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(shop.ToDTO(!expanded));
+                return CreateOkResponse(shop.ToDTO(expanded ? 3 : 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -54,7 +54,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Shop.ToListDTO(shops));
+                return CreateOkResponse(Shop.ToListDTO(shops, 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -165,7 +165,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Shop.ToListDTO(childShops));
+                return CreateOkResponse(Shop.ToListDTO(childShops, 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -233,6 +233,73 @@ namespace WebAPI.Controllers
                 }
 
                 return CreateOkResponse(shopReviews);
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+
+        }
+
+        /// <summary>
+        /// Endpoint for retrieving <see cref="Shop"/> <see cref="Review"/>s
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/Shop/Reviews/Recent")]
+        public BaseResponse RetrieveRecentShopReviews()
+        {
+            try
+            {
+                var shop = Db.Shops.Find(AuthShop.Id);
+                if (shop == null || shop.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                var shopReviews = shop.Reviews.Where(x=> !x.Deleted).OrderByDescending(x=> x.DateCreated).Take(5).ToList();
+                if (shopReviews == null)
+                {
+                    throw new RecordNotFoundException();
+                }
+
+                return CreateOkResponse(Review.ToListDTO(shopReviews,1));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+
+        }
+
+        /// <summary>
+        /// Endpoint for retrieving <see cref="Shop"/> <see cref="Review"/>s
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/Shop/NotificationData")]
+        public BaseResponse RetrieveShopNotificationData()
+        {
+            try
+            {
+                var shop = Db.Shops.Find(AuthShop.Id);
+                if (shop == null || shop.Deleted)
+                {
+                    throw new RecordNotFoundException();
+                }
+                var notificationData = new ShopNotificationData();
+                notificationData.NewRequests = shop.Requests.Where(x=> !x.ShopAccepted.HasValue && !x.UserAccepted.HasValue && !x.Deleted).Count();
+                notificationData.UpdatedRequests = shop.Requests.Where(x=> x.ShopAccepted.HasValue && x.UserAccepted.HasValue && !x.Deleted).Count();
+
+                return CreateOkResponse(notificationData);
             }
             catch (RecordNotFoundException e)
             {

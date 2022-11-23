@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(location.ToDTO(!expanded));
+                return CreateOkResponse(location.ToDTO(expanded ? 3 : 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -58,7 +58,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Location.ToListDTO(location));
+                return CreateOkResponse(Location.ToListDTO(location, 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -212,7 +212,7 @@ namespace WebAPI.Controllers
                     locations = locations.Where(x => x.Shops.Count() > 0 && Helper.IsDateInWorkday(x.Shops.First().WorkDays, date.Value)).ToList();
                 }
 
-                return CreateOkResponse(Location.ToListDTO(locations, false));
+                return CreateOkResponse(Location.ToListDTO(locations, 2));
             }
             catch (ArgumentException e)
             {

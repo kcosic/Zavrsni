@@ -8,7 +8,6 @@ import hr.kcosic.app.model.responses.ErrorResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import okhttp3.Call
-import okhttp3.Response
 
 abstract class BaseActivity : AppCompatActivity() {
 

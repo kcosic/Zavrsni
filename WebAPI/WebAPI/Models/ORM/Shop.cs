@@ -18,10 +18,10 @@ namespace WebAPI.Models.ORM
         public Shop()
         {
             this.Appointments = new HashSet<Appointment>();
-            this.Requests = new HashSet<Request>();
             this.Reviews = new HashSet<Review>();
             this.ChildShops = new HashSet<Shop>();
             this.Tokens = new HashSet<Token>();
+            this.Requests = new HashSet<Request>();
         }
     
         public int Id { get; set; }
@@ -44,13 +44,13 @@ namespace WebAPI.Models.ORM
         public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual Location Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Request> Requests { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Review> Reviews { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Shop> ChildShops { get; set; }
         public virtual Shop ParentShop { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Token> Tokens { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Request> Requests { get; set; }
     }
 }

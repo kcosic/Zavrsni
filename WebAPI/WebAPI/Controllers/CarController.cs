@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(car.ToDTO(!expanded));
+                return CreateOkResponse(car.ToDTO(expanded ? 3 : 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -51,7 +51,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Car.ToListDTO(car));
+                return CreateOkResponse(Car.ToListDTO(car, 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -134,7 +134,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (id == null || carDTO == null)
+                if (carDTO == null)
                 {
                     throw new Exception("Invalid value");
                 }

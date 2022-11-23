@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(appointment.ToDTO(!expanded));
+                return CreateOkResponse(appointment.ToDTO(expanded ? 3 : 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Appointment.ToListDTO(appointment));
+                return CreateOkResponse(Appointment.ToListDTO(appointment, 2));
             }
             catch (RecordNotFoundException e)
             {

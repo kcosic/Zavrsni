@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -12,7 +13,7 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:labelFor="@+id/rbTime"
-        android:text="11:30"/>
+        tools:ignore="LabelFor" />
 
     <RadioButton
         android:id="@+id/rbTime"

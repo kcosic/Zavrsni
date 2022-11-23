@@ -11,10 +11,8 @@ import android.widget.FrameLayout
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.BaseActivity
 import hr.kcosic.app.model.bases.BaseResponse
-import hr.kcosic.app.model.entities.Token
 import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
-import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.helpers.ValidationHelper
 import hr.kcosic.app.model.responses.ErrorResponse
@@ -23,12 +21,7 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.io.InvalidObjectException
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAccessor
 import java.util.*
 
 
@@ -65,17 +58,6 @@ class RegisterUserActivity : BaseActivity() {
         etUsername = findViewById(R.id.etUserName)
         etLastName = findViewById(R.id.etLastName)
         progressBarHolder = findViewById(R.id.progressBarHolder)
-
-
-        //TODO remove, for development only
-        etFirstName.setText("Testko")
-        etLastName.setText("Testic")
-        etDob.setText("09.08.1992")
-        etUsername.setText("Testko1")
-        etEmail.setText("test1@mail.com")
-        etPassword.setText("test1")
-        etRepeatPassword.setText("test1")
-
 
         btnBack.setOnClickListener {
             Helper.openActivity(this, ActivityEnum.LOGIN)

@@ -86,7 +86,7 @@ class IconHelper {
         }
 
         /**
-         * Loads vector drawable , aplys tint on it and returns a wrapped bitmap drawable.
+         * Loads vector drawable , applies tint on it and returns a wrapped bitmap drawable.
          * Bitmap drawable can be resized using setBounds method (unlike the VectorDrawable)
          * @param context Requires view context !
          */

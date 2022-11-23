@@ -7,8 +7,6 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import java.text.SimpleDateFormat
-import java.util.*
 
 object ErrorCodeSerializer : KSerializer<ErrorCodeEnum> {
     override val descriptor = PrimitiveSerialDescriptor("ErrorCodeEnum", PrimitiveKind.INT)
@@ -18,9 +16,9 @@ object ErrorCodeSerializer : KSerializer<ErrorCodeEnum> {
 
     @SuppressLint("SimpleDateFormat")
     override fun deserialize(decoder: Decoder): ErrorCodeEnum {
-        val wantedCode = decoder.decodeInt();
+        val wantedCode = decoder.decodeInt()
 
         val errorCode = ErrorCodeEnum.values().toList().find { errorCodeEnum -> errorCodeEnum.code == wantedCode}
-        return errorCode!!;
+        return errorCode!!
     }
 }

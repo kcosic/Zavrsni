@@ -1,7 +1,6 @@
 package hr.kcosic.app.model.bases
 
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.forEach
@@ -22,25 +21,24 @@ abstract class ValidatedActivityWithNavigation(val activity: ActivityEnum) : Val
         bottomNavigation = findViewById(activity.navigationId)
         bottomNavigation.selectedItemId = activity.menuItemId
         bottomNavigation.menu.forEach { item ->
-                item.setOnMenuItemClickListener {
-                    progressBarHolder.visibility = View.VISIBLE
-                    if(activity.menuItemId != item.itemId){
-                        Helper.openActivity(
-                            this,
-                            ActivityEnum.findByResourceId(it.itemId)
-                        )
-
-                    }
-                    onMenuItemSelected(it.itemId, it )
-
+            item.setOnMenuItemClickListener {
+                progressBarHolder.visibility = View.VISIBLE
+                if (activity.menuItemId != item.itemId) {
+                    Helper.openActivity(
+                        this,
+                        ActivityEnum.findByResourceId(it.itemId)
+                    )
                 }
+                onMenuItemSelected(it.itemId, it)
+            }
         }
     }
 
-    protected fun showSpinner(){
+    protected fun showSpinner() {
         progressBarHolder.visibility = View.VISIBLE
     }
-    protected fun hideSpinner(){
+
+    protected fun hideSpinner() {
         progressBarHolder.visibility = View.GONE
     }
 }

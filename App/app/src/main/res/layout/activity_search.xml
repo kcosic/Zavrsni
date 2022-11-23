@@ -93,6 +93,7 @@
                                 android:inputType="none"
                                 android:maxLength="50"
                                 tools:ignore="TextFields" />
+
                             <com.google.android.material.floatingactionbutton.FloatingActionButton
                                 style="@style/primaryButton"
                                 android:layout_weight="4"
@@ -104,7 +105,8 @@
                                 android:layout_marginLeft="10sp"
                                 android:layout_marginRight="10sp"
                                 android:src="@drawable/magnifying_glass"
-                                android:id="@+id/btnRefreshShops"/>
+                                android:id="@+id/btnRefreshShops"
+                                android:contentDescription="@string/search" />
                         </LinearLayout>
 
                     </LinearLayout>

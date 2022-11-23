@@ -3,7 +3,6 @@ package hr.kcosic.app.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
@@ -45,7 +44,7 @@ class RequestsAdapter(
         holder.cbShopAccepted.isEnabled = false
         holder.cbUserAccepted.isChecked = item.UserAccepted!!
         holder.cbUserAccepted.isEnabled = false
-        holder.btnMenu.setOnClickListener { _ ->
+        holder.btnMenu.setOnClickListener {
             menuButtonClickListener.onClick(
                 item
             )

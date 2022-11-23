@@ -3,7 +3,6 @@ package hr.kcosic.app.activity
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.kcosic.app.R
@@ -26,7 +25,7 @@ class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
         const val REQUEST_VIEW_KEY = "9sj0dfF3F8lsd7"
     }
     lateinit var rvRequests: RecyclerView
-    private lateinit var requestsAdapter: RequestsAdapter;
+    private lateinit var requestsAdapter: RequestsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

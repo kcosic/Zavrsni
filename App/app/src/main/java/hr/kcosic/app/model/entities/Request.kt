@@ -4,7 +4,6 @@ import hr.kcosic.app.model.bases.BaseEntity
 import hr.kcosic.app.model.serializer.DateSerializer
 import kotlinx.serialization.Serializable
 import java.util.*
-import kotlin.properties.Delegates
 
 @Serializable
 class Request : BaseEntity() {
@@ -22,7 +21,11 @@ class Request : BaseEntity() {
     var RequestDate: Date? = null
     var Completed: Boolean? = null
     var UserAccepted: Boolean? = null
+    @Serializable(with = DateSerializer::class)
+    var UserAcceptedDate: Date? = null
     var ShopAccepted: Boolean? = null
+    @Serializable(with = DateSerializer::class)
+    var ShopAcceptedDate: Date? = null
     var BillPicture: String? = null
     var IssueDescription: String? = null
     @Serializable

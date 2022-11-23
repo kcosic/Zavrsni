@@ -16,16 +16,16 @@
         <EntityTypeShape EntityType="DbModel.Car" Width="1.5" PointX="2.75" PointY="4.125" />
         <AssociationConnector Association="DbModel.FK_Car_User" />
         <EntityTypeShape EntityType="DbModel.Appointment" Width="1.5" PointX="8.25" PointY="8.25" />
-        <EntityTypeShape EntityType="DbModel.Request" Width="1.5" PointX="4.5" PointY="3" />
-        <EntityTypeShape EntityType="DbModel.Shop" Width="1.5" PointX="6.25" PointY="7.5" />
+        <EntityTypeShape EntityType="DbModel.Shop" Width="1.5" PointX="6.375" PointY="7.5" />
         <AssociationConnector Association="DbModel.FK_Appointment_Shop" />
-        <AssociationConnector Association="DbModel.FK_Request_Car" />
         <AssociationConnector Association="DbModel.FK_Shop_Location" ></AssociationConnector>
-        <AssociationConnector Association="DbModel.FK_Request_Shop" />
-        <AssociationConnector Association="DbModel.FK_Request_User" />
         <AssociationConnector Association="DbModel.FK_Review_Shop" />
         <AssociationConnector Association="DbModel.FK_Shop_Shop" />
         <AssociationConnector Association="DbModel.FK_Token_Shop" />
+        <EntityTypeShape EntityType="DbModel.Request" Width="1.5" PointX="4.625" PointY="2.5" />
+        <AssociationConnector Association="DbModel.FK_Request_Car" />
+        <AssociationConnector Association="DbModel.FK_Request_Shop" />
+        <AssociationConnector Association="DbModel.FK_Request_User" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

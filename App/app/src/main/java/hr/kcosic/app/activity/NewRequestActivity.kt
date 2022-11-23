@@ -3,7 +3,6 @@ package hr.kcosic.app.activity
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.os.Handler
 import android.view.View

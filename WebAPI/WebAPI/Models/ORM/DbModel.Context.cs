@@ -32,7 +32,7 @@ namespace WebAPI.Models.ORM
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Car> Cars { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
-        public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Shop> Shops { get; set; }
+        public virtual DbSet<Request> Requests { get; set; }
     }
 }

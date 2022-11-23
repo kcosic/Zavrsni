@@ -15,8 +15,6 @@ import java.util.*
 
 
 class ApiService private constructor() {
-
-
     companion object {
         private var apiService: ApiService? = null
 
@@ -27,7 +25,6 @@ class ApiService private constructor() {
             return apiService!!
         }
     }
-
 
     /**
      * Instance of Http Client
@@ -242,6 +239,14 @@ class ApiService private constructor() {
         return get("${ApiRoutes.REQUEST}/User/${userId}/Active${if (inFuture) "?inFuture=true" else ""}")
     }
 
+    fun retrieveCurrentRequest(): Call {
+        return get("${ApiRoutes.REQUEST}/Current")
+    }
+
+    fun retrieveUpcomingRequest(): Call {
+        return get("${ApiRoutes.REQUEST}/Next")
+    }
+
     fun retrieveRequests(): Call {
         return get(ApiRoutes.REQUEST)
     }
@@ -304,6 +309,13 @@ class ApiService private constructor() {
 
     fun retrieveShopAvailability(shopId: Int, dateOfRepair: String): Call {
         return get("${ApiRoutes.SHOP}/$shopId/Availability/${Helper.toBase64(dateOfRepair)}")
+    }
+    fun retrieveShopNotificationData(): Call {
+        return get("${ApiRoutes.SHOP}/NotificationData")
+    }
+
+    fun retrieveShopRecentReviews(): Call {
+        return get("${ApiRoutes.SHOP}/Review/Recent")
     }
 
     fun deleteShop(shopId: Int): Call {

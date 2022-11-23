@@ -2,19 +2,374 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="100"
-        tools:context=".activity.HomeUserActivity">
+        android:weightSum="100">
+
+
+        <ScrollView
+            style="@style/home"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="100"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/notificationsCard"
+                    style="@style/card_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/llNotificationsSection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                style="@style/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="@string/notifications"
+                                android:textAlignment="center" />
+
+                            <ImageView
+                                android:id="@+id/ivNotificationsExpand"
+                                android:layout_width="15sp"
+                                android:layout_height="match_parent"
+                                android:background="#FFFFFF"
+                                android:contentDescription="@string/content_toggle"
+                                android:src="@drawable/chevron_down_small_primary"
+                                android:visibility="gone"
+                                tools:src="@drawable/chevron_down_small_primary" />
+
+                            <ImageView
+                                android:id="@+id/ivNotificationsCollapse"
+                                android:layout_width="15sp"
+                                android:layout_height="match_parent"
+                                android:background="#FFFFFF"
+
+                                android:contentDescription="@string/content_toggle"
+                                android:src="@drawable/chevron_up_small_primary"
+                                android:visibility="visible"
+                                tools:src="@drawable/chevron_up_small_primary" />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
 
 
 
+                        <LinearLayout
+                            android:id="@+id/llNotificationsContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10"
+                            android:baselineAligned="false">
 
-        <include layout="@layout/user_bottom_navigation" />
+
+                                <FrameLayout
+                                    android:layout_width="0sp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="3"
+                                    android:clipToPadding="false"
+                                    android:focusable="true">
+                                    <TextView
+                                        android:id="@+id/tvNewRequestsBadge"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="end|top"
+                                        android:layout_marginEnd="0dp"
+                                        android:layout_marginTop="3dp"
+                                        android:background="@drawable/badge_background"
+                                        android:gravity="center"
+                                        android:padding="3dp"
+                                        android:visibility="gone"
+                                        android:textColor="@android:color/white"
+                                        tools:text="4"
+                                        android:textSize="11sp"/>
+                                    <TextView
+                                        style="@style/textView"
+                                        android:layout_gravity="center"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="40sp"
+                                        android:gravity="center"
+                                        android:layout_margin="5dp"
+                                        android:text="@string/new_requests"
+                                        android:textAlignment="center" />
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:layout_width="0sp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="3"
+                                    android:clipToPadding="false"
+                                    android:focusable="true">
+                                    <TextView
+                                        style="@style/textView"
+                                        android:layout_gravity="center"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="5dp"
+                                        android:text="@string/updated_requests"
+                                        android:textAlignment="center" />
+                                    <TextView
+                                        android:id="@+id/tvUpdatedRequestsBadge"
+                                        android:layout_width="20dp"
+                                        android:visibility="gone"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="end|top"
+                                        android:layout_marginEnd="0dp"
+                                        android:layout_marginTop="3dp"
+                                        android:background="@drawable/badge_background"
+                                        android:gravity="center"
+                                        android:padding="3dp"
+                                        android:textColor="@android:color/white"
+                                        tools:text="4"
+                                        android:textSize="11sp"/>
+                                </FrameLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+               <androidx.cardview.widget.CardView
+                    android:id="@+id/currentRepairCard"
+                    style="@style/card_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/llCurrentRepairSection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                style="@style/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="@string/current_repair"
+                                android:textAlignment="center"
+                                app:drawableEndCompat="@drawable/angle_right_solid"
+                                android:drawablePadding="10dp"
+                                />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                style="@style/textView"
+                                android:layout_width="0dp"
+
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:text="@string/vehicle" />
+
+                            <TextView
+                                android:id="@+id/tvCurrentVehicle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                tools:text="@string/lorem" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                style="@style/textView"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+
+                                android:text="@string/deadline" />
+
+                            <TextView
+                                android:id="@+id/tvDeadline"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                tools:text="@string/lorem" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/upcomingRepairCard"
+                    style="@style/card_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/llUpcomingRepairSection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                style="@style/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="@string/upcoming_repair"
+                                app:drawableEndCompat="@drawable/angle_right_solid"
+                                android:drawablePadding="10dp"
+                                android:textAlignment="center" />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                style="@style/textView"
+                                android:layout_width="0dp"
+
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:text="@string/vehicle" />
+
+                            <TextView
+                                android:id="@+id/tvUpcomingVehicle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                tools:text="@string/lorem" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                style="@style/textView"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+
+                                android:text="@string/start_date_time" />
+
+                            <TextView
+                                android:id="@+id/tvStartDateTime"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                tools:text="@string/lorem" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/reviewsCard"
+                    style="@style/card_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="@string/latest_reviews"
+
+                            android:textAlignment="center" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                       <ScrollView
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           >
+                           <androidx.recyclerview.widget.RecyclerView
+                               android:id="@+id/rvReviews"
+                               android:layout_width="match_parent"
+                               android:layout_height="100sp"
+                               tools:listitem="@layout/review_list_item"
+                               tools:itemCount="2"/>
+                       </ScrollView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </ScrollView>
+
+        <include layout="@layout/shop_bottom_navigation" />
     </LinearLayout>
 
     <include layout="@layout/loading_layout" />

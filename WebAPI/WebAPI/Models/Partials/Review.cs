@@ -8,9 +8,9 @@ namespace WebAPI.Models.ORM
 {
     partial class Review
     {
-        public static ReviewDTO ToDTO(Review item, bool singleLevel = true)
+        public static ReviewDTO ToDTO(Review item, int level)
         {
-            if (item == null)
+            if (item == null || level <= 0)
             {
                 return null;
             }
@@ -22,8 +22,8 @@ namespace WebAPI.Models.ORM
                 DateModified = item.DateModified,
                 Deleted = item.Deleted,
                 Id = item.Id,
-                Shop = singleLevel ? null : Shop.ToDTO(item.Shop),
-                User = singleLevel ? null : User.ToDTO(item.User),
+                Shop = Shop.ToDTO(item.Shop, level - 1),
+                User = User.ToDTO(item.User, level - 1),
                 UserId = item.UserId,
                 ShopId = item.ShopId,
                 Comment = item.Comment,
@@ -31,32 +31,32 @@ namespace WebAPI.Models.ORM
             };
         }
 
-        public static ICollection<ReviewDTO> ToListDTO(ICollection<Review> list, bool singleLevel = true)
+        public static ICollection<ReviewDTO> ToListDTO(ICollection<Review> list, int level)
         {
-            if (list == null)
+            if (list == null || level <= 0)
             {
                 return null;
             }
 
-            return list.Select(x => x.ToDTO(singleLevel)).ToList();
+            return list.Select(x => x.ToDTO(level)).ToList();
         }
 
-        public ReviewDTO ToDTO(bool singleLevel = true)
+        public ReviewDTO ToDTO(int level)
         {
-            return new ReviewDTO
+            return level > 0 ? new ReviewDTO
             {
                 DateCreated = DateCreated,
                 DateDeleted = DateDeleted,
                 DateModified = DateModified,
                 Deleted = Deleted,
                 Id = Id,
-                Shop = singleLevel ? null : Shop.ToDTO(Shop),
-                User = singleLevel ? null : User.ToDTO(User),
+                Shop = Shop.ToDTO(Shop, level - 1),
+                User = User.ToDTO(User, level - 1),
                 UserId = UserId,
                 ShopId = ShopId,
                 Comment = Comment,
                 Rating = Rating
-            };
+            } : null;
         }
     }
 }

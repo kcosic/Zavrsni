@@ -16,12 +16,12 @@ class ValidationHelper {
         }
 
         fun isValueInRange(value: Int, start: Int, end: Int): Boolean {
-            return value in start..end;
+            return value in start..end
 
         }
 
         fun isValueInRange(value: Double, start: Double, end: Double): Boolean {
-            return value in start..end;
+            return value in start..end
         }
 
         //#endregion General
@@ -180,7 +180,7 @@ class ValidationHelper {
                     etFirstName.error =
                         ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
-                !ValidationHelper.isStringInRange(etLastName.text.toString(), 1, 50) -> {
+                !isStringInRange(etLastName.text.toString(), 1, 50) -> {
                     valid = false
                     etFirstName.error =
                         ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
@@ -193,7 +193,7 @@ class ValidationHelper {
                     etUsername.error =
                         ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
-                !ValidationHelper.isStringInRange(etUsername.text.toString(), 5, 50) -> {
+                !isStringInRange(etUsername.text.toString(), 5, 50) -> {
                     valid = false
                     etUsername.error =
                         ContextInstance.getContext()!!.getString(R.string.length_between_5_50)
@@ -205,7 +205,7 @@ class ValidationHelper {
                     valid = false
                     etDob.error = ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
-                !ValidationHelper.isStringInRange(etDob.text.toString(), 1, 50) -> {
+                !isStringInRange(etDob.text.toString(), 1, 50) -> {
                     valid = false
                     etDob.error =
                         ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
@@ -226,7 +226,7 @@ class ValidationHelper {
                     etLastName.error =
                         ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
-                !ValidationHelper.isStringInRange(etLastName.text.toString(), 1, 50) -> {
+                !isStringInRange(etLastName.text.toString(), 1, 50) -> {
                     valid = false
                     etLastName.error =
                         ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
@@ -239,7 +239,7 @@ class ValidationHelper {
                     etPassword.error =
                         ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
-                !ValidationHelper.isStringInRange(etPassword.text.toString(), 1, 50) -> {
+                !isStringInRange(etPassword.text.toString(), 1, 50) -> {
                     valid = false
                     etPassword.error =
                         ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
@@ -252,7 +252,7 @@ class ValidationHelper {
                     etRepeatPassword.error =
                         ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
-                !ValidationHelper.isStringInRange(etRepeatPassword.text.toString(), 1, 50) -> {
+                !isStringInRange(etRepeatPassword.text.toString(), 1, 50) -> {
                     valid = false
                     etRepeatPassword.error =
                         ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
@@ -277,7 +277,7 @@ class ValidationHelper {
                     etVat.setError(ContextInstance.getContext()!!.getString(R.string.required_value), IconHelper.getErrorIcon())
                     isValid = false
                 }
-                !ValidationHelper.isStringInRange(etVat.text.toString(), 1, 50) -> {
+                !isStringInRange(etVat.text.toString(), 1, 50) -> {
                     etVat.setError(ContextInstance.getContext()!!.getString(R.string.length_between_1_50), IconHelper.getErrorIcon())
                     isValid = false
                 }
@@ -289,7 +289,7 @@ class ValidationHelper {
                     etEmail.setError(ContextInstance.getContext()!!.getString(R.string.required_value), IconHelper.getErrorIcon())
                     isValid = false
                 }
-                !ValidationHelper.isStringInRange(etEmail.text.toString(), 1, 50) -> {
+                !isStringInRange(etEmail.text.toString(), 1, 50) -> {
                     etEmail.setError(ContextInstance.getContext()!!.getString(R.string.length_between_1_50), IconHelper.getErrorIcon())
                     isValid = false
                 }
@@ -301,7 +301,7 @@ class ValidationHelper {
                     etLegalName.setError(ContextInstance.getContext()!!.getString(R.string.required_value), IconHelper.getErrorIcon())
                     isValid = false
                 }
-                !ValidationHelper.isStringInRange(etLegalName.text.toString(), 1, 200) -> {
+                !isStringInRange(etLegalName.text.toString(), 1, 200) -> {
                     etLegalName.setError(
                         ContextInstance.getContext()!!.getString(R.string.length_between_1_200),
                         IconHelper.getErrorIcon()
@@ -316,7 +316,7 @@ class ValidationHelper {
                     etShortName.setError(ContextInstance.getContext()!!.getString(R.string.required_value), IconHelper.getErrorIcon())
                     isValid = false
                 }
-                !ValidationHelper.isStringInRange(etShortName.text.toString(), 1, 50) -> {
+                !isStringInRange(etShortName.text.toString(), 1, 50) -> {
                     etShortName.setError(
                         ContextInstance.getContext()!!.getString(R.string.length_between_1_50),
                         IconHelper.getErrorIcon()
@@ -338,7 +338,7 @@ class ValidationHelper {
                     isValid = false
                     etPassword.error = ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
-                !ValidationHelper.isStringInRange(etPassword.text.toString(), 1, 50) -> {
+                !isStringInRange(etPassword.text.toString(), 1, 50) -> {
                     isValid = false
                     etPassword.error = ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
                 }
@@ -349,7 +349,7 @@ class ValidationHelper {
                     isValid = false
                     etRepeatPassword.error = ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
-                !ValidationHelper.isStringInRange(etRepeatPassword.text.toString(), 1, 50) -> {
+                !isStringInRange(etRepeatPassword.text.toString(), 1, 50) -> {
                     isValid = false
                     etRepeatPassword.error = ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
                 }

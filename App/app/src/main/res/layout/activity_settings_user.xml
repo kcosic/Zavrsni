@@ -78,8 +78,7 @@
                                 android:contentDescription="@string/content_toggle"
 
                                 android:src="@drawable/floppy_disk_solid"
-                                android:visibility="gone"
-                                tools:src="@drawable/chevron_up_small_primary" />
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <com.google.android.material.divider.MaterialDivider

@@ -9,9 +9,9 @@ namespace WebAPI.Models.ORM
 {
     partial class Shop
     {
-        public static ShopDTO ToDTO(Shop item, bool singleLevel = true)
+        public static ShopDTO ToDTO(Shop item, int level)
         {
-            if (item == null)
+            if (item == null || level <= 0)
             {
                 return null;
             }
@@ -23,14 +23,14 @@ namespace WebAPI.Models.ORM
                 DateModified = item.DateModified,
                 Deleted = item.Deleted,
                 Id = item.Id,
-                Location = singleLevel ? null : Location.ToDTO(item.Location),
-                Requests = singleLevel ? null : Request.ToListDTO(item.Requests),
-                Reviews = singleLevel ? null : Review.ToListDTO(item.Reviews),
-                Appointments = singleLevel ? null : Appointment.ToListDTO(item.Appointments),
-                ChildShops = singleLevel ? null : Shop.ToListDTO(item.ChildShops),
-                ParentShop = singleLevel ? null : Shop.ToDTO(item.ParentShop),
+                Location = Location.ToDTO(item.Location, level - 1),
+                Requests = Request.ToListDTO(item.Requests, level - 1),
+                Reviews = Review.ToListDTO(item.Reviews, level - 1),
+                Appointments = Appointment.ToListDTO(item.Appointments, level - 1),
+                ChildShops = Shop.ToListDTO(item.ChildShops, level - 1),
+                ParentShop = Shop.ToDTO(item.ParentShop, level - 1),
                 ParentShopId = item.ParentShopId,
-                Tokens = singleLevel ? null : Token.ToListDTO(item.Tokens),
+                Tokens = Token.ToListDTO(item.Tokens, level - 1),
                 LegalName = item.LegalName,
                 LocationId = item.LocationId,
                 ShortName = item.ShortName,
@@ -43,42 +43,42 @@ namespace WebAPI.Models.ORM
             };
         }
 
-        public static ICollection<ShopDTO> ToListDTO(ICollection<Shop> list, bool singleLevel = true)
+        public static ICollection<ShopDTO> ToListDTO(ICollection<Shop> list, int level)
         {
-            if (list == null)
+            if (list == null || level <= 0)
             {
                 return null;
             }
-            return list.Select(x => x.ToDTO(singleLevel)).ToList();
+            return list.Select(x => x.ToDTO(level)).ToList();
         }
 
-        public ShopDTO ToDTO(bool singleLevel = true)
+        public ShopDTO ToDTO(int level)
         {
-            return new ShopDTO
+            return level > 0 ? new ShopDTO
             {
                 DateCreated = DateCreated,
                 DateDeleted = DateDeleted,
                 DateModified = DateModified,
                 Deleted = Deleted,
                 Id = Id,
-                Location = singleLevel ? null : Location.ToDTO(Location),
-                Requests = singleLevel ? null : Request.ToListDTO(Requests),
-                Reviews = singleLevel ? null : Review.ToListDTO(Reviews),
-                Appointments = singleLevel ? null : Appointment.ToListDTO(Appointments),
+                Location = Location.ToDTO(Location, level - 1),
+                Requests = Request.ToListDTO(Requests, level - 1),
+                Reviews = Review.ToListDTO(Reviews, level - 1),
+                Appointments = Appointment.ToListDTO(Appointments, level - 1),
                 LegalName = LegalName,
                 LocationId = LocationId,
                 ShortName = ShortName,
                 Vat = Vat,
                 Email = Email,
                 Password = Helper.PASSWORD_PLACEHOLDER,
-                ChildShops = singleLevel ? null : Shop.ToListDTO(ChildShops),
-                ParentShop = singleLevel ? null : Shop.ToDTO(ParentShop),
+                ChildShops = Shop.ToListDTO(ChildShops, level - 1),
+                ParentShop = Shop.ToDTO(ParentShop, level - 1),
                 ParentShopId = ParentShopId,
-                Tokens = singleLevel ? null : Token.ToListDTO(Tokens),
+                Tokens = Token.ToListDTO(Tokens, level - 1),
                 WorkDays = WorkDays,
                 WorkHours = WorkHours,
                 CarCapacity = CarCapacity
-            };
+            }:null;
         }
     }
 

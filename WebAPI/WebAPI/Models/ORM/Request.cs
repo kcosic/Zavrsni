@@ -31,8 +31,10 @@ namespace WebAPI.Models.ORM
         public Nullable<System.DateTime> FinishDate { get; set; }
         public string BillPicture { get; set; }
         public bool Completed { get; set; }
-        public bool ShopAccepted { get; set; }
-        public bool UserAccepted { get; set; }
+        public Nullable<System.DateTime> ShopAcceptedDate { get; set; }
+        public Nullable<bool> ShopAccepted { get; set; }
+        public Nullable<System.DateTime> UserAcceptedDate { get; set; }
+        public Nullable<bool> UserAccepted { get; set; }
     
         public virtual Car Car { get; set; }
         public virtual Shop Shop { get; set; }

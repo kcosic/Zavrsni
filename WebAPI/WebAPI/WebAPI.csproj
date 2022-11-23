@@ -203,6 +203,7 @@
     <Compile Include="Models\Exceptions\ForbiddenException.cs" />
     <Compile Include="Models\Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Models\Exceptions\TokenNotFoundException.cs" />
+    <Compile Include="Models\ShopNotificationData.cs" />
     <Compile Include="Services\HERE\Models\Address.cs" />
     <Compile Include="Services\HERE\HereService.cs" />
     <Compile Include="Services\HERE\Models\LatLong.cs" />

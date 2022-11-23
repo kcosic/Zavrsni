@@ -9,7 +9,6 @@ import hr.kcosic.app.model.enums.ErrorCodeEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.responses.ErrorResponse
-import java.lang.Exception
 
 abstract class ValidatedActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,60 +21,61 @@ abstract class ValidatedActivity : BaseActivity() {
             val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN)
             val authFor = Helper.retrieveSharedPreference<String>(PreferenceEnum.AUTH_FOR)
             if (token == Helper.NO_VALUE || authFor == Helper.NO_VALUE) {
-                Helper.showShortToast(this,getString(R.string.token_error))
-                Helper.openActivity(this,ActivityEnum.LOGIN)
+                Helper.showShortToast(this, getString(R.string.token_error))
+                Helper.openActivity(this, ActivityEnum.LOGIN)
             }
         } catch (e: Exception) {
-            Helper.showShortToast(this,e.message ?: getString(R.string.unknown_error))
-            Helper.openActivity(this,ActivityEnum.LOGIN)
+            Helper.showShortToast(this, e.message ?: getString(R.string.unknown_error))
+            Helper.openActivity(this, ActivityEnum.LOGIN)
         }
     }
 
     fun getUser(): User {
-        lateinit var user:User
-        try{
+        lateinit var user: User
+        try {
             user = Helper.deserializeObject(
                 Helper.retrieveSharedPreference(PreferenceEnum.USER)
             )
-        } catch (e: Exception){
-            Helper.showShortToast(this,e.message ?: getString(R.string.unknown_error))
+        } catch (e: Exception) {
+            Helper.showShortToast(this, e.message ?: getString(R.string.unknown_error))
             logoutUser()
         }
-        return user;
+        return user
     }
-    fun getShop(): Shop {
-        lateinit var shop:Shop
 
-        try{
-            shop = return Helper.deserializeObject(
+    fun getShop(): Shop {
+        lateinit var shop: Shop
+        try {
+            shop = Helper.deserializeObject(
                 Helper.retrieveSharedPreference(PreferenceEnum.SHOP)
             )
-        } catch (e: Exception){
-            Helper.showShortToast(this,e.message ?: getString(R.string.unknown_error))
+        } catch (e: Exception) {
+            Helper.showShortToast(this, e.message ?: getString(R.string.unknown_error))
             logoutShop()
         }
-        return shop;
+        return shop
     }
 
-    override fun handleApiResponseError(response: ErrorResponse){
+    override fun handleApiResponseError(response: ErrorResponse) {
         super.handleApiResponseError(response)
-        if(response.ErrorCode == ErrorCodeEnum.InvalidCredentials){
+        if (response.ErrorCode == ErrorCodeEnum.InvalidCredentials) {
             logoutUser()
         }
     }
 
-    fun logoutUser(){
-        Helper.showLongToast(this,getString(R.string.token_error))
+    fun logoutUser() {
+        Helper.showLongToast(this, getString(R.string.token_error))
         Helper.deleteSharedPreference(PreferenceEnum.TOKEN)
         Helper.deleteSharedPreference(PreferenceEnum.AUTH_FOR)
         Helper.deleteSharedPreference(PreferenceEnum.USER)
-        Helper.openActivity(this,ActivityEnum.LOGIN)
+        Helper.openActivity(this, ActivityEnum.LOGIN)
     }
-    fun logoutShop(){
-        Helper.showLongToast(this,getString(R.string.token_error))
+
+    fun logoutShop() {
+        Helper.showLongToast(this, getString(R.string.token_error))
         Helper.deleteSharedPreference(PreferenceEnum.TOKEN)
         Helper.deleteSharedPreference(PreferenceEnum.AUTH_FOR)
         Helper.deleteSharedPreference(PreferenceEnum.SHOP)
-        Helper.openActivity(this,ActivityEnum.LOGIN)
+        Helper.openActivity(this, ActivityEnum.LOGIN)
     }
 }

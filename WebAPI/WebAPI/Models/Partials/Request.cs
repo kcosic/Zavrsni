@@ -8,9 +8,9 @@ namespace WebAPI.Models.ORM
 {
     partial class Request
     {
-        public static RequestDTO ToDTO(Request item, bool singleLevel = true)
+        public static RequestDTO ToDTO(Request item, int level)
         {
-            if (item == null)
+            if (item == null || level <= 0)
             {
                 return null;
             }
@@ -22,8 +22,8 @@ namespace WebAPI.Models.ORM
                 DateModified = item.DateModified,
                 Deleted = item.Deleted,
                 Id = item.Id,
-                Shop = singleLevel ? null : Shop.ToDTO(item.Shop),
-                User = singleLevel ? null : User.ToDTO(item.User),
+                Shop = Shop.ToDTO(item.Shop, level - 1),
+                User = User.ToDTO(item.User, level - 1),
                 UserId = item.UserId,
                 ShopId = item.ShopId,
                 FinishDate = item.FinishDate,
@@ -34,35 +34,37 @@ namespace WebAPI.Models.ORM
                 Completed = item.Completed,
                 ShopAccepted = item.ShopAccepted,
                 UserAccepted = item.UserAccepted,
-                Car = singleLevel ? null : Car.ToDTO(item.Car),
+                Car = Car.ToDTO(item.Car, level - 1),
                 CarId = item.CarId,
                 IssueDescription = item.IssueDescription,
                 RepairDate = item.RepairDate,
-                RequestDate = item.RequestDate
+                RequestDate = item.RequestDate,
+                ShopAcceptedDate = item.ShopAcceptedDate,
+                UserAcceptedDate = item.UserAcceptedDate
             };
         }
 
-        public static ICollection<RequestDTO> ToListDTO(ICollection<Request> list, bool singleLevel = true)
+        public static ICollection<RequestDTO> ToListDTO(ICollection<Request> list, int level)
         {
-            if (list == null)
+            if (list == null || level <= 0)
             {
                 return null;
             }
 
-            return list.Select(x => x.ToDTO(singleLevel)).ToList();
+            return list.Select(x => x.ToDTO(level)).ToList();
         }
 
-        public RequestDTO ToDTO(bool singleLevel = true)
+        public RequestDTO ToDTO(int level)
         {
-            return new RequestDTO
+            return level > 0 ? new RequestDTO
             {
                 DateCreated = DateCreated,
                 DateDeleted = DateDeleted,
                 DateModified = DateModified,
                 Deleted = Deleted,
                 Id = Id,
-                Shop = singleLevel ? null : Shop.ToDTO(Shop),
-                User = singleLevel ? null : User.ToDTO(User),
+                Shop = Shop.ToDTO(Shop, level - 1),
+                User = User.ToDTO(User, level - 1),
                 UserId = UserId,
                 ShopId = ShopId,
                 FinishDate = FinishDate,
@@ -73,12 +75,14 @@ namespace WebAPI.Models.ORM
                 Completed = Completed,
                 ShopAccepted = ShopAccepted,
                 UserAccepted = UserAccepted,
-                Car = singleLevel ? null : Car.ToDTO(Car),
+                Car = Car.ToDTO(Car, level - 1),
                 CarId = CarId,
                 IssueDescription = IssueDescription,
                 RepairDate = RepairDate,
-                RequestDate = RequestDate
-            };
+                RequestDate = RequestDate,
+                ShopAcceptedDate = ShopAcceptedDate,
+                UserAcceptedDate = UserAcceptedDate
+            } : null;
         }
     }
 }

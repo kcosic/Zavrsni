@@ -3,7 +3,6 @@ package hr.kcosic.app.activity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -103,14 +102,14 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
-                    handleretrieveActiveUserRequestResponse(response)
+                    handleRetrieveActiveUserRequestResponse(response)
                     hideSpinner()
                 }
             }
         }))
     }
 
-    fun handleretrieveActiveUserRequestResponse(response: Response) {
+    fun handleRetrieveActiveUserRequestResponse(response: Response) {
 
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<Request>>(response.body!!.string())

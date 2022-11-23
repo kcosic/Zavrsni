@@ -11,8 +11,8 @@ import hr.kcosic.app.model.listeners.ButtonClickListener
 
 
 class TimeAdapter(
-    var issues: List<String>,
-    var workHours: String,
+    private var issues: List<String>,
+    private var workHours: String,
     private var radioButtonClickListener: ButtonClickListener
 ) : RecyclerView.Adapter<TimeAdapter.ViewHolder>() {
 

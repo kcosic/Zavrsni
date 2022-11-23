@@ -28,11 +28,11 @@ namespace WebAPI.Controllers
             {
                 if (AuthUser != null)
                 {
-                    return CreateOkResponse(AuthUser.Tokens.First().ToDTO(false));
+                    return CreateOkResponse(AuthUser.Tokens.First().ToDTO(2));
                 }
                 else
                 {
-                    return CreateOkResponse(AuthShop.Tokens.First().ToDTO(false));
+                    return CreateOkResponse(AuthShop.Tokens.First().ToDTO(2));
                 }
             }
             catch (Exception e)

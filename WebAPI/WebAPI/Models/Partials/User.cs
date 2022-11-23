@@ -9,9 +9,9 @@ namespace WebAPI.Models.ORM
 {
     partial class User
     {
-        public static UserDTO ToDTO(User item, bool singleLevel = true)
+        public static UserDTO ToDTO(User item, int level)
         {
-            if (item == null)
+            if (item == null || level <= 0)
             {
                 return null;
             }
@@ -23,11 +23,11 @@ namespace WebAPI.Models.ORM
                 DateModified = item.DateModified,
                 Deleted = item.Deleted,
                 Id = item.Id,
-                Tokens = singleLevel ? null : Token.ToListDTO(item.Tokens),
-                Requests = singleLevel ? null : Request.ToListDTO(item.Requests),
-                Reviews = singleLevel ? null : Review.ToListDTO(item.Reviews),
-                Cars = singleLevel ? null : Car.ToListDTO(item.Cars),
-                Locations = singleLevel ? null : Location.ToListDTO(item.Locations),
+                Tokens = Token.ToListDTO(item.Tokens, level - 1),
+                Requests = Request.ToListDTO(item.Requests, level - 1),
+                Reviews = Review.ToListDTO(item.Reviews, level - 1),
+                Cars = Car.ToListDTO(item.Cars, level - 1),
+                Locations = Location.ToListDTO(item.Locations, level - 1),
                 DateOfBirth = item.DateOfBirth,
                 Email = item.Email,
                 FirstName = item.FirstName,
@@ -37,37 +37,37 @@ namespace WebAPI.Models.ORM
             };
         }
 
-        public static ICollection<UserDTO> ToListDTO(ICollection<User> list, bool singleLevel = true)
+        public static ICollection<UserDTO> ToListDTO(ICollection<User> list, int level)
         {
-            if (list == null)
+            if (list == null || level <= 0)
             {
                 return null;
             }
 
-            return list.Select(x => x.ToDTO(singleLevel)).ToList();
+            return list.Select(x => x.ToDTO(level)).ToList();
         }
 
-        public UserDTO ToDTO(bool singleLevel = true)
+        public UserDTO ToDTO(int level)
         {
-            return new UserDTO
+            return level > 0 ? new UserDTO
             {
                 DateCreated = DateCreated,
                 DateDeleted = DateDeleted,
                 DateModified = DateModified,
                 Deleted = Deleted,
                 Id = Id,
-                Tokens = singleLevel ? null : Token.ToListDTO(Tokens, false),
-                Requests = singleLevel ? null : Request.ToListDTO(Requests),
-                Reviews = singleLevel ? null : Review.ToListDTO(Reviews),
-                Cars = singleLevel ? null : Car.ToListDTO(Cars),
-                Locations = singleLevel ? null : Location.ToListDTO(Locations),
+                Tokens = Token.ToListDTO(Tokens, level - 1),
+                Requests = Request.ToListDTO(Requests, level - 1),
+                Reviews = Review.ToListDTO(Reviews, level - 1),
+                Cars = Car.ToListDTO(Cars, level - 1),
+                Locations = Location.ToListDTO(Locations, level - 1),
                 DateOfBirth = DateOfBirth,
                 Email = Email,
                 FirstName = FirstName,
                 LastName = LastName,
                 Username = Username,
                 Password = Helper.PASSWORD_PLACEHOLDER
-            };
+            } : null;
         }
     }
 }
