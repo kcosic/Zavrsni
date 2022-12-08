@@ -19,7 +19,9 @@ namespace WebAPI.Models.ORM
             {
                 TokenValue = item.TokenValue,
                 User = User.ToDTO(item.User, level - 1),
-                UserId = item.UserId
+                UserId = item.UserId,
+                Shop = Shop.ToDTO(item.Shop, level - 1),
+                ShopId = item.ShopId
             };
         }
 
@@ -39,7 +41,9 @@ namespace WebAPI.Models.ORM
             {
                 TokenValue = TokenValue,
                 User = User.ToDTO(User, level - 1),
-                UserId = UserId
+                UserId = UserId,
+                Shop = Shop.ToDTO(Shop, level - 1),
+                ShopId = ShopId
             } : null;
         }
     }

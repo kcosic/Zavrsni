@@ -7,7 +7,8 @@ namespace WebAPI.Models
 {
     public class ShopNotificationData
     {
-        public int NewRequests { get; set; }
-        public int UpdatedRequests { get; set; }
+        public List<int> NewRequests { get; set; }
+
+        public List<int> UpdatedRequests { get; set; }
     }
 }

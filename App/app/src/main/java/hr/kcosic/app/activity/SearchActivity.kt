@@ -86,8 +86,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         map = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         map?.getMapAsync(this)
         etDateOfRepair.setText(Helper.formatDate(Calendar.getInstance().time))
-        btnSelectLocation.visibility = View.GONE
-        tvRepairShopName.visibility = View.GONE
+        hideComponent(tvRepairShopName)
+        hideComponent(btnSelectLocation)
         val date =
             DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 repairCalendar.set(Calendar.YEAR, year)
@@ -126,7 +126,6 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         swUseCurrentLocation.setOnCheckedChangeListener { buttonView, isChecked ->
             showSpinner()
             coroutineScope.launch {
-                val mainHandler = Handler(applicationContext.mainLooper)
                 val actvVisibility: Boolean
                 var buttonViewActivated = true
                 var latLng: LatLng? = null
@@ -147,7 +146,11 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 }
 
                 mainHandler.post {
-                    actvSearchAddress.visibility = if (actvVisibility) View.VISIBLE else View.GONE
+                    if (actvVisibility) {
+                        showComponent(actvSearchAddress)
+                    } else {
+                        hideComponent(actvSearchAddress)
+                    }
                     buttonView.isEnabled = buttonViewActivated
                     if (latLng != null) {
                         createOrUpdateMarkerFromPosition(latLng, "Your location", true)
@@ -195,21 +198,22 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             val test = locationMarkerMap
             val location = test[it.id]
             if (location != null) {
-                tvRepairShopName.visibility = View.VISIBLE
                 tvRepairShopName.text = if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0].ShortName else null
-                btnSelectLocation.visibility = View.VISIBLE
                 selectedLocation = location
+                showComponent(tvRepairShopName)
+                showComponent(btnSelectLocation)
+
             } else {
-                tvRepairShopName.visibility = View.GONE
-                btnSelectLocation.visibility = View.GONE
+                hideComponent(tvRepairShopName)
+                hideComponent(btnSelectLocation)
                 selectedLocation = null
             }
 
             false
         }
         googleMap.setOnMapClickListener {
-            tvRepairShopName.visibility = View.GONE
-            btnSelectLocation.visibility = View.GONE
+            hideComponent(tvRepairShopName)
+            hideComponent(btnSelectLocation)
             selectedLocation = null
         }
         googleMap.setOnCameraMoveListener {
@@ -220,8 +224,6 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     private fun searchAddress(address: String?) {
         if (address != null && address.isNotEmpty()) {
             apiService.discoverLocationByAddress(address).enqueue(object : Callback {
-                val mainHandler = Handler(applicationContext.mainLooper)
-
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleApiResponseException(call, e)
@@ -320,7 +322,6 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             10000,
             date
         ).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -347,7 +348,6 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             10000,
             date
         ).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)

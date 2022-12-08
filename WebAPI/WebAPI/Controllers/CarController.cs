@@ -110,7 +110,8 @@ namespace WebAPI.Controllers
                     Model= newCarDTO.Model,
                     Odometer= newCarDTO.Odometer,
                     Year = newCarDTO.Year,
-                    UserId = AuthUser.Id
+                    UserId = AuthUser.Id,
+                    LicensePlate = newCarDTO.LicensePlate
                 };
 
                 Db.Cars.Add(newCar);
@@ -149,6 +150,7 @@ namespace WebAPI.Controllers
                 car.Model = carDTO.Model;
                 car.Odometer = carDTO.Odometer;
                 car.Year = carDTO.Year;
+                car.LicensePlate = carDTO.LicensePlate;
 
                 Db.SaveChanges();
 

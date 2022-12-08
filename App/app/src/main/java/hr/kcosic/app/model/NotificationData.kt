@@ -1,6 +1,7 @@
 package hr.kcosic.app.model
 
+@kotlinx.serialization.Serializable
 class NotificationData {
-    var NewRequests: Int? = null
-    var UpdatedRequests: Int? = null
+    var NewRequests: MutableList<Int>? = null
+    var UpdatedRequests: MutableList<Int>? = null
 }

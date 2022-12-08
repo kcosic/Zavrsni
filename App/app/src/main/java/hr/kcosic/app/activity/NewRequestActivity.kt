@@ -169,7 +169,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     private fun createNewRequest(newRequest: Request) {
         showSpinner()
         apiService.createRequest(newRequest).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
+            
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -212,21 +212,20 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
 
 
     private fun createVehicle(newVehicle: Car, dialog: DialogInterface?) {
-        dialogProgressbar.visibility = View.VISIBLE
+        showComponent(dialogProgressbar)
         apiService.createCar(newVehicle).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
+            
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    dialogProgressbar.visibility = View.GONE
-
+                    hideComponent(dialogProgressbar)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleCreateCarResponse(response, dialog)
-                    dialogProgressbar.visibility = View.GONE
+                    hideComponent(dialogProgressbar)
                 }
             }
 
@@ -261,7 +260,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     private fun retrieveMyVehicles() {
         showSpinner()
         apiService.retrieveCars().enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
+            
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -305,7 +304,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
         //TODO: fix when multiple shops are in  the same location
         apiService.retrieveShopAvailability(shopId!!, dateOfRepair)
             .enqueue(object : Callback {
-                val mainHandler = Handler(applicationContext.mainLooper)
+                
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleApiResponseException(call, e)
@@ -362,9 +361,9 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
 
     private fun validateNextButton() {
         if (isRequestValid()) {
-            btnNext.visibility = View.VISIBLE
+            showComponent(btnNext)
         } else {
-            btnNext.visibility = View.GONE
+            hideComponent(btnNext)
         }
     }
 

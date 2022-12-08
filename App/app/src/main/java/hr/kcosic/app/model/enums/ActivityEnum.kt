@@ -7,11 +7,9 @@ import hr.kcosic.app.model.helpers.Helper
 import kotlin.reflect.KClass
 
 enum class ActivityEnum(val layoutId: Int, val menuItemId: Int, val navigationId: Int) {
+    //#region USER
     HOME_USER(R.layout.activity_home_user, R.id.home, R.id.user_bottom_navigation) {
         override fun getClass(): KClass<HomeUserActivity> = HomeUserActivity::class
-    },
-    HOME_SHOP(R.layout.activity_home_shop, R.id.home, R.id.shop_bottom_navigation) {
-        override fun getClass(): KClass<HomeShopActivity> = HomeShopActivity::class
     },
     SEARCH(R.layout.activity_search, R.id.search_service, R.id.user_bottom_navigation) {
         override fun getClass(): KClass<SearchActivity> = SearchActivity::class
@@ -28,7 +26,25 @@ enum class ActivityEnum(val layoutId: Int, val menuItemId: Int, val navigationId
     SETTINGS_USER(R.layout.activity_settings_user, R.id.settings, R.id.user_bottom_navigation) {
         override fun getClass(): KClass<SettingsUserActivity> = SettingsUserActivity::class
     },
+    //#endregion USER
 
+    //#region SHOP
+    HOME_SHOP(R.layout.activity_home_shop, R.id.home, R.id.shop_bottom_navigation) {
+        override fun getClass(): KClass<HomeShopActivity> = HomeShopActivity::class
+    },
+    REPAIR_VIEW(R.layout.activity_repair_view, R.id.repair_view, R.id.shop_bottom_navigation) {
+        override fun getClass(): KClass<RepairActivity> = RepairActivity::class
+    },
+    REPAIR_LIST_VIEW(R.layout.activity_repair_list, R.id.repair_list, R.id.shop_bottom_navigation) {
+        override fun getClass(): KClass<RepairListActivity> = RepairListActivity::class
+    },
+    SETTINGS_SHOP(R.layout.activity_settings_shop, R.id.settings, R.id.user_bottom_navigation) {
+        override fun getClass(): KClass<SettingsShopActivity> = SettingsShopActivity::class
+    },
+
+    //#endregion SHOP
+
+    //#region MISC
 
     LOGIN(R.layout.activity_login, -1,-1) {
         override fun getClass(): KClass<LoginActivity> = LoginActivity::class
@@ -39,6 +55,7 @@ enum class ActivityEnum(val layoutId: Int, val menuItemId: Int, val navigationId
     REGISTER_SHOP(R.layout.activity_register_shop, -1,-1) {
         override fun getClass(): KClass<RegisterShopActivity> = RegisterShopActivity::class
     },
+    //#endregion MISC
 
 
     ;
@@ -58,9 +75,9 @@ enum class ActivityEnum(val layoutId: Int, val menuItemId: Int, val navigationId
             else if (Helper.AUTH_FOR_KEY == "Shop") {
                 when (resId) {
                     R.id.home -> return HOME_SHOP
-//                    R.id.current_repair -> return SEARCH
-//                    R.id.repair_requests -> return REQUEST_LIST
-//                    R.id.settings -> return SETTINGS_USER
+                    R.id.repair_view -> return REPAIR_VIEW
+                    R.id.repair_list -> return REPAIR_LIST_VIEW
+                    R.id.settings -> return SETTINGS_SHOP
                 }
             }
 

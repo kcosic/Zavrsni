@@ -12,10 +12,10 @@ import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.listeners.ButtonClickListener
 
 
-class RequestsAdapter(
+class RepairsAdapter(
     private var requests: List<Request>,
     private var menuButtonClickListener: ButtonClickListener
-) : RecyclerView.Adapter<RequestsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RepairsAdapter.ViewHolder>() {
 
     private var selectedPosition = -1
 
@@ -25,7 +25,7 @@ class RequestsAdapter(
         // that is used to hold list item
 
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.request_list_item, parent, false)
+            .inflate(R.layout.repair_list_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -35,8 +35,8 @@ class RequestsAdapter(
 
         val item = requests[position]
 
-        holder.tvDate.text = Helper.formatDate(item.RequestDate!!)
-        holder.tvName.text = item.Shop!!.ShortName
+        holder.tvDate.text = Helper.formatDate(item.RepairDate!!)
+        holder.tvVehicle.text = item.Car.toString()
         holder.tvCompleted.setCompoundDrawablesWithIntrinsicBounds(
             if (item.Completed != null && item.Completed == true) R.drawable.check_green
             else R.drawable.xmark_red, 0, 0, 0
@@ -70,7 +70,7 @@ class RequestsAdapter(
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val tvDate: TextView = itemView.findViewById(R.id.tvDate)
-        val tvName: TextView = itemView.findViewById(R.id.tvName)
+        val tvVehicle: TextView = itemView.findViewById(R.id.tvVehicle)
         val tvUserConsent: TextView = itemView.findViewById(R.id.tvUserConsent)
         val tvShopConsent: TextView = itemView.findViewById(R.id.tvShopConsent)
         val tvCompleted: TextView = itemView.findViewById(R.id.tvCompleted)

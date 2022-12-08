@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 class Car : BaseEntity() {
     var Manufacturer: String? = null
     var Model: String? = null
+    var LicensePlate: String? = null
     var Year: Int? = null
     var Odometer: Double? = null
     var UserId: Int? = null
@@ -16,6 +17,6 @@ class Car : BaseEntity() {
     var User: User? = null
 
     override fun toString(): String {
-        return "$Manufacturer-$Model-$Year"
+        return "$Manufacturer $Model ($LicensePlate)"
     }
 }

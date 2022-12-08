@@ -32,6 +32,7 @@
           <Property Name="Model" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Year" Type="int" Nullable="false" />
           <Property Name="Odometer" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="LicensePlate" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Location">
           <Key>
@@ -123,6 +124,7 @@
           <Property Name="WorkHours" Type="nvarchar" MaxLength="11" Nullable="false" />
           <Property Name="WorkDays" Type="nvarchar" MaxLength="7" Nullable="false" />
           <Property Name="CarCapacity" Type="int" Nullable="false" />
+          <Property Name="HourlyRate" Type="decimal" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <EntityType Name="Token">
           <Key>
@@ -546,6 +548,7 @@
           <Property Name="Odometer" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <NavigationProperty Name="User" Relationship="DbModel.FK_Car_User" FromRole="Car" ToRole="User" />
           <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_Car" FromRole="Car" ToRole="Request" />
+          <Property Name="LicensePlate" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Car_User">
           <End Type="DbModel.User" Role="User" Multiplicity="1" />
@@ -599,6 +602,7 @@
           <NavigationProperty Name="ParentShop" Relationship="DbModel.FK_Shop_Shop" FromRole="Shop1" ToRole="Shop" />
           <NavigationProperty Name="Tokens" Relationship="DbModel.FK_Token_Shop" FromRole="Shop" ToRole="Token" />
           <NavigationProperty Name="Requests" Relationship="DbModel.FK_Request_Shop" FromRole="Shop" ToRole="Request" />
+          <Property Name="HourlyRate" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
         </EntityType>
         <Association Name="FK_Appointment_Shop">
           <End Type="DbModel.Shop" Role="Shop" Multiplicity="1" />
@@ -808,6 +812,7 @@
           <EntitySetMapping Name="Cars">
             <EntityTypeMapping TypeName="DbModel.Car">
               <MappingFragment StoreEntitySet="Car">
+                <ScalarProperty Name="LicensePlate" ColumnName="LicensePlate" />
                 <ScalarProperty Name="Odometer" ColumnName="Odometer" />
                 <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="Model" ColumnName="Model" />
@@ -838,6 +843,7 @@
           <EntitySetMapping Name="Shops">
             <EntityTypeMapping TypeName="DbModel.Shop">
               <MappingFragment StoreEntitySet="Shop">
+                <ScalarProperty Name="HourlyRate" ColumnName="HourlyRate" />
                 <ScalarProperty Name="CarCapacity" ColumnName="CarCapacity" />
                 <ScalarProperty Name="WorkDays" ColumnName="WorkDays" />
                 <ScalarProperty Name="WorkHours" ColumnName="WorkHours" />

@@ -3,6 +3,7 @@ package hr.kcosic.app.model.bases
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.view.forEach
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import hr.kcosic.app.R
@@ -34,11 +35,11 @@ abstract class ValidatedActivityWithNavigation(val activity: ActivityEnum) : Val
         }
     }
 
-    protected fun showSpinner() {
-        progressBarHolder.visibility = View.VISIBLE
+    protected open fun showSpinner() {
+        showComponent(progressBarHolder)
     }
 
-    protected fun hideSpinner() {
-        progressBarHolder.visibility = View.GONE
+    protected open fun hideSpinner() {
+        hideComponent(progressBarHolder)
     }
 }

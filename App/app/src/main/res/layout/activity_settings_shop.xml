@@ -7,9 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="100"
-        tools:context=".activity.HomeUserActivity">
+        android:orientation="vertical">
 
         <ScrollView
             style="@style/app_background"
@@ -49,14 +47,15 @@
                                 android:layout_margin="10dp"
                                 android:text="@string/account_info"
                                 android:textAlignment="center" />
+
                             <ImageView
                                 android:id="@+id/ivAccountInfoExpand"
                                 android:layout_width="15sp"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
-                                android:visibility="gone"
                                 android:contentDescription="@string/content_toggle"
                                 android:src="@drawable/chevron_down_small_primary"
+                                android:visibility="gone"
                                 tools:src="@drawable/chevron_down_small_primary" />
 
                             <ImageView
@@ -92,49 +91,6 @@
                             android:orientation="vertical"
                             android:visibility="visible">
 
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal"
-                                android:weightSum="10">
-
-                                <TextView
-                                    style="@style/textView"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="3"
-                                    android:labelFor="@id/etUserName"
-                                    android:text="@string/username" />
-
-                                <EditText
-                                    android:id="@+id/etUserName"
-                                    style="@style/textField"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-
-                                    android:layout_gravity="center"
-                                    android:layout_weight="6"
-                                    android:autofillHints=""
-                                    android:enabled="false"
-                                    android:inputType="text"
-                                     />
-
-                                <ImageButton
-                                    android:id="@+id/btnEditUserName"
-                                    android:layout_width="0sp"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:background="#FFFFFF"
-
-                                    android:contentDescription="@string/edit_row"
-                                    android:src="@drawable/pen_to_square_small_primary"
-                                    tools:ignore="TouchTargetSizeCheck"
-                                    tools:src="@drawable/pen_to_square_small_primary" />
-                            </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -217,7 +173,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/llPersonalInfoSection"
+                            android:id="@+id/llShopInfoSection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
@@ -230,11 +186,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
-                                android:text="@string/personal_info"
+                                android:text="@string/repair_shop_info"
                                 android:textAlignment="center" />
 
                             <ImageView
-                                android:id="@+id/ivPersonalInfoExpand"
+                                android:id="@+id/ivShopInfoExpand"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -246,7 +202,7 @@
                                 tools:src="@drawable/chevron_down_small_primary" />
 
                             <ImageView
-                                android:id="@+id/ivPersonalInfoCollapse"
+                                android:id="@+id/ivShopInfoCollapse"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -255,8 +211,9 @@
                                 android:src="@drawable/chevron_up_small_primary"
                                 android:visibility="visible"
                                 tools:src="@drawable/chevron_up_small_primary" />
+
                             <ImageView
-                                android:id="@+id/ivPersonalInfoSave"
+                                android:id="@+id/ivShopInfoSave"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
@@ -272,7 +229,7 @@
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
-                            android:id="@+id/personalInfoContent"
+                            android:id="@+id/llShopInfoContent"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
@@ -292,10 +249,10 @@
                                     android:layout_gravity="center"
                                     android:layout_weight="3"
                                     android:labelFor="@id/etFirstName"
-                                    android:text="@string/first_name" />
+                                    android:text="@string/legal_name" />
 
                                 <EditText
-                                    android:id="@+id/etFirstName"
+                                    android:id="@+id/etLegalName"
                                     style="@style/textField"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -304,11 +261,10 @@
                                     android:layout_weight="6"
                                     android:autofillHints=""
                                     android:enabled="false"
-                                    android:inputType="text"
-                                     />
+                                    android:inputType="text" />
 
                                 <ImageButton
-                                    android:id="@+id/btnEditFirstName"
+                                    android:id="@+id/btnEditLegalName"
                                     android:layout_width="0sp"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
@@ -335,10 +291,10 @@
                                     android:layout_gravity="center"
                                     android:layout_weight="3"
                                     android:labelFor="@id/etLastName"
-                                    android:text="@string/last_name" />
+                                    android:text="@string/short_name" />
 
                                 <EditText
-                                    android:id="@+id/etLastName"
+                                    android:id="@+id/etShortName"
                                     style="@style/textField"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -351,7 +307,7 @@
                                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                                 <ImageButton
-                                    android:id="@+id/btnEditLastName"
+                                    android:id="@+id/btnEditShortName"
                                     android:layout_width="0sp"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
@@ -378,10 +334,10 @@
                                     android:layout_gravity="center"
                                     android:layout_weight="3"
                                     android:labelFor="@id/etDob"
-                                    android:text="@string/date_of_birth" />
+                                    android:text="@string/vat_id" />
 
                                 <EditText
-                                    android:id="@+id/etDob"
+                                    android:id="@+id/etVat"
                                     style="@style/textField"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -394,7 +350,7 @@
                                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                                 <ImageButton
-                                    android:id="@+id/btnEditDob"
+                                    android:id="@+id/btnEditVat"
                                     android:layout_width="0sp"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
@@ -422,7 +378,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/llVehiclesSection"
+                            android:id="@+id/llShopSettingsSection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
@@ -435,64 +391,295 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
-                                android:text="@string/vehicles"
+                                android:text="@string/repair_shop_settings"
                                 android:textAlignment="center" />
 
                             <ImageView
-                                android:id="@+id/ivVehiclesExpand"
+                                android:id="@+id/ivShopSettingsExpand"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
-                                android:contentDescription="@string/menu"
-
+                                android:contentDescription="@string/content_toggle"
                                 android:src="@drawable/chevron_down_small_primary"
                                 android:visibility="gone"
+
                                 tools:ignore="TouchTargetSizeCheck"
                                 tools:src="@drawable/chevron_down_small_primary" />
 
                             <ImageView
-                                android:id="@+id/ivVehiclesCollapse"
+                                android:id="@+id/ivShopSettingsCollapse"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#FFFFFF"
+                                android:contentDescription="@string/content_toggle"
 
-                                android:contentDescription="@string/menu"
                                 android:src="@drawable/chevron_up_small_primary"
                                 android:visibility="visible"
                                 tools:src="@drawable/chevron_up_small_primary" />
+
+                            <ImageView
+                                android:id="@+id/ivShopSettingsSave"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="#FFFFFF"
+                                android:contentDescription="@string/content_toggle"
+
+                                android:src="@drawable/floppy_disk_solid"
+                                android:visibility="gone"
+                                tools:src="@drawable/chevron_up_small_primary" />
                         </LinearLayout>
+
 
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
-                            android:id="@+id/vehiclesContent"
+                            android:id="@+id/llShopSettingsContent"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:visibility="visible">
 
-                            <ScrollView
-                                android:layout_width="match_parent"
-                                android:layout_height="200sp">
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/rvVehicles"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    tools:itemCount="30"
 
-                                    tools:listitem="@layout/vehicle_list_item" />
-                            </ScrollView>
-
-                            <Button
-                                android:id="@+id/btnNewVehicle"
-                                style="@style/info_button"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="10sp"
-                                android:text="@string/add_new_car" />
+                                android:layout_margin="10dp"
+                                android:orientation="horizontal"
+                                android:weightSum="10">
 
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="3"
+                                    android:labelFor="@+id/etCapacity"
+                                    android:text="@string/car_capacity" />
+
+                                <EditText
+                                    android:id="@+id/etCapacity"
+                                    style="@style/textField"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_gravity="center"
+                                    android:layout_weight="6"
+                                    android:autofillHints=""
+                                    android:enabled="false"
+                                    android:inputType="number" />
+
+                                <ImageButton
+                                    android:id="@+id/btnEditCapacity"
+                                    android:layout_width="0sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:contentDescription="@string/menu"
+                                    android:src="@drawable/pen_to_square_small_primary"
+                                    tools:ignore="TouchTargetSizeCheck"
+                                    tools:src="@drawable/pen_to_square_small_primary" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:orientation="horizontal"
+                                android:weightSum="10">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="3"
+                                    android:labelFor="@+id/etHourlyRate"
+                                    android:text="@string/hourly_rate" />
+
+                                <EditText
+                                    android:id="@+id/etHourlyRate"
+                                    style="@style/textField"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_gravity="center"
+                                    android:layout_weight="6"
+                                    android:autofillHints=""
+                                    android:enabled="false"
+                                    android:inputType="number" />
+
+                                <ImageButton
+                                    android:id="@+id/btnEditHourlyRate"
+                                    android:layout_width="0sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+
+                                    android:contentDescription="@string/menu"
+                                    android:src="@drawable/pen_to_square_small_primary"
+                                    tools:ignore="TouchTargetSizeCheck"
+                                    tools:src="@drawable/pen_to_square_small_primary" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:orientation="horizontal"
+                                android:weightSum="10">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="3"
+                                    android:labelFor="@+id/etWorkHoursStart"
+                                    android:text="@string/work_hours" />
+
+                                <EditText
+                                    android:id="@+id/etWorkHoursStart"
+                                    style="@style/textField"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_gravity="center"
+                                    android:layout_weight="2"
+                                    android:autofillHints=""
+                                    android:enabled="false"
+                                    android:inputType="number" />
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="2"
+                                    android:gravity="center"
+                                    android:labelFor="@+id/etEmail"
+                                    android:text=" - "
+                                    android:textFontWeight="1000"
+                                    tools:ignore="HardcodedText,UnusedAttribute" />
+
+                                <EditText
+                                    android:id="@+id/etWorkHoursEnd"
+                                    style="@style/textField"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_gravity="center"
+                                    android:layout_weight="2"
+                                    android:autofillHints=""
+                                    android:enabled="false"
+                                    android:inputType="number" />
+
+                                <ImageButton
+                                    android:id="@+id/btnEditWorkHours"
+                                    android:layout_width="0sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+
+                                    android:contentDescription="@string/menu"
+                                    android:src="@drawable/pen_to_square_small_primary"
+                                    tools:ignore="TouchTargetSizeCheck"
+                                    tools:src="@drawable/pen_to_square_small_primary" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="48sp"
+                                android:layout_margin="10dp"
+                                android:orientation="horizontal"
+                                android:weightSum="10">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="3"
+
+                                    android:text="@string/work_days" />
+
+                                <LinearLayout
+
+                                    android:layout_width="0sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="7"
+                                    android:orientation="horizontal">
+
+                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                        android:id="@+id/fabMonday"
+                                        style="@style/primary_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="30sp"
+                                        android:layout_gravity="center"
+                                        android:layout_margin="1sp"
+                                        tools:ignore="ContentDescription,TooDeepLayout" />
+
+                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                        android:id="@+id/fabTuesday"
+                                        style="@style/primary_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="30sp"
+                                        android:layout_gravity="center"
+                                        android:layout_margin="1sp"
+                                        tools:ignore="ContentDescription,TooDeepLayout" />
+
+                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                        android:id="@+id/fabWednesday"
+                                        style="@style/primary_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="30sp"
+                                        android:layout_gravity="center"
+                                        android:layout_margin="1sp"
+                                        tools:ignore="ContentDescription,TooDeepLayout" />
+
+                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                        android:id="@+id/fabThursday"
+                                        style="@style/primary_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="30sp"
+                                        android:layout_gravity="center"
+                                        android:layout_margin="1sp"
+                                        tools:ignore="ContentDescription,TooDeepLayout" />
+
+                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                        android:id="@+id/fabFriday"
+                                        style="@style/primary_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="30sp"
+                                        android:layout_gravity="center"
+                                        android:layout_margin="1sp"
+                                        tools:ignore="ContentDescription,TooDeepLayout" />
+
+                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                        android:id="@+id/fabSaturday"
+                                        style="@style/primary_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="30sp"
+                                        android:layout_gravity="center"
+                                        android:layout_margin="1sp"
+                                        tools:ignore="ContentDescription,TooDeepLayout" />
+
+                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                        android:id="@+id/fabSunday"
+                                        style="@style/white_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="30sp"
+                                        android:layout_gravity="center"
+                                        android:layout_margin="1sp"
+                                        tools:ignore="ContentDescription,TooDeepLayout" />
+
+                                </LinearLayout>
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -558,7 +745,6 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:visibility="visible">
-
 
 
                             <Button

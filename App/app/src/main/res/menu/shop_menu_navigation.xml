@@ -5,12 +5,12 @@
         android:title="@string/home"
         android:icon="@drawable/house"/>
     <item
-        android:id="@+id/current_repair"
-        android:title="@string/current_repair"
-        android:icon="@drawable/magnifying_glass"/>
+        android:id="@+id/repair_view"
+        android:title="@string/repair_view"
+        android:icon="@drawable/screwdriver_wrench"/>
 
     <item
-        android:id="@+id/repair_requests"
+        android:id="@+id/repair_list"
         android:title="@string/repair_requests"
         android:icon="@drawable/file_lines"/>
     <item

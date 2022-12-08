@@ -178,9 +178,9 @@ namespace WebAPI.Controllers
 
                 var user = Db.Users.Find(id);
 
-                if (user == null || user.Deleted)
+                if (user == null || user.Deleted || user.Id != AuthUser.Id)
                 {
-                    throw new RecordNotFoundException();
+                    throw new RecordNotFoundException("User not found");
                 }
 
 

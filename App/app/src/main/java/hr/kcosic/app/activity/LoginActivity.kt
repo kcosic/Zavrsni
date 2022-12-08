@@ -8,6 +8,7 @@ import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ToggleButton
 import androidx.appcompat.widget.SwitchCompat
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.BaseActivity
@@ -33,7 +34,7 @@ class LoginActivity : BaseActivity() {
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var registerDialog: AlertDialog
-    private lateinit var swLoginAsShop: SwitchCompat
+    private lateinit var tbLoginType: ToggleButton
     private lateinit var progressBarHolder: FrameLayout
 
 
@@ -42,7 +43,6 @@ class LoginActivity : BaseActivity() {
         val token = Helper.retrieveSharedPreference<String>(PreferenceEnum.TOKEN)
         val authFor = Helper.retrieveSharedPreference<String>(PreferenceEnum.AUTH_FOR)
         if (token != Helper.NO_VALUE && authFor != Helper.NO_VALUE) {
-            Helper.showShortToast(this,getString(R.string.already_logged_in))
             if(authFor == "User"){
                 Helper.setAuthKeyToUser()
                 Helper.openActivity(this,ActivityEnum.HOME_USER)
@@ -61,7 +61,7 @@ class LoginActivity : BaseActivity() {
         progressBarHolder = findViewById(R.id.progressBarHolder)
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
-        swLoginAsShop = findViewById(R.id.sw_login_as_shop)
+        tbLoginType = findViewById(R.id.tbLoginType)
 
         btnRegister.setOnClickListener {
             val dialogView = Helper.inflateView(R.layout.register_dialog)
@@ -100,8 +100,8 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun login() {
-        progressBarHolder.visibility = VISIBLE
-        if(swLoginAsShop.isActivated){
+        showComponent(progressBarHolder)
+        if(tbLoginType.isChecked){
             Helper.setAuthKeyToShop()
         }else {
             Helper.setAuthKeyToUser()
@@ -109,19 +109,17 @@ class LoginActivity : BaseActivity() {
         apiService.login(etEmail.text.toString(), etPassword.text.toString())
             .enqueue(object :
                 Callback {
-                var mainHandler: Handler = Handler(applicationContext.mainLooper)
-
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleApiResponseException(call, e)
-                        progressBarHolder.visibility = GONE
+                        hideComponent(progressBarHolder)
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     mainHandler.post {
                         handleLoginSuccess(response)
-                        progressBarHolder.visibility = GONE
+                        hideComponent(progressBarHolder)
                     }
                 }
             })

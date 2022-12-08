@@ -16,14 +16,17 @@
         android:layout_gravity="center"
         android:layout_weight="3"
         android:textSize="20sp"
+        tools:text="01.11.2022"
         android:textFontWeight="1000"
         android:textAlignment="center" />
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tvVehicle"
         android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:breakStrategy="balanced"
+        tools:text="Renault-Megane III-2009"
         android:layout_weight="3" />
 
     <TextView
@@ -50,30 +53,6 @@
         android:layout_gravity="center"
         app:drawableStartCompat="@drawable/check_green"
         android:layout_height="wrap_content"/>
-
-<!--    <CheckBox-->
-<!--        android:id="@+id/cbUserAccepted"-->
-<!--        android:layout_width="0sp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_weight="1"-->
-<!--        android:textSize="11sp" />-->
-
-<!--    <CheckBox-->
-<!--        android:id="@+id/cbShopAccepted"-->
-<!--        android:layout_width="0sp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_weight="1"-->
-<!--        android:textSize="11sp" />-->
-
-<!--    <CheckBox-->
-<!--        android:id="@+id/cbCompleted"-->
-<!--        android:layout_width="0sp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_weight="1"-->
-<!--        android:textSize="11sp" />-->
 
     <ImageButton
         android:id="@+id/btnMenu"

@@ -365,5 +365,23 @@ class ValidationHelper {
             return isValid
 
         }
+
+        fun validateCurrentRequest(etWorkHoursEstimate: EditText): Boolean {
+            var isValid = true
+
+            try {
+                when {
+                    !isValueInRange(etWorkHoursEstimate.text.toString().toInt(), 1, 999) -> {
+                        isValid = false
+                        etWorkHoursEstimate.error = ContextInstance.getContext()!!.getString(R.string.value_between_1_999)
+                    }
+                }
+            }catch (e: java.lang.NumberFormatException){
+                isValid = false
+                etWorkHoursEstimate.error = ContextInstance.getContext()!!.getString(R.string.incorrectFormat)
+            }
+
+            return isValid
+        }
     }
 }

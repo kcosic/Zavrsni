@@ -29,7 +29,8 @@ namespace WebAPI.Models.ORM
                 User =User.ToDTO(item.User, level - 1),
                 Requests = Request.ToListDTO(item.Requests, level - 1),
                 UserId = item.UserId,
-                Year = item.Year
+                Year = item.Year,
+                LicensePlate = item.LicensePlate
 
             };
         }
@@ -58,7 +59,9 @@ namespace WebAPI.Models.ORM
                 Odometer = Odometer,
                 User = User.ToDTO(User, level - 1),
                 UserId = UserId,
-                Year = Year
+                Year = Year,
+                LicensePlate = LicensePlate
+
 
             } : null;
         }

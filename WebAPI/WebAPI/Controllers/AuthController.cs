@@ -30,9 +30,13 @@ namespace WebAPI.Controllers
                 {
                     return CreateOkResponse(AuthUser.Tokens.First().ToDTO(2));
                 }
-                else
+                else if(AuthShop != null)
                 {
                     return CreateOkResponse(AuthShop.Tokens.First().ToDTO(2));
+                } 
+                else
+                {
+                    return CreateErrorResponse("Something happened", ErrorCodeEnum.UnexpectedError);
                 }
             }
             catch (Exception e)

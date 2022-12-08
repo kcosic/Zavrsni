@@ -27,8 +27,8 @@ namespace WebAPI.Models.ORM
                 Requests = Request.ToListDTO(item.Requests, level - 1),
                 Reviews = Review.ToListDTO(item.Reviews, level - 1),
                 Appointments = Appointment.ToListDTO(item.Appointments, level - 1),
-                ChildShops = Shop.ToListDTO(item.ChildShops, level - 1),
-                ParentShop = Shop.ToDTO(item.ParentShop, level - 1),
+                ChildShops = ToListDTO(item.ChildShops, level - 1),
+                ParentShop = ToDTO(item.ParentShop, level - 1),
                 ParentShopId = item.ParentShopId,
                 Tokens = Token.ToListDTO(item.Tokens, level - 1),
                 LegalName = item.LegalName,
@@ -39,7 +39,8 @@ namespace WebAPI.Models.ORM
                 Password = Helper.PASSWORD_PLACEHOLDER,
                 WorkDays = item.WorkDays,
                 WorkHours = item.WorkHours,
-                CarCapacity = item.CarCapacity
+                CarCapacity = item.CarCapacity,
+                HourlyRate = item.HourlyRate
             };
         }
 
@@ -71,13 +72,14 @@ namespace WebAPI.Models.ORM
                 Vat = Vat,
                 Email = Email,
                 Password = Helper.PASSWORD_PLACEHOLDER,
-                ChildShops = Shop.ToListDTO(ChildShops, level - 1),
-                ParentShop = Shop.ToDTO(ParentShop, level - 1),
+                ChildShops = ToListDTO(ChildShops, level - 1),
+                ParentShop = ToDTO(ParentShop, level - 1),
                 ParentShopId = ParentShopId,
                 Tokens = Token.ToListDTO(Tokens, level - 1),
                 WorkDays = WorkDays,
                 WorkHours = WorkHours,
-                CarCapacity = CarCapacity
+                CarCapacity = CarCapacity,
+                HourlyRate = HourlyRate
             }:null;
         }
     }

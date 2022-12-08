@@ -1,6 +1,7 @@
 package hr.kcosic.app.model.serializer
 
 import android.annotation.SuppressLint
+import hr.kcosic.app.model.helpers.Helper
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -14,13 +15,11 @@ object DateSerializer : KSerializer<Date> {
 
     @SuppressLint("SimpleDateFormat")
     override fun serialize(encoder: Encoder, value: Date) {
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
-        encoder.encodeString(formatter.format(value))
+        encoder.encodeString(Helper.formatIsoDateTime(value))
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun deserialize(decoder: Decoder): Date {
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
-        return formatter.parse(decoder.decodeString())!!
+        return Helper.isoStringToDateTime(decoder.decodeString());
     }
 }

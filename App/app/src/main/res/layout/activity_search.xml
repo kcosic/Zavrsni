@@ -13,7 +13,7 @@
         >
 
         <ScrollView
-            style="@style/home"
+            style="@style/app_background"
             android:id="@+id/vScroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -95,7 +95,7 @@
                                 tools:ignore="TextFields" />
 
                             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                                style="@style/primaryButton"
+                                style="@style/primary_button"
                                 android:layout_weight="4"
                                 app:fabSize="mini"
                                 android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                         <Button
                             android:layout_width="match_parent"
                             android:layout_margin="10sp"
-                            style="@style/primaryButton"
+                            style="@style/primary_button"
                             android:layout_height="wrap_content"
                             android:text="@string/create_new_service_request"
                             android:id="@+id/btnSelectLocation"/>

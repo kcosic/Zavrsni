@@ -133,7 +133,10 @@ namespace WebAPI.Models
         [NonAction]
         public ErrorResponse CreateErrorResponse(string message, ErrorCodeEnum errorCode)
         {
-            Log(SeverityEnum.Error, message);
+            if (!errorCode.Equals(ErrorCodeEnum.RecordNotFound))
+            {
+                Log(SeverityEnum.Error, message);
+            }
 
             return new ErrorResponse
             {

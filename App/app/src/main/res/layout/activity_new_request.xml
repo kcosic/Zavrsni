@@ -12,7 +12,7 @@
         >
 
         <ScrollView
-            style="@style/home"
+            style="@style/app_background"
             android:id="@+id/vScroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -96,7 +96,7 @@
                                 android:layout_width="0sp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="3"
-                                style="@style/primaryButton"
+                                style="@style/primary_button"
                                 android:text="@string/new_vehicle_btn"/>
                         </LinearLayout>
 
@@ -139,7 +139,7 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/btnNext"
                             android:layout_margin="10sp"
-                            style="@style/primaryButton"
+                            style="@style/primary_button"
                             android:text="@string/next"/>
 
 

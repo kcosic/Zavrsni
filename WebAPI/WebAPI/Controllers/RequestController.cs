@@ -75,19 +75,20 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var request = Db.Requests.Where(x => 
+                var requests = Db.Requests.Where(x => 
                         x.RepairDate.HasValue && 
-                        x.RepairDate.Value.Date <= DateTime.Now.Date && 
                         !x.Completed && 
                         x.ShopAccepted.HasValue && 
-                        x.ShopAccepted.Value && 
-                        x.UserAccepted.HasValue && 
-                        x.UserAccepted.Value && 
+                        x.UserAccepted.HasValue &&
+                        x.ShopAccepted.Value && x.UserAccepted.Value &&
                         !x.Deleted)
-                    .FirstOrDefault();
+                    
+                    .ToList();
+
+                var request = requests.Where(x =>  x.RepairDate.Value.Date <= DateTime.Now.Date).OrderByDescending(x => x.RepairDate.Value.Date).FirstOrDefault();
                 if (request == null)
                 {
-                    throw new RecordNotFoundException();
+                    throw new RecordNotFoundException("No current requests found");
                 }
 
                 return CreateOkResponse(Models.ORM.Request.ToDTO(request, 3));
@@ -108,20 +109,20 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var request = Db.Requests.Where(x => 
+                var requests = Db.Requests.Where(x => 
                         x.RepairDate.HasValue && 
-                        x.RepairDate.Value.Date >= DateTime.Now.Date && 
                         !x.Completed &&
                         x.ShopAccepted.HasValue &&
-                        x.ShopAccepted.Value &&
                         x.UserAccepted.HasValue &&
-                        x.UserAccepted.Value &&
+                        x.ShopAccepted.Value && x.UserAccepted.Value &&
                         !x.Deleted)
-                    .OrderBy(x=> x.RepairDate.Value.Date)
-                    .FirstOrDefault();
+                    .ToList();
+
+                var request = requests.Where(x => x.RepairDate.Value.Date > DateTime.Now.Date).OrderByDescending(x => x.RepairDate.Value.Date).FirstOrDefault();
+
                 if (request == null)
                 {
-                    throw new RecordNotFoundException();
+                    throw new RecordNotFoundException("No upcoming requests found");
                 }
 
                 return CreateOkResponse(Models.ORM.Request.ToDTO(request, 3));
@@ -235,7 +236,9 @@ namespace WebAPI.Controllers
                 request.UserId = requestDTO.UserId;
                 request.CarId = requestDTO.CarId;
                 request.ShopAccepted = requestDTO.ShopAccepted;
+                request.ShopAcceptedDate = requestDTO.ShopAcceptedDate;
                 request.UserAccepted = requestDTO.UserAccepted;
+                request.UserAcceptedDate = requestDTO.UserAcceptedDate;
                 request.IssueDescription = requestDTO.IssueDescription;
                 request.RepairDate = requestDTO.RepairDate;
                 request.RequestDate = requestDTO.RequestDate;
@@ -243,7 +246,7 @@ namespace WebAPI.Controllers
 
                 Db.SaveChanges();
 
-                return CreateOkResponse();
+                return CreateOkResponse(request.ToDTO(3));
             }
             catch (RecordNotFoundException e)
             {

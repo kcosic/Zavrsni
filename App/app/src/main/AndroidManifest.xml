@@ -15,6 +15,27 @@
         android:theme="@style/Theme.App"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.SettingsShopActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.RepairListActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.RepairActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activity.HomeShopActivity"
             android:exported="false">
             <meta-data

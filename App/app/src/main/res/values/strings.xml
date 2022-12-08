@@ -117,4 +117,23 @@
     <string name="new_requests">New requests</string>
     <string name="updated_requests">Updated Requests</string>
     <string name="search">Search</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
+    <string name="image_representation_of_user_consent">Image representation of user consent</string>
+    <string name="image_representation_of_shop_consent">Image Representation Of Shop Consent</string>
+    <string name="work_hours_estimate">Work Hours Estimate</string>
+    <string name="issue_description">Issue Description</string>
+    <string name="incorrectFormat">Incorrect Format</string>
+    <string name="value_between_1_999">Value must be between 1 and 999</string>
+    <string name="no_updated_requests">No Updated Requests</string>
+    <string name="no_new_requests">No New Requests</string>
+    <string name="internet_connection_error">Unable to establish connection with the server</string>
+    <string name="repair_view">Repair View</string>
+    <string name="repair_shop_info">Repair Shop Information</string>
+    <string name="repair_shop_settings">Repair Shop Settings</string>
+    <string name="hourly_rate">Hourly Rate</string>
+    <string name="work_days">Work Days</string>
+    <string name="work_hours">Work Hours</string>
+    <string name="car_capacity">Car Capacity</string>
+    <string name="login_as">Login as</string>
 </resources>

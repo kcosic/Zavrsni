@@ -30,6 +30,7 @@ namespace WebAPI.Models.ORM
         public string Model { get; set; }
         public int Year { get; set; }
         public decimal Odometer { get; set; }
+        public string LicensePlate { get; set; }
     
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

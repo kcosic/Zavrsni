@@ -39,6 +39,7 @@ namespace WebAPI.Models.ORM
         public string WorkHours { get; set; }
         public string WorkDays { get; set; }
         public int CarCapacity { get; set; }
+        public decimal HourlyRate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }

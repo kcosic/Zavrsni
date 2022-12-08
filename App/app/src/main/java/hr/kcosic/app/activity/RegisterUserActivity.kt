@@ -95,7 +95,7 @@ class RegisterUserActivity : BaseActivity() {
 
     @SuppressLint("SimpleDateFormat")
     private fun register() {
-        progressBarHolder.visibility = View.VISIBLE
+        showComponent(progressBarHolder)
 
         val formatter = SimpleDateFormat("dd.MM.yyyy")
 
@@ -109,20 +109,17 @@ class RegisterUserActivity : BaseActivity() {
 
         apiService.register(newUser).enqueue(object :
             Callback {
-            var mainHandler: Handler = Handler(applicationContext.mainLooper)
-
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    progressBarHolder.visibility = View.GONE
-
+                    hideComponent(progressBarHolder)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleRegisterSuccess(response)
-                    progressBarHolder.visibility = View.GONE
+                    hideComponent(progressBarHolder)
                 }
             }
         })

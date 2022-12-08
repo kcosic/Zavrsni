@@ -13,7 +13,7 @@
 
 
         <ScrollView
-            style="@style/home"
+            style="@style/app_background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="100"
@@ -112,6 +112,7 @@
                                         tools:text="4"
                                         android:textSize="11sp"/>
                                     <TextView
+                                        android:id="@+id/tvNewRequests"
                                         style="@style/textView"
                                         android:layout_gravity="center"
                                         android:layout_width="wrap_content"
@@ -130,6 +131,7 @@
                                     android:clipToPadding="false"
                                     android:focusable="true">
                                     <TextView
+                                        android:id="@+id/tvUpdatedRequests"
                                         style="@style/textView"
                                         android:layout_gravity="center"
                                         android:layout_width="wrap_content"

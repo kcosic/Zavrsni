@@ -44,6 +44,6 @@ class ReviewsAdapter(
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val rbRating: RatingBar = itemView.findViewById(R.id.rbRating)
         val tvName: TextView = itemView.findViewById(R.id.tvName)
-        val tvComment: CheckBox = itemView.findViewById(R.id.cbUserAccepted)
+        val tvComment: CheckBox = itemView.findViewById(R.id.tvComment)
     }
 }

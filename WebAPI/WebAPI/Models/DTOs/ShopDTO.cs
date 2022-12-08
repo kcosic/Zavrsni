@@ -50,6 +50,8 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public int CarCapacity { get; set; }
         [JsonProperty]
+        public decimal HourlyRate { get; set; }
+        [JsonProperty]
         public ICollection<AppointmentDTO> Appointments { get; set; }
         [JsonProperty]
         public LocationDTO Location { get; set; }

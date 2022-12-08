@@ -295,9 +295,11 @@ namespace WebAPI.Controllers
                 {
                     throw new RecordNotFoundException();
                 }
-                var notificationData = new ShopNotificationData();
-                notificationData.NewRequests = shop.Requests.Where(x=> !x.ShopAccepted.HasValue && !x.UserAccepted.HasValue && !x.Deleted).Count();
-                notificationData.UpdatedRequests = shop.Requests.Where(x=> x.ShopAccepted.HasValue && x.UserAccepted.HasValue && !x.Deleted).Count();
+                var notificationData = new ShopNotificationData
+                {
+                    NewRequests = shop.Requests.Where(x => !x.ShopAccepted.HasValue && !x.UserAccepted.HasValue && !x.Deleted).ToList().Select(x => x.Id).ToList(),
+                    UpdatedRequests = shop.Requests.Where(x => x.ShopAccepted.HasValue && !x.UserAccepted.HasValue && !x.Deleted).ToList().Select(x => x.Id).ToList()
+                };
 
                 return CreateOkResponse(notificationData);
             }
@@ -387,6 +389,7 @@ namespace WebAPI.Controllers
                 shop.WorkDays = shopDTO.WorkDays;
                 shop.WorkHours = shopDTO.WorkHours;
                 shop.CarCapacity = shopDTO.CarCapacity;
+                shop.HourlyRate = shopDTO.HourlyRate;
 
                 Db.SaveChanges();
 

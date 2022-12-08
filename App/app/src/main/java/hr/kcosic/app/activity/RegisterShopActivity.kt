@@ -148,7 +148,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
 
         apiService.register(newShop).enqueue(object :
             Callback {
-            var mainHandler: Handler = Handler(applicationContext.mainLooper)
+            
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {

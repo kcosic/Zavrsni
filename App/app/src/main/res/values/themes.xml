@@ -1,7 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.App" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="buttonStyle">@style/primaryButton</item>
+        <item name="buttonStyle">@style/primary_button</item>
         <item name="fontFamily">@font/luis_george_font_family</item>
     </style>
 
@@ -12,7 +12,7 @@
 
     </style>
 
-    <style name="home" parent="Theme.App">
+    <style name="app_background" parent="Theme.App">
         <item name="android:background">@drawable/background_gradient</item>
     </style>
     <style name="login" parent="Theme.App">
@@ -86,22 +86,31 @@
         <item name="android:textColor">@color/text_dark_700</item>
     </style>
 
-    <style name="primaryButton">
+    <style name="confirm_button">
+        <item name="backgroundTint">@color/confirm_500</item>
+        <item name="android:textColor">@color/text_dark_500</item>
+    </style>
+    <style name="primary_button">
         <item name="backgroundTint">@color/primary_500</item>
         <item name="android:textColor">@color/text_dark_100</item>
     </style>
 
-    <style name="warningButton">
+    <style name="white_button">
+        <item name="backgroundTint">@color/text_dark_100</item>
+        <item name="android:textColor">@color/text_dark_900</item>
+    </style>
+
+    <style name="warning_button">
         <item name="backgroundTint">@color/warning_500</item>
         <item name="android:textColor">@color/text_dark_900</item>
     </style>
 
-    <style name="dangerButton">
+    <style name="danger_button">
         <item name="backgroundTint">@color/danger_500</item>
         <item name="android:textColor">@color/text_dark_100</item>
     </style>
 
-    <style name="infoButton">
+    <style name="info_button">
         <item name="backgroundTint">@color/information_500</item>
         <item name="android:textColor">@color/text_dark_700</item>
     </style>

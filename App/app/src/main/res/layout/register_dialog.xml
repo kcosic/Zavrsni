@@ -16,7 +16,7 @@
         android:textSize="20sp"/>
     <Button
         android:id="@+id/btnUserRegister"
-        style="@style/primaryButton"
+        style="@style/primary_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -24,7 +24,7 @@
 
     <Button
         android:id="@+id/btnShopRegister"
-        style="@style/primaryButton"
+        style="@style/primary_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"

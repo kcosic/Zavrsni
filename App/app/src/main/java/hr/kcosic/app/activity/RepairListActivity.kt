@@ -2,10 +2,10 @@ package hr.kcosic.app.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.kcosic.app.R
+import hr.kcosic.app.adapter.RepairsAdapter
 import hr.kcosic.app.adapter.RequestsAdapter
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ValidatedActivityWithNavigation
@@ -20,12 +20,9 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 
-class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST_LIST) {
-    companion object{
-        const val REQUEST_VIEW_KEY = "9sj0dfF3F8lsd7"
-    }
-    lateinit var rvRequests: RecyclerView
-    private lateinit var requestsAdapter: RequestsAdapter
+class RepairListActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_LIST_VIEW) {
+    lateinit var rvRepairs: RecyclerView
+    private lateinit var repairsAdapter: RepairsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +31,12 @@ class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
     }
 
     override fun initializeComponents() {
-        rvRequests = findViewById(R.id.rvRequests)
+        rvRepairs = findViewById(R.id.rvRepairs)
     }
 
     private fun retrieveRequests() {
         showSpinner()
-        apiService.retrieveUserRequests().enqueue((object :
-            Callback {
-            
-
+        apiService.retrieveRequests().enqueue((object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -71,20 +65,20 @@ class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
 
                 val menuClickListener = object : ButtonClickListener {
                     @SuppressLint("NotifyDataSetChanged")
-                    override fun onClick(data: Request) {
+                    override fun onClick(o: Request) {
                         // Notify adapter
-                        rvRequests.post {
-                            handleMenuButtonClick(data)
+                        rvRepairs.post {
+                            handleMenuButtonClick(o)
                         }
                     }
                 }
-                requestsAdapter = RequestsAdapter(
+                repairsAdapter = RepairsAdapter(
                     data,
                     menuClickListener
                 )
-                rvRequests.layoutManager = LinearLayoutManager(this)
-                rvRequests.adapter = requestsAdapter
-                requestsAdapter.notifyDataSetChanged()
+                rvRepairs.layoutManager = LinearLayoutManager(this)
+                rvRepairs.adapter = repairsAdapter
+                repairsAdapter.notifyDataSetChanged()
 
             } catch (e: Exception) {
                 Helper.showLongToast(this, e.message.toString())
@@ -97,12 +91,11 @@ class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
 
     private fun handleMenuButtonClick(request: Request) {
         navigateToSingleRequestActivity(request)
-
     }
 
-    private fun navigateToSingleRequestActivity(request:Request) {
+    private fun navigateToSingleRequestActivity(request: Request) {
         val baggage: MutableMap<String, String> = mutableMapOf()
         baggage["requestId"] = request.Id.toString()
-        Helper.openActivity(this, ActivityEnum.REQUEST_VIEW, baggage, REQUEST_VIEW_KEY)
+        Helper.openActivity(this, ActivityEnum.REPAIR_VIEW, baggage, RepairActivity.REQUEST_ID_KEY)
     }
 }

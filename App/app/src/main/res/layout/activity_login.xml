@@ -81,17 +81,36 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="30dp">
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/sw_login_as_shop"
-                android:layout_width="wrap_content"
+            android:padding="30dp"
+            android:weightSum="10">
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="20sp"
+                android:layout_weight="5"
+                android:labelFor="@+id/etPassword"
+                android:text="@string/login_as"
+
+                android:textSize="20sp" />
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/primary_button"
+                android:text="@string/user"
                 android:checked="false"
-                android:hint="@string/login_as_shop"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                android:layout_weight="5"
+                android:textOff="@string/user"
+                android:textOn="@string/repair_shop"
+                android:id="@+id/tbLoginType"/>
+<!--            <androidx.appcompat.widget.SwitchCompat-->
+<!--                android:id="@+id/sw_login_as_shop"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginStart="20sp"-->
+<!--                android:checked="false"-->
+<!--                android:hint="@string/login_as_shop"-->
+<!--                tools:ignore="UseSwitchCompatOrMaterialXml" />-->
             <!--        <Switch-->
             <!--            android:id="@+id/sw_remember_me"-->
             <!--            android:layout_weight="5"-->
@@ -113,7 +132,7 @@
 
             <Button
                 android:id="@+id/btnLogin"
-                style="@style/primaryButton"
+                style="@style/primary_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -121,7 +140,7 @@
 
             <Button
                 android:id="@+id/btnRegister"
-                style="@style/warningButton"
+                style="@style/warning_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"

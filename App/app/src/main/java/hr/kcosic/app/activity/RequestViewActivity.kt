@@ -96,7 +96,7 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
         showSpinner()
         apiService.retrieveRequest(requestId!!, true).enqueue((object :
             Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
+            
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {

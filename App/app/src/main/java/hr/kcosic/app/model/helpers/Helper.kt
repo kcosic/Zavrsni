@@ -32,6 +32,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.InvalidObjectException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.reflect.typeOf
 
@@ -370,7 +373,6 @@ class Helper {
             return dateFormat.format(date)
         }
 
-        @SuppressLint("SimpleDateFormat")
         fun isoStringToDateTime(dateString: String): Date {
             val myFormat = "yyyy-MM-dd'T'HH:mm:ss"
             val dateFormat = SimpleDateFormat(myFormat)

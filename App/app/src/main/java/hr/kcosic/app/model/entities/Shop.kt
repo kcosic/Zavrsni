@@ -15,6 +15,8 @@ class Shop : BaseEntity() {
     var Password: String? = null
     var WorkHours:String? = null
     var WorkDays:String? = null
+    var HourlyRate: Double? = null
+
     @Serializable
     var Appointments: MutableList<Appointment>? = null
     @Serializable

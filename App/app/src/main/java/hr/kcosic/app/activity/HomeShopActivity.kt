@@ -2,7 +2,6 @@ package hr.kcosic.app.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -18,7 +17,9 @@ import hr.kcosic.app.model.bases.ValidatedActivityWithNavigation
 import hr.kcosic.app.model.entities.Request
 import hr.kcosic.app.model.entities.Review
 import hr.kcosic.app.model.enums.ActivityEnum
+import hr.kcosic.app.model.enums.ErrorCodeEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.helpers.IconHelper
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.ListResponse
 import hr.kcosic.app.model.responses.SingleResponse
@@ -29,14 +30,18 @@ import java.io.IOException
 import java.util.*
 
 class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP) {
-
+    companion object{
+        const val REQUEST_REDIRECT = "7hf3asd9078Fa9sdf"
+    }
     private lateinit var notificationsCard : CardView
     private lateinit var llNotificationsSection : LinearLayout
     private lateinit var llNotificationsContent : LinearLayout
     private lateinit var ivNotificationsExpand : ImageView
     private lateinit var ivNotificationsCollapse : ImageView
     private lateinit var tvNewRequestsBadge : TextView
+    private lateinit var tvNewRequests : TextView
     private lateinit var tvUpdatedRequestsBadge : TextView
+    private lateinit var tvUpdatedRequests : TextView
 
     private lateinit var currentRepairCard : CardView
     private lateinit var llCurrentRepairSection : LinearLayout
@@ -53,6 +58,12 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
 
     private lateinit var rvReviews : RecyclerView
     private lateinit var reviewsAdapter: ReviewsAdapter
+    private lateinit var notificationData: NotificationData
+
+    private var loadedNotifications: Boolean = false;
+    private var loadedCurrentRepair: Boolean = false;
+    private var loadedUpcomingRepair: Boolean = false;
+    private var loadedReviews: Boolean = false;
 
     //#region Init
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +88,9 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
         ivNotificationsExpand = findViewById(R.id.ivNotificationsExpand)
         ivNotificationsCollapse = findViewById(R.id.ivNotificationsCollapse)
         tvNewRequestsBadge = findViewById(R.id.tvNewRequestsBadge)
+        tvNewRequests = findViewById(R.id.tvNewRequests)
         tvUpdatedRequestsBadge = findViewById(R.id.tvUpdatedRequestsBadge)
+        tvUpdatedRequests = findViewById(R.id.tvUpdatedRequests)
 
         llNotificationsSection.setOnClickListener {
             toggleHeader(
@@ -119,14 +132,14 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
     ) {
         when {
             ivExpand.visibility == View.VISIBLE -> {
-                ivExpand.visibility = View.GONE
-                ivCollapse.visibility = View.VISIBLE
-                llContent.visibility = View.VISIBLE
+                showComponent(llContent)
+                showComponent(ivCollapse)
+                hideComponent(ivExpand)
             }
             ivCollapse.visibility == View.VISIBLE -> {
-                ivExpand.visibility = View.VISIBLE
-                ivCollapse.visibility = View.GONE
-                llContent.visibility = View.GONE
+                hideComponent(llContent)
+                hideComponent(ivCollapse)
+                showComponent(ivExpand)
             }
         }
     }
@@ -135,8 +148,17 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
         if(request == null){
             return
         }
+        navigateToRequest(request.Id.toString())
+    }
 
-        //TODO: implement redirecting to individual requests
+    private fun navigateToRequest(requestId: String){
+        if(requestId.isBlank()){
+            return
+        }
+
+        val baggage: MutableMap<String, String> = mutableMapOf()
+        baggage["requestId"] = requestId
+        Helper.openActivity(this, ActivityEnum.REPAIR_VIEW, baggage, RepairActivity.REQUEST_ID_KEY)
     }
 
 
@@ -144,18 +166,23 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
 
     //#region Retrieve Current Request
     private fun retrieveCurrentRequest(){
+        showSpinner()
         apiService.retrieveCurrentRequest().enqueue(object : Callback{
-            val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post{
                     handleApiResponseException(call,e)
+                    loadedCurrentRepair = true
+                    hideSpinner()
+                    hideComponent(upcomingRepairCard)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post{
                     handleRetrieveCurrentRequestResponse(response)
+                    loadedCurrentRepair = true
+                    hideSpinner()
                 }
             }
         })
@@ -165,8 +192,10 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<Request>>(response.body!!.string())
 
-        if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+        if (resp.IsSuccess == true && resp is SingleResponse<*>) {
             try {
+                showComponent(currentRepairCard)
+
                 currentRequest = resp.Data as Request
 
                 val calendar = Calendar.getInstance()
@@ -177,29 +206,40 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
                 tvDeadline.text = Helper.formatDate(calendar.time)
 
             } catch (e: Exception) {
+                hideComponent(currentRepairCard)
                 Helper.showLongToast(this, e.message.toString())
             }
         } else {
-            handleApiResponseError(resp as ErrorResponse)
-
+            if((resp as ErrorResponse).ErrorCode != ErrorCodeEnum.RecordNotFound){
+                handleApiResponseError(resp )
+            }
+            hideComponent(currentRepairCard)
         }
     }
     //#endregion Retrieve Current Request
 
     //#region Retrieve Upcoming Request
     private fun retrieveUpcomingRequest(){
+        showSpinner()
         apiService.retrieveUpcomingRequest().enqueue(object : Callback{
-            val mainHandler = Handler(applicationContext.mainLooper)
+            
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post{
                     handleApiResponseException(call,e)
+                    loadedUpcomingRepair = true
+                    hideSpinner()
+                    hideComponent(upcomingRepairCard)
+
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post{
                     handleRetrieveUpcomingRequestResponse(response)
+                    loadedUpcomingRepair = true
+                    hideSpinner()
+
                 }
             }
         })
@@ -211,32 +251,42 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
 
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             try {
+                showComponent(upcomingRepairCard)
                 upcomingRequest = resp.Data as Request
-                tvCurrentVehicle.text = upcomingRequest!!.Car.toString()
+                tvUpcomingVehicle.text = upcomingRequest!!.Car.toString()
                 tvStartDateTime.text = Helper.formatDate(upcomingRequest!!.RequestDate!!)
             } catch (e: Exception) {
+                hideComponent(upcomingRepairCard)
                 Helper.showLongToast(this, e.message.toString())
             }
         } else {
-            handleApiResponseError(resp as ErrorResponse)
+            if((resp as ErrorResponse).ErrorCode != ErrorCodeEnum.RecordNotFound){
+                handleApiResponseError(resp)
+            }
+            hideComponent(upcomingRepairCard)
         }
     }
     //#endregion Retrieve Upcoming Request
 
     //#region Retrieve Notification Data
     private fun retrieveNotificationData(){
+        showSpinner()
         apiService.retrieveShopNotificationData().enqueue(object : Callback{
-            val mainHandler = Handler(applicationContext.mainLooper)
-
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post{
                     handleApiResponseException(call,e)
+                    loadedNotifications = true
+                    hideSpinner()
+                    hideComponent(notificationsCard)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post{
                     handleRetrieveShopNotificationData(response)
+                    loadedNotifications = true
+                    hideSpinner()
+
                 }
             }
         })
@@ -248,22 +298,44 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
 
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             try {
-                val data = resp.Data as NotificationData
+                notificationData = resp.Data as NotificationData
 
-                if(data.NewRequests!! > 0){
-                    tvNewRequestsBadge.text = data.NewRequests!!.toString()
-                    tvNewRequestsBadge.visibility = View.VISIBLE
+                if(notificationData.NewRequests!!.size > 0){
+                    tvNewRequestsBadge.text = notificationData.NewRequests!!.size.toString()
+                    showComponent(tvNewRequestsBadge)
+                    tvNewRequests.text = getString(R.string.new_requests)
+                    tvNewRequests.setCompoundDrawables(null, null, IconHelper.loadVectorDrawableWithTint(R.drawable.chevron_right, R.color.primary_500), null)
+                    tvNewRequests.setOnClickListener {
+                        navigateToRequest(notificationData.NewRequests!![0].toString())
+                    }
+                }else {
+                    hideComponent(tvNewRequestsBadge)
+                    tvNewRequests.text = getString(R.string.no_new_requests)
+                    tvNewRequests.setCompoundDrawables(null, null, null, null)
+                    tvNewRequests.setOnClickListener{}
                 }
 
-                if(data.UpdatedRequests!! > 0){
-                    tvUpdatedRequestsBadge.text = data.UpdatedRequests!!.toString()
-                    tvUpdatedRequestsBadge.visibility = View.VISIBLE
+                if(notificationData.UpdatedRequests!!.size > 0){
+                    tvUpdatedRequestsBadge.text = notificationData.UpdatedRequests!!.size.toString()
+                    showComponent(tvUpdatedRequestsBadge)
+                    tvUpdatedRequests.text = getString(R.string.updated_requests)
+                    tvUpdatedRequests.setCompoundDrawables(null, null, IconHelper.loadVectorDrawableWithTint(R.drawable.chevron_right, R.color.primary_500), null)
+                    tvUpdatedRequests.setOnClickListener {
+                        navigateToRequest(notificationData.UpdatedRequests!![0].toString())
+                    }
+                }else {
+                    tvUpdatedRequests.text = getString(R.string.no_updated_requests)
+                    hideComponent(tvUpdatedRequestsBadge)
+                    tvUpdatedRequests.setCompoundDrawables(null, null, null, null)
+                    tvUpdatedRequestsBadge.setOnClickListener{}
                 }
             } catch (e: Exception) {
+                hideComponent(notificationsCard)
                 Helper.showLongToast(this, e.message.toString())
             }
         } else {
             handleApiResponseError(resp as ErrorResponse)
+            hideComponent(notificationsCard)
 
         }
     }
@@ -271,18 +343,22 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
 
     //#region Retrieve Reviews
     private fun retrieveRecentReviews(){
+        showSpinner()
         apiService.retrieveShopRecentReviews().enqueue(object : Callback{
-            val mainHandler = Handler(applicationContext.mainLooper)
-
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post{
                     handleApiResponseException(call,e)
+                    loadedReviews = true
+                    hideSpinner()
+                    hideComponent(rvReviews)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post{
                     handleRetrieveRecentReviewsResponse(response)
+                    loadedReviews = true
+                    hideSpinner()
                 }
             }
         })
@@ -293,11 +369,11 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
         val resp: BaseResponse =
             Helper.parseStringResponse<ListResponse<Review>>(response.body!!.string())
 
-        if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+        if (resp.IsSuccess!! && resp is ListResponse<*>) {
             try {
                 @Suppress("UNCHECKED_CAST")
                 val data = resp.Data as List<Review>
-
+                showComponent(rvReviews)
 
                 reviewsAdapter = ReviewsAdapter(data)
                 rvReviews.layoutManager = LinearLayoutManager(this)
@@ -305,11 +381,19 @@ class HomeShopActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_SHOP)
                 reviewsAdapter.notifyDataSetChanged()
 
             } catch (e: Exception) {
+                hideComponent(rvReviews)
                 Helper.showLongToast(this, e.message.toString())
             }
         } else {
+            hideComponent(rvReviews)
             handleApiResponseError(resp as ErrorResponse)
         }
     }
     //#endregion Retrieve Reviews
+
+    override fun hideSpinner(){
+        if(loadedReviews && loadedNotifications && loadedCurrentRepair && loadedUpcomingRepair){
+            super.hideSpinner()
+        }
+    }
 }

@@ -158,7 +158,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
                                 etOdometer
                             )
                         ) {
-                            dialogProgressbar.visibility = VISIBLE
+                            showComponent(dialogProgressbar)
                             createVehicle(assignFormToVehicle(), dialog)
                         }
                     }
@@ -317,18 +317,17 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     ) {
         apiService.resetPassword(getUser().Id!!, oldPassword, newPassword)
             .enqueue(object : Callback {
-                val mainHandler = Handler(applicationContext.mainLooper)
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleApiResponseException(call, e)
-                        progressBar.visibility = GONE
+                        hideComponent(progressBar)
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     mainHandler.post {
                         handleResetPasswordResponse(response, dialog)
-                        progressBar.visibility = GONE
+                        hideComponent(progressBar)
                     }
                 }
             })
@@ -362,19 +361,19 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         when {
             ivSave != null && ivSave.visibility == VISIBLE -> {
                 saveFn()
-                ivSave.visibility = GONE
-                ivExpand.visibility = GONE
-                ivCollapse.visibility = VISIBLE
+                hideComponent(ivSave)
+                hideComponent(ivExpand)
+                showComponent(ivCollapse)
             }
             ivExpand.visibility == VISIBLE -> {
-                ivExpand.visibility = GONE
-                ivCollapse.visibility = VISIBLE
-                llContent.visibility = VISIBLE
+                hideComponent(ivExpand)
+                showComponent(ivCollapse)
+                showComponent(llContent)
             }
             ivCollapse.visibility == VISIBLE -> {
-                ivExpand.visibility = VISIBLE
-                ivCollapse.visibility = GONE
-                llContent.visibility = GONE
+                showComponent(ivExpand)
+                hideComponent(ivCollapse)
+                hideComponent(llContent)
             }
         }
     }
@@ -388,8 +387,8 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         field.isEnabled = true
         btnField.visibility = View.INVISIBLE
         if (ivSave.visibility != VISIBLE) {
-            ivCollapse.visibility = GONE
-            ivSave.visibility = VISIBLE
+            hideComponent(ivCollapse)
+            showComponent(ivSave)
         }
     }
 
@@ -399,7 +398,6 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private fun retrieveUser() {
         showSpinner()
         apiService.retrieveUser(getUser().Id!!).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -456,7 +454,6 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private fun updateUser(user: User) {
         showSpinner()
         apiService.updateUser(user).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -502,7 +499,6 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private fun retrieveMyVehicles() {
         showSpinner()
         apiService.retrieveCars().enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -569,8 +565,6 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private fun deleteVehicle(vehicle: Car) {
         showSpinner()
         apiService.deleteCar(vehicle.Id!!).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
-
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -635,8 +629,6 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private fun editVehicle(vehicle: Car, dialog: DialogInterface?) {
         showSpinner()
         apiService.updateCar(vehicle).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
-
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
@@ -650,7 +642,6 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
                     handleEditVehicleResponse(response, dialog)
                 }
             }
-
         })
     }
 
@@ -677,19 +668,20 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         if (etFirstName.isEnabled) {
             user.FirstName = etFirstName.text.toString()
             etFirstName.isEnabled = false
-            btnEditFirstName.visibility = VISIBLE
+            showComponent(btnEditFirstName)
         }
 
         if (etLastName.isEnabled) {
             user.LastName = etLastName.text.toString()
             etLastName.isEnabled = false
-            btnEditLastName.visibility = VISIBLE
+            showComponent(btnEditLastName)
+
         }
 
         if (etDob.isEnabled) {
             user.DateOfBirth = Helper.stringToDate(etDob.text.toString())
             etDob.isEnabled = false
-            btnEditDob.visibility = VISIBLE
+            showComponent(btnEditDob)
         }
 
         updateUser(user)
@@ -701,41 +693,35 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         if (etUserName.isEnabled) {
             user.Username = etUserName.text.toString()
             etUserName.isEnabled = false
-            btnEditEmail.visibility = VISIBLE
-
+            showComponent(btnEditUserName)
         }
 
         if (etEmail.isEnabled) {
             user.Email = etEmail.text.toString()
             etEmail.isEnabled = false
-            btnEditEmail.visibility = VISIBLE
+            showComponent(btnEditEmail)
         }
 
         updateUser(user)
     }
 
     //#region Vehicles
-
-
     private fun createVehicle(newVehicle: Car, dialog: DialogInterface?) {
-        dialogProgressbar.visibility = VISIBLE
+        showComponent(dialogProgressbar)
         apiService.createCar(newVehicle).enqueue(object : Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
                     handleApiResponseException(call, e)
-                    dialogProgressbar.visibility = GONE
-
+                    hideComponent(dialogProgressbar)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 mainHandler.post {
                     handleCreateCarResponse(response, dialog)
-                    dialogProgressbar.visibility = GONE
+                    hideComponent(dialogProgressbar)
                 }
             }
-
         })
     }
 

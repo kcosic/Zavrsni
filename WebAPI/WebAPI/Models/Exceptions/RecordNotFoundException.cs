@@ -14,6 +14,10 @@ namespace WebAPI.Models.Exceptions
         public RecordNotFoundException() : base("Record not found")
         {
 
+        }        
+        public RecordNotFoundException(string message) : base(message)
+        {
+
         }
     }
 }

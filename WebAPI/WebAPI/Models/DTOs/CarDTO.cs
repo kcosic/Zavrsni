@@ -28,7 +28,8 @@ namespace WebAPI.Models.DTOs
         public int Year { get; set; }
         [JsonProperty]
         public decimal Odometer { get; set; }
-      
+        [JsonProperty]
+        public string LicensePlate { get; set; }
         [JsonProperty]
         public ICollection<RequestDTO> Requests { get; set; }
         [JsonProperty]

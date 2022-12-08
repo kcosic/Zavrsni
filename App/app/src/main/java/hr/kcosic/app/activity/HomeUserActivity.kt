@@ -88,10 +88,10 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
     private fun retrieveActiveUserRequest() {
         showSpinner()
         homeContentView.visibility = View.INVISIBLE
-        homeNoContentView.visibility = View.GONE
+        hideComponent(homeNoContentView)
         apiService.retrieveActiveUserRequest(getUser().Id!!, true).enqueue((object :
             Callback {
-            val mainHandler = Handler(applicationContext.mainLooper)
+            
 
             override fun onFailure(call: Call, e: IOException) {
                 mainHandler.post {
@@ -130,7 +130,6 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         } else {
             showContent(false)
             handleApiResponseError(resp as ErrorResponse)
-
         }
     }
 
@@ -146,15 +145,11 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
 
     private fun showContent(hasContent: Boolean) {
         if (hasContent) {
-            homeContentView.visibility = View.VISIBLE
-            homeNoContentView.visibility = View.GONE
+            showComponent(homeContentView)
+            hideComponent(homeNoContentView)
         } else {
-            homeContentView.visibility = View.GONE
-            homeNoContentView.visibility = View.VISIBLE
+            showComponent(homeNoContentView)
+            hideComponent(homeContentView)
         }
-
     }
-
-
-
 }

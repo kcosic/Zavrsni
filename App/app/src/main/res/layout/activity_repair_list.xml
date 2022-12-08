@@ -7,8 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="100">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,36 +28,34 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:padding="3sp"
-                android:text="@string/name"
+                android:text="@string/vehicle"
                 android:textSize="11sp" />
 
             <TextView
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="1.33"
                 android:padding="3sp"
                 android:text="@string/user_accepted"
-
                 android:textSize="11sp" />
 
             <TextView
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="1.33"
                 android:padding="3sp"
                 android:text="@string/shop_accepted"
-
                 android:textSize="11sp" />
 
             <TextView
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="1.33"
                 android:padding="3sp"
                 android:text="@string/completed"
                 android:textSize="11sp" />
@@ -79,15 +76,15 @@
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvRequests"
+                    android:id="@+id/rvRepairs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:listitem="@layout/request_list_item" />
+                    tools:listitem="@layout/repair_list_item" />
 
             </LinearLayout>
         </ScrollView>
 
-        <include layout="@layout/user_bottom_navigation" />
+        <include layout="@layout/shop_bottom_navigation" />
 
     </LinearLayout>
 

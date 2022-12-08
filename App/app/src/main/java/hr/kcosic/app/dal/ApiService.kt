@@ -315,7 +315,7 @@ class ApiService private constructor() {
     }
 
     fun retrieveShopRecentReviews(): Call {
-        return get("${ApiRoutes.SHOP}/Review/Recent")
+        return get("${ApiRoutes.SHOP}/Reviews/Recent")
     }
 
     fun deleteShop(shopId: Int): Call {
