@@ -22,10 +22,12 @@
         <AssociationConnector Association="DbModel.FK_Review_Shop" />
         <AssociationConnector Association="DbModel.FK_Shop_Shop" />
         <AssociationConnector Association="DbModel.FK_Token_Shop" />
-        <EntityTypeShape EntityType="DbModel.Request" Width="1.5" PointX="6" PointY="0.5" />
+        <EntityTypeShape EntityType="DbModel.Request" Width="1.5" PointX="5.875" PointY="0.5" />
         <AssociationConnector Association="DbModel.FK_Request_Car" />
         <AssociationConnector Association="DbModel.FK_Request_Shop" />
         <AssociationConnector Association="DbModel.FK_Request_User" />
+        <EntityTypeShape EntityType="DbModel.Issue" Width="1.5" PointX="8.25" PointY="0.75" />
+        <AssociationConnector Association="DbModel.FK_Issue_Request" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

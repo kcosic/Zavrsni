@@ -1,18 +1,26 @@
 package hr.kcosic.app.activity
 
+import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import hr.kcosic.app.R
+import hr.kcosic.app.adapter.ShopIssuesAdapter
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ValidatedActivityWithNavigation
+import hr.kcosic.app.model.entities.Issue
 import hr.kcosic.app.model.entities.Request
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.ErrorCodeEnum
 import hr.kcosic.app.model.helpers.Helper
-import hr.kcosic.app.model.helpers.IconHelper
 import hr.kcosic.app.model.helpers.ValidationHelper
+import hr.kcosic.app.model.listeners.ButtonClickListener
+import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.Call
@@ -22,7 +30,7 @@ import java.io.IOException
 import java.util.*
 
 class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW) {
-    companion object{
+    companion object {
         const val REQUEST_ID_KEY = "87ioa4sd0fg8inf923af"
     }
 
@@ -46,8 +54,19 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
     //#region Request Details
     private lateinit var tvRequestDescription: TextView
     private lateinit var tvVehicle: TextView
-    //#endregion Request Details
 
+    //#endregion Request Details
+    private lateinit var llIssues: LinearLayout
+    private lateinit var ivIssuesSave: ImageView
+    private lateinit var btnNewIssue: Button
+    private lateinit var rvIssues: RecyclerView
+
+    private lateinit var shopIssuesAdapter: ShopIssuesAdapter
+    private var issues: MutableList<Issue> = mutableListOf()
+
+    //#region Issues
+
+    //#endregion Issues
     //#region Properties
     private var request: Request? = null
     //#endregion Properties
@@ -56,9 +75,9 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
         super.onCreate(savedInstanceState)
         initializeComponents()
         val requestId = retrieveRequestIdFromIntent()
-        if(requestId == null){
+        if (requestId == null) {
             retrieveCurrentRequest()
-        }else if(requestId != -1){
+        } else if (requestId != -1) {
             retrieveRequest(requestId)
         }
     }
@@ -67,18 +86,79 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
         initializeConsentSection()
         initializeRequestDetailsSection()
         initializeRepairDateTimeSection()
+        initializeIssuesSection()
+
     }
 
-    private fun initializeRepairDateTimeSection(){
+    private fun initializeIssuesSection() {
+        llIssues = findViewById(R.id.llIssues)
+        ivIssuesSave = findViewById(R.id.ivIssuesSave)
+        btnNewIssue = findViewById(R.id.btnNewIssue)
+        rvIssues = findViewById(R.id.rvIssues)
+
+        llIssues.setOnClickListener {
+            if(areIssuesValid()){
+                Helper.showConfirmDialog(
+                    this,
+                    getString(R.string.save_changes),
+                    getString(R.string.issue_save_text),
+                    getString(R.string.yes),
+                    getString(R.string.no),
+                    object : OnPositiveButtonClickListener {
+                        override fun onPositiveBtnClick(dialog: DialogInterface?) {
+                            updateIssues()
+                        }
+                    }
+                )
+            }
+            else {
+                Helper.showLongToast(this, getString(R.string.invalid_issues))
+            }
+
+        }
+
+        btnNewIssue.setOnClickListener {
+            ivIssuesSave.visibility = View.VISIBLE
+            issues.add(createNewIssue())
+            updateRVIssues()
+        }
+
+    }
+
+    private fun createNewIssue(): Issue {
+        val newIssue = Issue()
+        newIssue.RequestId = request!!.Id
+        return newIssue
+    }
+
+    private fun areIssuesValid(): Boolean {
+        var isValid = true
+        for (issue in issues) {
+            if(!ValidationHelper.validateIssueObject(issue)){
+                isValid = false
+            }
+        }
+        return isValid
+    }
+
+    private fun updateIssues(){
+        showSpinner()
+        request?.Issues = issues
+        updateRequest(request!!)
+    }
+
+    private fun initializeRepairDateTimeSection() {
         tvDateOfRepair = findViewById(R.id.tvDateOfRepair)
         tvTimeOfRepair = findViewById(R.id.tvTimeOfRepair)
         etWorkHoursEstimate = findViewById(R.id.etWorkHoursEstimate)
     }
-    private fun initializeRequestDetailsSection(){
+
+    private fun initializeRequestDetailsSection() {
         tvRequestDescription = findViewById(R.id.tvRequestDescription)
         tvVehicle = findViewById(R.id.tvVehicle)
     }
-    private fun initializeConsentSection(){
+
+    private fun initializeConsentSection() {
         llShopConsentChoice = findViewById(R.id.llShopConsentChoice)
         llShopConsent = findViewById(R.id.llShopConsent)
         llUserConsent = findViewById(R.id.llUserConsent)
@@ -89,7 +169,7 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
         tvUserConsent = findViewById(R.id.tvUserConsent)
 
         btnAcceptRequest.setOnClickListener {
-            if(ValidationHelper.validateCurrentRequest(etWorkHoursEstimate)){
+            if (ValidationHelper.validateCurrentRequest(etWorkHoursEstimate)) {
                 acceptRequest()
             }
         }
@@ -114,8 +194,10 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
         request!!.ShopAcceptedDate = Calendar.getInstance().time
         updateRequest(request!!)
     }
+
     private fun acceptRequest() {
         request!!.EstimatedRepairHours = etWorkHoursEstimate.text.toString().toInt()
+        request!!.EstimatedPrice = request!!.EstimatedRepairHours!! * getShop().HourlyRate!!
         request!!.ShopAccepted = true
         request!!.ShopAcceptedDate = Calendar.getInstance().time
         updateRequest(request!!)
@@ -129,29 +211,29 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
             val map = Helper.deserializeObject<Map<String, String>>(stringMap!!)
             map["requestId"].toString().toInt()
 
-        }catch (e: NumberFormatException){
+        } catch (e: NumberFormatException) {
             Helper.openActivity(this, ActivityEnum.HOME_SHOP)
             Helper.showLongToast(this, "Couldn't retrieve Request, ID is missing")
-            -1;
-        }catch (e:Exception){
+            -1
+        } catch (e: Exception) {
             null
         }
     }
 
-    private fun retrieveRequest(requestId: Int){
+    private fun retrieveRequest(requestId: Int) {
         showSpinner()
         apiService.retrieveRequest(requestId, true).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post{
-                    handleApiResponseException(call,e)
+                mainHandler.post {
+                    handleApiResponseException(call, e)
                     hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mainHandler.post{
+                mainHandler.post {
                     handleRetrieveRequestResponse(response)
                     hideSpinner()
                 }
@@ -159,7 +241,7 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
         })
     }
 
-    private fun handleRetrieveRequestResponse(response: Response){
+    private fun handleRetrieveRequestResponse(response: Response) {
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<Request>>(response.body!!.string())
 
@@ -167,6 +249,7 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
             try {
 
                 request = resp.Data as Request
+                issues = if(request!!.Issues != null) request!!.Issues!! else mutableListOf()
                 updateUI(request!!)
             } catch (e: Exception) {
                 Helper.showLongToast(this, e.message.toString())
@@ -178,20 +261,20 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
     //#endregion Retrieve Request
     // #region Retrieve Current Request
 
-    private fun retrieveCurrentRequest(){
+    private fun retrieveCurrentRequest() {
         showSpinner()
         apiService.retrieveCurrentRequest().enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post{
-                    handleApiResponseException(call,e)
+                mainHandler.post {
+                    handleApiResponseException(call, e)
                     hideSpinner()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mainHandler.post{
+                mainHandler.post {
                     handleRetrieveCurrentRequestResponse(response)
                     hideSpinner()
                 }
@@ -199,18 +282,19 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
         })
     }
 
-    private fun handleRetrieveCurrentRequestResponse(response: Response){
+    private fun handleRetrieveCurrentRequestResponse(response: Response) {
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<Request>>(response.body!!.string())
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             try {
                 request = resp.Data as Request
+                issues = if(request!!.Issues != null) request!!.Issues!! else mutableListOf()
                 updateUI(request!!)
             } catch (e: Exception) {
                 Helper.showLongToast(this, e.message.toString())
             }
         } else {
-            if((resp as ErrorResponse).ErrorCode == ErrorCodeEnum.RecordNotFound){
+            if ((resp as ErrorResponse).ErrorCode == ErrorCodeEnum.RecordNotFound) {
                 Helper.openActivity(this, ActivityEnum.HOME_SHOP)
             }
             handleApiResponseError(resp)
@@ -219,20 +303,20 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
     //#endregion Retrieve Current Request
     //#region Update Request
 
-    private fun updateRequest(request: Request){
+    private fun updateRequest(request: Request) {
         showSpinner()
         apiService.updateRequest(request).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post{
+                mainHandler.post {
                     hideSpinner()
-                    handleApiResponseException(call,e)
+                    handleApiResponseException(call, e)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mainHandler.post{
+                mainHandler.post {
                     handleUpdateRequestResponse(response)
                     hideSpinner()
                 }
@@ -240,13 +324,14 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
         })
     }
 
-    private fun handleUpdateRequestResponse(response: Response){
+    private fun handleUpdateRequestResponse(response: Response) {
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<Request>>(response.body!!.string())
 
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             try {
                 request = resp.Data as Request
+                issues = if(request!!.Issues != null) request!!.Issues!! else mutableListOf()
                 updateUI(request!!)
             } catch (e: Exception) {
                 Helper.showLongToast(this, e.message.toString())
@@ -257,36 +342,57 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
     }
     //#endregion Update Request
 
-    private fun updateUI(request: Request){
-        if(request.ShopAccepted != null ){
+    private fun updateUI(request: Request) {
+        if (request.ShopAccepted != null) {
             //shop accepted request
-            if(request.ShopAccepted!!){
+            if (request.ShopAccepted!!) {
                 showComponent(llShopConsent)
                 showComponent(llUserConsent)
                 hideComponent(llShopConsentChoice)
-                tvShopConsent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.check_green,0,0,0)
+                tvShopConsent.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.check_green,
+                    0,
+                    0,
+                    0
+                )
 
-                if(request.UserAccepted != null){
+                if (request.UserAccepted != null) {
                     //user accepted request
-                    if(request.UserAccepted!!){
-                        tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.check_green, 0,0,0)
+                    if (request.UserAccepted!!) {
+                        tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.check_green,
+                            0,
+                            0,
+                            0
+                        )
                         //show complete button if current date is equal of later than repair date
-                        if(request.RepairDate!! <= Calendar.getInstance().time) {
+                        etWorkHoursEstimate.isEnabled = false
+                        if (request.RepairDate!! <= Calendar.getInstance().time && request.Completed == false) {
                             showComponent(btnCompleteRequest)
-                        }
-                        else {
+                            //TODO: add issues RV
+                        } else {
                             hideComponent(btnCompleteRequest)
                         }
                     }
                     //user declined request
                     else {
-                        tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.xmark_red,0,0,0)
+                        tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.xmark_red,
+                            0,
+                            0,
+                            0
+                        )
                         hideComponent(btnCompleteRequest)
                     }
                 }
                 //user hasn't responded
                 else {
-                    tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.minus_gray,0,0,0)
+                    tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.minus_gray,
+                        0,
+                        0,
+                        0
+                    )
                     hideComponent(btnCompleteRequest)
                 }
             }
@@ -296,8 +402,13 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
                 hideComponent(btnCompleteRequest)
                 showComponent(llUserConsent)
                 showComponent(llShopConsent)
-                tvShopConsent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.xmark_red,0,0,0)
-                tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.minus_gray, 0,0,0)
+                tvShopConsent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.xmark_red, 0, 0, 0)
+                tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.minus_gray,
+                    0,
+                    0,
+                    0
+                )
             }
         }
         //shop hasn't responded yet
@@ -310,13 +421,42 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
 
         tvVehicle.text = request.Car.toString()
         tvRequestDescription.text = request.IssueDescription
-        tvDateOfRepair.text =  Helper.formatDate(request.RepairDate!!)
-        tvShopConsent.text = if(request.ShopAcceptedDate != null) Helper.formatDateTime(request.ShopAcceptedDate!!) else ""
-        tvUserConsent.text = if(request.UserAcceptedDate != null) Helper.formatDateTime(request.UserAcceptedDate!!) else ""
-        tvDateOfRepair.text =  Helper.formatDate(request.RepairDate!!)
-        tvTimeOfRepair.text =  Helper.formatTime(request.RepairDate!!)
+        tvDateOfRepair.text = Helper.formatDate(request.RepairDate!!)
+        tvShopConsent.text =
+            if (request.ShopAcceptedDate != null) Helper.formatDateTime(request.ShopAcceptedDate!!) else ""
+        tvUserConsent.text =
+            if (request.UserAcceptedDate != null) Helper.formatDateTime(request.UserAcceptedDate!!) else ""
+        tvDateOfRepair.text = Helper.formatDate(request.RepairDate!!)
+        tvTimeOfRepair.text = Helper.formatTime(request.RepairDate!!)
 
-        etWorkHoursEstimate.setText(if(request.EstimatedRepairHours != null) request.EstimatedRepairHours!!.toString() else "")
+        etWorkHoursEstimate.setText(if (request.EstimatedRepairHours != null) request.EstimatedRepairHours!!.toString() else "")
 
+        if(request.UserAccepted == false || request.Completed == true){
+            btnNewIssue.visibility = View.GONE
+            ivIssuesSave.visibility = View.GONE
+        }
+        else{
+            btnNewIssue.visibility = View.VISIBLE
+        }
+        updateRVIssues()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateRVIssues(){
+        if(issues.size > 0){
+            shopIssuesAdapter = ShopIssuesAdapter(issues,
+                object: ButtonClickListener{
+                    override fun onClick(issue: Issue) {
+                        ivIssuesSave.visibility = View.VISIBLE
+                        val iss = issues.find { i -> i == issue }
+                        iss?.Deleted = true
+                        iss?.DateDeleted = Calendar.getInstance().time
+                        updateRVIssues()
+                    }
+                })
+            rvIssues.adapter = shopIssuesAdapter
+            rvIssues.layoutManager = LinearLayoutManager(this)
+            shopIssuesAdapter.notifyDataSetChanged()
+        }
     }
 }

@@ -57,18 +57,38 @@
                             android:layout_marginRight="10sp"
                             android:layout_height="wrap_content"
                             android:text="@string/use_current_location" />
-                        <AutoCompleteTextView
-                            android:id="@+id/actvSearchAddress"
-                            style="@style/textField"
+                        <LinearLayout
+                            android:id="@+id/llSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
                             android:layout_marginTop="5sp"
                             android:layout_marginBottom="5sp"
                             android:layout_marginLeft="10sp"
                             android:layout_marginRight="10sp"
-                            android:layout_width="match_parent"
-                            android:hint="@string/search_location"
-                            android:inputType="text"
-                            android:importantForAutofill="no"
-                            tools:ignore="LabelFor" />
+                            android:weightSum="10">
+                            <AutoCompleteTextView
+                                android:id="@+id/actvSearchAddress"
+                                style="@style/textField"
+                                android:layout_width="match_parent"
+                                android:layout_height="48sp"
+                                android:hint="@string/search_location"
+                                android:inputType="text"
+                                android:importantForAutofill="no"
+                                tools:ignore="LabelFor"
+                                android:layout_weight="9"/>
+                            <ProgressBar
+                                android:id="@+id/pbActvSearch"
+                                android:layout_weight="1"
+                                android:visibility="invisible"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:indeterminate="true"
+                                android:indeterminateTint="@color/primary_500"
+                                android:layout_gravity="center" />
+                        </LinearLayout>
+
 
                         <LinearLayout
                             android:orientation="horizontal"
@@ -149,13 +169,54 @@
                             map:uiZoomControls="true"
                             map:uiZoomGestures="true"
                             tools:ignore="FragmentTagUsage" />
-                        <TextView
-                            android:id="@+id/tvRepairShopName"
+                        <LinearLayout
+                            android:id="@+id/llRepairShopName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/lorem"
-                            style="@style/textView"
-                            android:layout_margin="10sp"/>
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:weightSum="10">
+                            <TextView
+                                android:layout_width="0sp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/repair_shop_name"
+                                android:layout_weight="4"
+                                style="@style/textView"
+                                android:layout_margin="10sp"/>
+                            <TextView
+                                android:id="@+id/tvRepairShopName"
+                                android:layout_width="0sp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/test"
+                                android:layout_weight="6"
+                                style="@style/textView"
+                                android:layout_margin="10sp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/llRepairShopRate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:weightSum="10">
+                            <TextView
+                                android:layout_width="0sp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/hourly_rate"
+                                android:layout_weight="4"
+                                style="@style/textView"
+                                android:layout_margin="10sp"/>
+                            <TextView
+                                android:id="@+id/tvRepairShopRate"
+                                android:layout_width="0sp"
+                                android:layout_weight="6"
+                                android:layout_height="wrap_content"
+                                android:text="@string/test"
+                                style="@style/textView"
+                                android:layout_margin="10sp"/>
+                        </LinearLayout>
+
+
                         <Button
                             android:layout_width="match_parent"
                             android:layout_margin="10sp"

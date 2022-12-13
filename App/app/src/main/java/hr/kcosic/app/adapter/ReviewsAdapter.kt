@@ -30,7 +30,7 @@ class ReviewsAdapter(
         if(item.Rating != null){
             holder.rbRating.rating = item.Rating!!.toFloat()
         }
-        holder.tvName.text = item.User!!.Username
+        holder.tvUsername.text = item.User!!.Username
         holder.tvComment.text = item.Comment
 
     }
@@ -43,7 +43,7 @@ class ReviewsAdapter(
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val rbRating: RatingBar = itemView.findViewById(R.id.rbRating)
-        val tvName: TextView = itemView.findViewById(R.id.tvName)
-        val tvComment: CheckBox = itemView.findViewById(R.id.tvComment)
+        val tvUsername: TextView = itemView.findViewById(R.id.tvUsername)
+        val tvComment: TextView = itemView.findViewById(R.id.tvComment)
     }
 }

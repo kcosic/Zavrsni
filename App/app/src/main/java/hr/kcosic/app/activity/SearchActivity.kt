@@ -50,7 +50,13 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     private lateinit var swUseCurrentLocation: SwitchCompat
     private lateinit var actvSearchAddress: AutoCompleteTextView
     private lateinit var etDateOfRepair: EditText
+
     private lateinit var tvRepairShopName: TextView
+    private lateinit var llRepairShopName: LinearLayout
+    private lateinit var llSearch: LinearLayout
+    private lateinit var pbActvSearch: ProgressBar
+    private lateinit var llRepairShopRate: LinearLayout
+    private lateinit var tvRepairShopRate: TextView
     private lateinit var cardMap: CardView
     private lateinit var vScroll: ScrollView
     private lateinit var btnSelectLocation: Button
@@ -64,9 +70,13 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     private var locationMarkerMap: MutableMap<String, Location> = mutableMapOf()
     private var selectedLocation: Location? = null
     private val repairCalendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+    private var textBefore: String? = null
 
     val handleAddressSearch = debounce<Unit>(1000, coroutineScope) {
-        searchAddress(actvSearchAddress.text?.toString())
+        mainHandler.post{
+            showComponent(pbActvSearch)
+            searchAddress(actvSearchAddress.text?.toString())
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +88,12 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         swUseCurrentLocation = findViewById(R.id.swUseCurrentLocation)
         actvSearchAddress = findViewById(R.id.actvSearchAddress)
         etDateOfRepair = findViewById(R.id.etDateOfRepair)
+        llRepairShopName = findViewById(R.id.llRepairShopName)
+        llRepairShopRate = findViewById(R.id.llRepairShopRate)
+        llSearch = findViewById(R.id.llSearch)
         tvRepairShopName = findViewById(R.id.tvRepairShopName)
+        pbActvSearch = findViewById(R.id.pbActvSearch)
+        tvRepairShopRate = findViewById(R.id.tvRepairShopRate)
         cardMap = findViewById(R.id.cardMap)
         vScroll = findViewById(R.id.vScroll)
         btnSelectLocation = findViewById(R.id.btnSelectLocation)
@@ -86,7 +101,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         map = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         map?.getMapAsync(this)
         etDateOfRepair.setText(Helper.formatDate(Calendar.getInstance().time))
-        hideComponent(tvRepairShopName)
+        hideComponent(llRepairShopRate)
+        hideComponent(llRepairShopName)
         hideComponent(btnSelectLocation)
         val date =
             DatePickerDialog.OnDateSetListener { _, year, month, day ->
@@ -109,17 +125,16 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             ).show()
         }
         actvSearchAddress.addTextChangedListener(object : TextWatcher {
-            var textBefore: String? = null
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 textBefore = p0.toString()
             }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString() != textBefore) handleAddressSearch(Unit)
             }
-
-            override fun afterTextChanged(p0: Editable?) {}
 
         })
 
@@ -147,9 +162,9 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
 
                 mainHandler.post {
                     if (actvVisibility) {
-                        showComponent(actvSearchAddress)
+                        showComponent(llSearch)
                     } else {
-                        hideComponent(actvSearchAddress)
+                        hideComponent(llSearch)
                     }
                     buttonView.isEnabled = buttonViewActivated
                     if (latLng != null) {
@@ -199,12 +214,16 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             val location = test[it.id]
             if (location != null) {
                 tvRepairShopName.text = if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0].ShortName else null
+                tvRepairShopRate.text = if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0].HourlyRate.toString() else null
+
                 selectedLocation = location
-                showComponent(tvRepairShopName)
+                showComponent(llRepairShopName)
+                showComponent(llRepairShopRate)
                 showComponent(btnSelectLocation)
 
             } else {
-                hideComponent(tvRepairShopName)
+                hideComponent(llRepairShopName)
+                hideComponent(llRepairShopRate)
                 hideComponent(btnSelectLocation)
                 selectedLocation = null
             }
@@ -212,7 +231,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
             false
         }
         googleMap.setOnMapClickListener {
-            hideComponent(tvRepairShopName)
+            hideComponent(llRepairShopRate)
+            hideComponent(llRepairShopName)
             hideComponent(btnSelectLocation)
             selectedLocation = null
         }
@@ -223,11 +243,14 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
 
     private fun searchAddress(address: String?) {
         if (address != null && address.isNotEmpty()) {
+            actvSearchAddress.isEnabled = false
             apiService.discoverLocationByAddress(address).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     mainHandler.post {
                         handleApiResponseException(call, e)
                         hideSpinner()
+                        hideComponent(pbActvSearch)
+                        actvSearchAddress.isEnabled = true
                     }
                 }
 
@@ -235,6 +258,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                     mainHandler.post {
                         handleDiscoverAddressResponse(response)
                         hideSpinner()
+                        hideComponent(pbActvSearch)
+                        actvSearchAddress.isEnabled = true
                     }
                 }
             })
@@ -293,6 +318,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     private fun updateAndRefocusUserMarker(latLng: LatLng, title: String) {
         if (userMarker != null) {
             userMarker!!.remove()
+            googleMap.clear()
+
         }
         userMarker = googleMap.addMarker(
             MarkerOptions()
@@ -326,7 +353,6 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 mainHandler.post {
                     handleApiResponseException(call, e)
                     hideSpinner()
-
                 }
             }
 
@@ -334,10 +360,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                 mainHandler.post {
                     handleRetrieveLocationByCoordinatesAndRadiusResponse(response)
                     hideSpinner()
-
                 }
             }
-
         })
     }
 

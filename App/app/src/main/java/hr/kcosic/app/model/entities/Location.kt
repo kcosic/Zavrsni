@@ -3,6 +3,7 @@ package hr.kcosic.app.model.entities
 import hr.kcosic.app.model.bases.BaseEntity
 import kotlinx.serialization.Serializable
 
+@Suppress("PropertyName")
 @Serializable
 class Location : BaseEntity() {
     var UserId: Int? = null

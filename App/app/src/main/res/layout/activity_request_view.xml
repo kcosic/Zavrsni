@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,79 +46,94 @@
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
+                            android:id="@+id/llShopConsent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
+                            android:layout_margin="10sp"
                             android:orientation="horizontal"
                             android:weightSum="10">
 
                             <TextView
+                                android:layout_margin="10sp"
+                                style="@style/textView"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-
-                                android:layout_weight="4"
-                                android:text="@string/user_accepted" />
-
-                            <CheckBox
-                                android:id="@+id/ckbUserAccepted"
-                                android:layout_width="wrap_content"
-                                android:layout_gravity="center"
-
-                                android:layout_height="wrap_content"
-                                android:clickable="false"
-                                android:textAlignment="center" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal"
-                            android:weightSum="10"
-                            >
+                                android:layout_weight="5"
+                                android:text="@string/shop_accepted"
+                                />
 
                             <TextView
+                                android:layout_weight="5"
+                                android:layout_margin="10sp"
+                                android:id="@+id/tvShopConsent"
                                 android:layout_width="0sp"
-                                android:layout_height="wrap_content"
+                                tools:text="12.12.2022 16:31"
                                 android:layout_gravity="center"
-                                android:layout_weight="4"
-                                android:text="@string/shop_accepted" />
-
-                            <CheckBox
-                                android:id="@+id/ckbShopAccepted"
-                                android:layout_gravity="center"
-
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clickable="false"
-                                android:textAlignment="center" />
+                                app:drawableStartCompat="@drawable/check_green"
+                                android:layout_height="wrap_content"/>
                         </LinearLayout>
-
                         <LinearLayout
+                            android:id="@+id/llUserConsent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
+                            android:layout_margin="10sp"
                             android:orientation="horizontal"
                             android:weightSum="10">
 
                             <TextView
+                                android:layout_margin="10sp"
+                                style="@style/textView"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
 
-                                android:layout_weight="4"
-                                android:text="@string/completed" />
+                                android:layout_weight="5"
+                                android:text="@string/user_accepted"
+                                />
 
-                            <CheckBox
-                                android:id="@+id/ckbCompleted"
-                                android:layout_width="wrap_content"
+                            <TextView
+                                android:layout_weight="5"
+                                android:layout_margin="10sp"
+                                android:id="@+id/tvUserConsent"
+                                android:layout_width="0sp"
+                                tools:text="12.12.2022 16:31"
+                                android:layout_gravity="center"
+                                app:drawableStartCompat="@drawable/check_green"
+
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/llCompleted"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10sp"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:layout_margin="10sp"
+                                style="@style/textView"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
 
-                                android:clickable="false"
-                                android:textAlignment="center" />
+                                android:layout_weight="5"
+                                android:text="@string/completed"
+                                />
+
+                            <TextView
+                                android:layout_weight="5"
+                                android:layout_margin="10sp"
+                                android:id="@+id/tvCompleted"
+                                android:layout_width="0sp"
+                                tools:text="12.12.2022 16:31"
+                                android:layout_gravity="center"
+                                app:drawableStartCompat="@drawable/check_green"
+
+                                android:layout_height="wrap_content"/>
                         </LinearLayout>
+
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

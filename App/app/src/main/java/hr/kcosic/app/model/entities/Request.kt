@@ -5,6 +5,7 @@ import hr.kcosic.app.model.serializer.DateSerializer
 import kotlinx.serialization.Serializable
 import java.util.*
 
+@Suppress("PropertyName")
 @Serializable
 class Request : BaseEntity() {
     var UserId: Int? = null
@@ -13,26 +14,37 @@ class Request : BaseEntity() {
     var Price: Double? = null
     var EstimatedPrice: Double? = null
     var EstimatedRepairHours: Int? = null
+
     @Serializable(with = DateSerializer::class)
     var FinishDate: Date? = null
+
     @Serializable(with = DateSerializer::class)
     var RepairDate: Date? = null
+
     @Serializable(with = DateSerializer::class)
     var RequestDate: Date? = null
     var Completed: Boolean? = null
     var UserAccepted: Boolean? = null
+    var Reviewed: Boolean? = null
+
     @Serializable(with = DateSerializer::class)
     var UserAcceptedDate: Date? = null
     var ShopAccepted: Boolean? = null
+
     @Serializable(with = DateSerializer::class)
     var ShopAcceptedDate: Date? = null
     var BillPicture: String? = null
     var IssueDescription: String? = null
+
     @Serializable
     var Shop: Shop? = null
+
     @Serializable
     var User: User? = null
+
     @Serializable
     var Car: Car? = null
 
+    @Serializable
+    var Issues: MutableList<Issue>? = null
 }

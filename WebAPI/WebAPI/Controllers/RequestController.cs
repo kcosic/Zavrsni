@@ -192,7 +192,8 @@ namespace WebAPI.Controllers
                     IssueDescription = newRequestDTO.IssueDescription,
                     RepairDate = newRequestDTO.RepairDate,
                     RequestDate = newRequestDTO.RequestDate,
-                    Completed = newRequestDTO.Completed
+                    Completed = newRequestDTO.Completed,
+                    Issues = newRequestDTO.Issues
                 };
 
                 Db.Requests.Add(newRequest);
@@ -243,6 +244,7 @@ namespace WebAPI.Controllers
                 request.RepairDate = requestDTO.RepairDate;
                 request.RequestDate = requestDTO.RequestDate;
                 request.Completed = requestDTO.Completed;
+                request.Issues = requestDTO.Issues;
 
                 Db.SaveChanges();
 

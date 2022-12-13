@@ -40,7 +40,9 @@ namespace WebAPI.Models.ORM
                 RepairDate = item.RepairDate,
                 RequestDate = item.RequestDate,
                 ShopAcceptedDate = item.ShopAcceptedDate,
-                UserAcceptedDate = item.UserAcceptedDate
+                UserAcceptedDate = item.UserAcceptedDate,
+                Reviewed = item.Reviewed,
+                Issues = Issue.ToListDTO(item.Issues, level - 1)
             };
         }
 
@@ -81,7 +83,10 @@ namespace WebAPI.Models.ORM
                 RepairDate = RepairDate,
                 RequestDate = RequestDate,
                 ShopAcceptedDate = ShopAcceptedDate,
-                UserAcceptedDate = UserAcceptedDate
+                UserAcceptedDate = UserAcceptedDate,
+                Reviewed = Reviewed,
+                Issues = Issue.ToListDTO(Issues, level - 1)
+
             } : null;
         }
     }

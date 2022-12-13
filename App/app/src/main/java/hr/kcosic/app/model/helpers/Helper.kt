@@ -32,9 +32,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.InvalidObjectException
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.reflect.typeOf
 
@@ -55,6 +52,8 @@ class Helper {
         ) {
             val intent = Intent(context, activity.getClass().java)
             intent.putExtra(baggageTag, serializeData(baggage))
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+
             ContextCompat.startActivity(context, intent, null)
             context.overridePendingTransition(
                 androidx.appcompat.R.anim.abc_fade_in,
@@ -64,6 +63,7 @@ class Helper {
 
         fun openActivity(context: Context, activity: ActivityEnum) {
             val intent = Intent(context, activity.getClass().java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             ContextCompat.startActivity(context, intent, null)
         }
 

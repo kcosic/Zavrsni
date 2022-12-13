@@ -178,6 +178,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CarController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
+    <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
@@ -187,6 +188,12 @@
     </Compile>
     <Compile Include="Models\Bases\BaseController.cs" />
     <Compile Include="Models\Bases\BaseException.cs" />
+    <Compile Include="Models\DTOs\IssueDTO.cs" />
+    <Compile Include="Models\Exceptions\NothingToReviewException.cs" />
+    <Compile Include="Models\ORM\Issue.cs">
+      <DependentUpon>DbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Partials\Issue.cs" />
     <Compile Include="Models\PasswordReset.cs" />
     <Compile Include="Models\DTOs\UserDTO.cs" />
     <Compile Include="Models\DTOs\TokenDTO.cs" />
@@ -304,6 +311,8 @@
       <DependentUpon>DbModel.edmx</DependentUpon>
     </Content>
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\ZavrsniAPI - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\ZavrsniAPI - Web Deploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -329,8 +338,7 @@
           <IISUrl>http://localhost:31420/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl>https://zavrsniapi.azurewebsites.net</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

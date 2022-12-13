@@ -51,13 +51,17 @@ namespace WebAPI.Models.DTOs
         [JsonProperty]
         public bool? UserAccepted { get; set; }
         [JsonProperty]
-        public DateTime? UserAcceptedDate { get; set; }
+        public DateTime? UserAcceptedDate { get; set; }        
+        [JsonProperty]
+        public bool Reviewed { get; set; }
 
         [JsonProperty]
         public DateTime RequestDate { get; set; }
         [JsonProperty]
         public DateTime? RepairDate { get; set; }
         [JsonProperty]
-        public string IssueDescription { get; set; }
+        public string IssueDescription { get; set; }        
+        [JsonProperty]
+        public ICollection<IssueDTO> Issues { get; set; }
     }
 }

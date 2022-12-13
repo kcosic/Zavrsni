@@ -64,7 +64,6 @@ abstract class ValidatedActivity : BaseActivity() {
     }
 
     fun logoutUser() {
-        Helper.showLongToast(this, getString(R.string.token_error))
         Helper.deleteSharedPreference(PreferenceEnum.TOKEN)
         Helper.deleteSharedPreference(PreferenceEnum.AUTH_FOR)
         Helper.deleteSharedPreference(PreferenceEnum.USER)
@@ -72,7 +71,6 @@ abstract class ValidatedActivity : BaseActivity() {
     }
 
     fun logoutShop() {
-        Helper.showLongToast(this, getString(R.string.token_error))
         Helper.deleteSharedPreference(PreferenceEnum.TOKEN)
         Helper.deleteSharedPreference(PreferenceEnum.AUTH_FOR)
         Helper.deleteSharedPreference(PreferenceEnum.SHOP)

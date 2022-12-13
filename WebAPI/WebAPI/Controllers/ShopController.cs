@@ -232,7 +232,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(shopReviews);
+                return CreateOkResponse(Review.ToListDTO(shopReviews, 3));
             }
             catch (RecordNotFoundException e)
             {
@@ -267,7 +267,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Review.ToListDTO(shopReviews,1));
+                return CreateOkResponse(Review.ToListDTO(shopReviews,2));
             }
             catch (RecordNotFoundException e)
             {

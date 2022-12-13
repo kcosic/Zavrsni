@@ -23,6 +23,7 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.util.*
 
 class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST_VIEW),
     OnMapReadyCallback {
@@ -37,9 +38,9 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
     private lateinit var tvVehicle: TextView
     private lateinit var tvDateOfFinish: TextView
     private lateinit var tvActualPrice: TextView
-    private lateinit var ckbUserAccepted: CheckBox
-    private lateinit var ckbShopAccepted: CheckBox
-    private lateinit var ckbCompleted: CheckBox
+    private lateinit var tvUserConsent: CheckBox
+    private lateinit var tvShopConsent: CheckBox
+    private lateinit var tvCompleted: CheckBox
     private lateinit var googleMap: GoogleMap
     private var request: Request? = null
     private var requestId: Int? = null
@@ -61,9 +62,9 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
         tvRequestDescription = findViewById(R.id.tvRequestDescription)
         tvEstimatedTime = findViewById(R.id.tvEstimatedTime)
         tvEstimatedPrice = findViewById(R.id.tvEstimatedPrice)
-        ckbUserAccepted = findViewById(R.id.ckbUserAccepted)
-        ckbShopAccepted = findViewById(R.id.ckbShopAccepted)
-        ckbCompleted = findViewById(R.id.ckbCompleted)
+        tvUserConsent = findViewById(R.id.tvUserConsent)
+        tvShopConsent = findViewById(R.id.tvShopConsent)
+        tvCompleted = findViewById(R.id.tvCompleted)
         tvVehicle = findViewById(R.id.tvVehicle)
         tvDateOfFinish = findViewById(R.id.tvDateOfFinish)
         tvActualPrice = findViewById(R.id.tvActualPrice)
@@ -145,11 +146,33 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
         tvRequestDescription.text = request?.IssueDescription
         tvEstimatedTime.text = if(request?.EstimatedRepairHours != null) request?.EstimatedRepairHours.toString() else "N/A"
         tvEstimatedPrice.text = request?.EstimatedPrice?.toString()
-        ckbShopAccepted.isChecked = request?.ShopAccepted == true
-        ckbUserAccepted.isChecked = request?.UserAccepted == true
-        ckbCompleted.isChecked = request?.Completed == true
         tvVehicle.text = request?.Car!!.toString()
         tvActualPrice.text = if(request?.Price != null) request?.Price!!.toString() else "N/A"
         tvDateOfFinish.text = if(request?.FinishDate != null) Helper.formatDate(request?.FinishDate!!) else "N/A"
+        tvShopConsent.text = Helper.formatDate(request?.ShopAcceptedDate!!)
+        tvShopConsent.setCompoundDrawablesWithIntrinsicBounds(
+            when (request?.ShopAccepted) {
+                true -> R.drawable.check_green
+                false -> R.drawable.xmark_red
+                else -> R.drawable.minus_gray
+            }
+            ,0,0,0)
+
+        tvUserConsent.text = Helper.formatDate(request?.UserAcceptedDate!!)
+        tvUserConsent.setCompoundDrawablesWithIntrinsicBounds(
+            when (request?.UserAccepted) {
+                true -> R.drawable.check_green
+                false -> R.drawable.xmark_red
+                else -> R.drawable.minus_gray
+        }, 0,0,0)
+
+        tvCompleted.text = Helper.formatDate(request?.FinishDate!!)
+        tvCompleted.setCompoundDrawablesWithIntrinsicBounds(
+            when (request?.Completed) {
+                true -> R.drawable.check_green
+                false -> R.drawable.xmark_red
+                else -> R.drawable.minus_gray
+        }, 0,0,0)
+
     }
 }

@@ -14,6 +14,12 @@ namespace WebAPI.Models.ORM
     
     public partial class Request
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Request()
+        {
+            this.Issues = new HashSet<Issue>();
+        }
+    
         public int Id { get; set; }
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
@@ -35,9 +41,12 @@ namespace WebAPI.Models.ORM
         public Nullable<bool> ShopAccepted { get; set; }
         public Nullable<System.DateTime> UserAcceptedDate { get; set; }
         public Nullable<bool> UserAccepted { get; set; }
+        public bool Reviewed { get; set; }
     
         public virtual Car Car { get; set; }
         public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Issue> Issues { get; set; }
     }
 }

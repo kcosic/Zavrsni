@@ -1,34 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
-using WebAPI.Models.DTOs;
 using WebAPI.Models.Exceptions;
 using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
 namespace WebAPI.Controllers
 {
-    public class ReviewController : BaseController
+    public class IssueController : BaseController
     {
-        public ReviewController() : base(nameof(ReviewController)) { }
+        public IssueController() : base(nameof(IssueController)) { }
 
         [HttpGet]
-        [Route("api/Review/{id}")]
-        public BaseResponse RetrieveReview(int id, bool expanded = false)
+        [Route("api/Issue/{id}")]
+        public BaseResponse RetrieveIssue(int id, bool expanded = false)
         {
             try
             {
-                var review = Db.Reviews.Find(id);
-                if (review == null || review.Deleted)
+                var issue = Db.Issues.Find(id);
+                if (issue == null || issue.Deleted)
                 {
                     throw new RecordNotFoundException();
                 }
+                var issueDTO = issue.ToDTO(expanded ? 3 : 2);
+                //if (expanded)
+                //{
 
-                return CreateOkResponse(review.ToDTO(expanded ? 3 : 2));
+                //    issueDTO.Shop.Location = issue.Shop.Location.ToDTO();
+                //    issueDTO.User = issue.User.ToDTO();
+                //}
+
+                return CreateOkResponse(issueDTO);
             }
             catch (RecordNotFoundException e)
             {
@@ -42,18 +47,18 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("api/Review")]
-        public BaseResponse RetrieveReviews()
+        [Route("api/Issue/{requestId}")]
+        public BaseResponse RetrieveIssues(int requestId)
         {
             try
             {
-                var review = Db.Reviews.Where(x => x.UserId == AuthUser.Id && !x.Deleted).ToList();
-                if (review == null)
+                var issue = Db.Issues.Where(x => x.RequestId == requestId && !x.Deleted).ToList();
+                if (issue == null)
                 {
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Review.ToListDTO(review, 2));
+                return CreateOkResponse(Issue.ToListDTO(issue, 2));
             }
             catch (RecordNotFoundException e)
             {
@@ -63,22 +68,22 @@ namespace WebAPI.Controllers
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
             }
-
         }
 
         [HttpDelete]
-        [Route("api/Review/{id}")]
-        public BaseResponse DeleteReview(int id)
+        [Route("api/Issue/{id}")]
+        public BaseResponse DeleteIssue(int id)
         {
             try
             {
-                var review = Db.Reviews.Find(id);
-                if (review == null || review.Deleted)
+                var issue = Db.Issues.Find(id);
+                if (issue == null || issue.Deleted)
                 {
                     throw new RecordNotFoundException();
                 }
-                review.DateDeleted = DateTime.Now;
-                review.Deleted = true;
+                issue.DateDeleted = DateTime.Now;
+                issue.Deleted = true;
+
                 Db.SaveChanges();
                 return CreateOkResponse();
             }
@@ -93,32 +98,35 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("api/Review/Shop/{id}")]
-        public BaseResponse CreateReview([FromUri] int id, [FromBody] ReviewDTO newReviewDTO)
+        [Route("api/Issue")]
+        public BaseResponse CreateIssue(Issue newIssueDTO)
         {
             try
             {
-                if (newReviewDTO == null)
+                if (newIssueDTO == null)
                 {
-                    throw new Exception("Invalid value");
+                    throw new ArgumentNullException();
                 }
 
-                var newReview = new Review
+                var newIssue = new Issue
                 {
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
-                    UserId = newReviewDTO.UserId,
-                    Comment = newReviewDTO.Comment,
-                    Rating = newReviewDTO.Rating,
-                    ShopId = newReviewDTO.ShopId,
+                    Price= newIssueDTO.Price,
+                    Accepted= newIssueDTO.Accepted,
+                    Description = newIssueDTO.Description,
+                    RequestId = newIssueDTO.RequestId
                 };
 
-                Db.Reviews.Add(newReview);
-                Db.Requests.Find(id).Reviewed = true;
+                Db.Issues.Add(newIssue);
                 Db.SaveChanges();
 
                 return CreateOkResponse();
             }
+            catch (ArgumentNullException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.InvalidParameter);
+            }            
             catch (Exception e)
             {
                 return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
@@ -126,31 +134,32 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        [Route("api/Review/{id}")]
-        public BaseResponse UpdateReview([FromUri] int id, [FromBody] ReviewDTO reviewDTO)
+        [Route("api/Issue/{id}")]
+        public BaseResponse UpdateIssue([FromUri] int id, [FromBody] Issue issueDTO)
         {
             try
             {
-                if (reviewDTO == null)
+                if (issueDTO == null)
                 {
                     throw new Exception("Invalid value");
                 }
 
-                var review = Db.Reviews.Find(id);
-                if (review == null || review.Deleted)
+                var issue = Db.Issues.Find(id);
+                if (issue == null || issue.Deleted)
                 {
                     throw new RecordNotFoundException();
                 }
-
-                review.DateModified = DateTime.Now;
-                review.UserId = reviewDTO.UserId;
-                review.Comment = reviewDTO.Comment;
-                review.Rating = reviewDTO.Rating;
-                review.ShopId = reviewDTO.ShopId;
+                issue.DateModified = DateTime.Now;
+                issue.DateCreated = DateTime.Now;
+                issue.DateModified = DateTime.Now;
+                issue.Price = issueDTO.Price;
+                issue.Accepted = issueDTO.Accepted;
+                issue.Description = issueDTO.Description;
+                issue.RequestId = issueDTO.RequestId;
 
                 Db.SaveChanges();
 
-                return CreateOkResponse();
+                return CreateOkResponse(issue.ToDTO(3));
             }
             catch (RecordNotFoundException e)
             {
@@ -162,4 +171,5 @@ namespace WebAPI.Controllers
             }
         }
     }
+
 }

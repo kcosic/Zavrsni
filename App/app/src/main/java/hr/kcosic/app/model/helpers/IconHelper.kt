@@ -8,6 +8,8 @@ import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.VectorDrawable
+import android.text.TextPaint
+import androidx.annotation.ColorLong
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -113,10 +115,11 @@ class IconHelper {
             return ContextInstance.getContext()!!.resources.getString(color)
         }
 
-        fun textAsBitmap(text: String?, textSize: Float, textColor: Int): Bitmap? {
+        fun textAsBitmap(text: String?, textSize: Float,@ColorRes textColor: Int): Bitmap? {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.textSize = textSize
-            paint.color = textColor
+            paint.style = Paint.Style.FILL_AND_STROKE
+            paint.color = Color.MAGENTA
             paint.textAlign = Paint.Align.LEFT
             val baseline: Float = -paint.ascent() // ascent() is negative
             val width = (paint.measureText(text) + 0.0f).toInt() // round
@@ -126,5 +129,7 @@ class IconHelper {
             canvas.drawText(text!!, 0f, baseline, paint)
             return image
         }
+
+
     }
 }

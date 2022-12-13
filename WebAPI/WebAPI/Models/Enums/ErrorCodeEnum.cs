@@ -16,6 +16,7 @@ namespace WebAPI.Models.Enums
         LegalNameExists,
         ShortNameExists,
         VatExists,
-        RecordNotFound
+        RecordNotFound,
+        NoReview
     }
 }

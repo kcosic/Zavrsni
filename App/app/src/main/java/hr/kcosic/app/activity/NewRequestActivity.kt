@@ -43,6 +43,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
     private lateinit var etModel: EditText
     private lateinit var etYear: EditText
     private lateinit var etOdometer: EditText
+    private lateinit var etLicensePlate: EditText
     private lateinit var dialogProgressbar: FrameLayout
     private lateinit var etIssueDescription: EditText
     private lateinit var timeAdapter: TimeAdapter
@@ -104,6 +105,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
             etModel = dialogView.findViewById(R.id.etModel)
             etYear = dialogView.findViewById(R.id.etYear)
             etOdometer = dialogView.findViewById(R.id.etOdometer)
+            etLicensePlate = dialogView.findViewById(R.id.etLicensePlate)
             dialogProgressbar = dialogView.findViewById(R.id.progressBarHolder)
             newVehicleDialog = Helper.showConfirmDialog(
                 this,
@@ -113,7 +115,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
                 getString(R.string.cancel),
                 object : OnPositiveButtonClickListener {
                     override fun onPositiveBtnClick(dialog: DialogInterface?) {
-                        if (ValidationHelper.validateCar(etManufacturer, etModel, etYear, etOdometer)) {
+                        if (ValidationHelper.validateCar(etManufacturer, etModel, etYear, etOdometer, etLicensePlate)) {
                             createVehicle(assignFormToVehicle(), dialog)
                         }
                     }
@@ -193,6 +195,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
 
         if (resp.IsSuccess!!) {
             Helper.showLongToast(this, getString(R.string.request_submitted))
+            Helper.openActivity(this,ActivityEnum.HOME_USER)
         } else {
             handleApiResponseError(resp as ErrorResponse)
         }
@@ -253,6 +256,7 @@ class NewRequestActivity : ValidatedActivityWithNavigation(ActivityEnum.NEW_REQU
         car.Model = etModel.text.toString()
         car.Odometer = etOdometer.text.toString().toDouble()
         car.Year = etYear.text.toString().toInt()
+        car.LicensePlate = etLicensePlate.text.toString()
         return car
     }
 

@@ -77,6 +77,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private lateinit var etModel: EditText
     private lateinit var etYear: EditText
     private lateinit var etOdometer: EditText
+    private lateinit var etLicensePlate: EditText
     private lateinit var dialogProgressbar: FrameLayout
     private lateinit var newVehicleDialog: Dialog
 
@@ -142,6 +143,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
             val etModel: EditText = dialogView.findViewById(R.id.etModel)
             val etYear: EditText = dialogView.findViewById(R.id.etYear)
             val etOdometer: EditText = dialogView.findViewById(R.id.etOdometer)
+            val etLicensePlate: EditText = dialogView.findViewById(R.id.etLicensePlate)
             val dialogProgressbar: ProgressBar = dialogView.findViewById(R.id.progressBarHolder)
             Helper.showConfirmDialog(
                 this,
@@ -155,7 +157,8 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
                                 etManufacturer,
                                 etModel,
                                 etYear,
-                                etOdometer
+                                etOdometer,
+                                etLicensePlate
                             )
                         ) {
                             showComponent(dialogProgressbar)
@@ -602,12 +605,14 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         etModel = dialogView.findViewById(R.id.etModel)
         etYear = dialogView.findViewById(R.id.etYear)
         etOdometer = dialogView.findViewById(R.id.etOdometer)
+        etLicensePlate = dialogView.findViewById(R.id.etLicensePlate)
         dialogProgressbar = dialogView.findViewById(R.id.progressBarHolder)
 
         etManufacturer.setText(vehicle.Manufacturer)
         etModel.setText(vehicle.Model)
         etYear.setText(vehicle.Year.toString())
         etOdometer.setText(vehicle.Odometer.toString())
+        etLicensePlate.setText(vehicle.LicensePlate.toString())
 
         newVehicleDialog = Helper.showConfirmDialog(
             this,
@@ -617,7 +622,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
             getString(R.string.cancel),
             object : OnPositiveButtonClickListener {
                 override fun onPositiveBtnClick(dialog: DialogInterface?) {
-                    if (ValidationHelper.validateCar(etManufacturer, etModel, etYear, etOdometer)) {
+                    if (ValidationHelper.validateCar(etManufacturer, etModel, etYear, etOdometer, etLicensePlate)) {
                         editVehicle(assignFormToVehicle(vehicle), dialog)
                     }
                 }
@@ -746,6 +751,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
             existingCar.Model = etModel.text.toString()
             existingCar.Odometer = etOdometer.text.toString().toDouble()
             existingCar.Year = etYear.text.toString().toInt()
+            existingCar.LicensePlate = etLicensePlate.text.toString()
             existingCar
         } else {
             val car = Car()
@@ -753,6 +759,7 @@ class SettingsUserActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
             car.Model = etModel.text.toString()
             car.Odometer = etOdometer.text.toString().toDouble()
             car.Year = etYear.text.toString().toInt()
+            car.LicensePlate = etLicensePlate.text.toString()
             car
         }
 

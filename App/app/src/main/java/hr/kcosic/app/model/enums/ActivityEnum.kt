@@ -38,7 +38,7 @@ enum class ActivityEnum(val layoutId: Int, val menuItemId: Int, val navigationId
     REPAIR_LIST_VIEW(R.layout.activity_repair_list, R.id.repair_list, R.id.shop_bottom_navigation) {
         override fun getClass(): KClass<RepairListActivity> = RepairListActivity::class
     },
-    SETTINGS_SHOP(R.layout.activity_settings_shop, R.id.settings, R.id.user_bottom_navigation) {
+    SETTINGS_SHOP(R.layout.activity_settings_shop, R.id.settings, R.id.shop_bottom_navigation) {
         override fun getClass(): KClass<SettingsShopActivity> = SettingsShopActivity::class
     },
 

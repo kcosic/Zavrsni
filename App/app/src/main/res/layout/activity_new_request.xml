@@ -140,7 +140,7 @@
                             android:id="@+id/btnNext"
                             android:layout_margin="10sp"
                             style="@style/primary_button"
-                            android:text="@string/next"/>
+                            android:text="@string/submit"/>
 
 
                     </LinearLayout>

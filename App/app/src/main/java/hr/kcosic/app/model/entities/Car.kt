@@ -3,6 +3,7 @@ package hr.kcosic.app.model.entities
 import hr.kcosic.app.model.bases.BaseEntity
 import kotlinx.serialization.Serializable
 
+@Suppress("PropertyName")
 @Serializable
 class Car : BaseEntity() {
     var Manufacturer: String? = null
@@ -11,8 +12,10 @@ class Car : BaseEntity() {
     var Year: Int? = null
     var Odometer: Double? = null
     var UserId: Int? = null
+
     @Serializable
     var Requests: MutableList<Request>? = null
+
     @Serializable
     var User: User? = null
 

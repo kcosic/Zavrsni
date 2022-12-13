@@ -88,6 +88,37 @@ namespace WebAPI.Controllers
 
         }
 
+        [HttpGet]
+        [Route("api/User/Request/Latest")]
+        public BaseResponse RetrieveUserLatestRequest()
+        {
+            try
+            {
+                var user = Db.Users.Where(x =>!x.Deleted && AuthUser.Id == x.Id).FirstOrDefault();
+                if (user == null)
+                {
+                    throw new RecordNotFoundException();
+                }               
+                
+                var latestRequest = Db.Requests.Where(x =>!x.Deleted && x.UserId == AuthUser.Id && x.Completed).ToList().OrderByDescending(x=> x.FinishDate).FirstOrDefault();
+                if (latestRequest == null || latestRequest.Reviewed)
+                {
+                    throw new NothingToReviewException();
+                }
+
+                return CreateOkResponse(latestRequest.ToDTO(1));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.RecordNotFound);
+            }
+            catch (Exception e)
+            {
+                return CreateErrorResponse(e, Models.Enums.ErrorCodeEnum.UnexpectedError);
+            }
+
+        }
+
         [HttpDelete]
         [Route("api/User/{id}")]
         public BaseResponse DeleteUser(int id)

@@ -1,11 +1,12 @@
 package hr.kcosic.app.activity
 
 import android.annotation.SuppressLint
-import android.app.TimePickerDialog
 import android.content.DialogInterface
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.BaseResponse
@@ -15,6 +16,7 @@ import hr.kcosic.app.model.entities.User
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.enums.PreferenceEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.helpers.IconHelper
 import hr.kcosic.app.model.helpers.ValidationHelper
 import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
 import hr.kcosic.app.model.responses.ErrorResponse
@@ -24,6 +26,7 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.io.InvalidObjectException
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog as TPD
 
 class SettingsShopActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTINGS_SHOP) {
 
@@ -72,6 +75,7 @@ class SettingsShopActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     private lateinit var fabFriday: FloatingActionButton
     private lateinit var fabSaturday: FloatingActionButton
     private lateinit var fabSunday: FloatingActionButton
+    private lateinit var llFabs: LinearLayout
 
     //#endregion Shop Settings
 
@@ -112,13 +116,17 @@ class SettingsShopActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         ivShopSettingsCollapse = findViewById(R.id.ivShopSettingsCollapse)
         ivShopSettingsSave = findViewById(R.id.ivShopSettingsSave)
         llShopSettingsContent = findViewById(R.id.llShopSettingsContent)
+
         etCapacity = findViewById(R.id.etCapacity)
         btnEditCapacity = findViewById(R.id.btnEditCapacity)
+
         etHourlyRate = findViewById(R.id.etHourlyRate)
         btnEditHourlyRate = findViewById(R.id.btnEditHourlyRate)
+
         etWorkHoursStart = findViewById(R.id.etWorkHoursStart)
         etWorkHoursEnd = findViewById(R.id.etWorkHoursEnd)
         btnEditWorkHours = findViewById(R.id.btnEditWorkHours)
+
         fabMonday = findViewById(R.id.fabMonday)
         fabTuesday = findViewById(R.id.fabTuesday)
         fabWednesday = findViewById(R.id.fabWednesday)
@@ -127,110 +135,429 @@ class SettingsShopActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
         fabSaturday = findViewById(R.id.fabSaturday)
         fabSunday = findViewById(R.id.fabSunday)
 
+        llShopSettingsSection.setOnClickListener {
+            toggleHeader(
+                llShopSettingsContent,
+                ivShopSettingsExpand,
+                ivShopSettingsCollapse,
+                ivShopSettingsSave
+            ) { saveShopSettings() }
+        }
+
+        btnEditCapacity.setOnClickListener {
+            enableEditField(etCapacity, btnEditCapacity, ivShopSettingsSave, ivShopSettingsCollapse)
+        }
+        btnEditHourlyRate.setOnClickListener {
+            enableEditField(
+                etHourlyRate,
+                btnEditHourlyRate,
+                ivShopSettingsSave,
+                ivShopSettingsCollapse
+            )
+        }
+        btnEditWorkHours.setOnClickListener {
+            enableEditField(
+                etWorkHoursStart,
+                btnEditWorkHours,
+                ivShopSettingsSave,
+                ivShopSettingsCollapse
+            )
+            enableEditField(
+                etWorkHoursEnd,
+                btnEditWorkHours,
+                ivShopSettingsSave,
+                ivShopSettingsCollapse
+            )
+        }
+
+
+/*
+
+shopData!!.WorkHours =
+                        "${joinHourMinute(hourOfDay, minute)}-${shopData!!.WorkHours!!.split('-')[1]}"
+                    updateLabel(etWorkHoursStart, joinHourMinute(hourOfDay, minute))
+
+ */
+
         val startTimeListener =
-            TimePickerDialog.OnTimeSetListener { _, hourOfDay: Int, minute: Int ->
+            com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener { _, hourOfDay, _, _ ->
                 shopData!!.WorkHours =
-                    "${joinHourMinute(hourOfDay, minute)}:${shopData!!.WorkHours!!.split('-')[1]}"
-                updateLabel(etWorkHoursStart, shopData!!.WorkHours!!)
+                    "${joinHourMinute(hourOfDay, 0)}-${shopData!!.WorkHours!!.split('-')[1]}"
+                updateLabel(etWorkHoursStart, joinHourMinute(hourOfDay, 0))
             }
+
         etWorkHoursStart.setOnClickListener {
-            TimePickerDialog(
-                this,
+            val picker = TPD.newInstance(
                 startTimeListener,
                 getStartHour(shopData!!.WorkHours),
                 getStartMinute(shopData!!.WorkHours),
                 true
-            ).show()
+            )
+            picker.enableMinutes(false)
+            picker.enableSeconds(false)
+            picker.show(supportFragmentManager, "TimePickerStart")
         }
 
         etWorkHoursStart.setOnFocusChangeListener { _, inFocus ->
             if (inFocus) {
-                TimePickerDialog(
-                    this,
+                val picker = TPD.newInstance(
                     startTimeListener,
                     getStartHour(shopData!!.WorkHours),
                     getStartMinute(shopData!!.WorkHours),
                     true
-                ).show()
+                )
+                picker.enableMinutes(false)
+                picker.enableSeconds(false)
+                picker.show(supportFragmentManager, "TimePickerStart")
             }
         }
 
         val endTimeListener =
-            TimePickerDialog.OnTimeSetListener { _, hourOfDay: Int, minute: Int ->
+            com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener { _, hourOfDay, _, _ ->
                 shopData!!.WorkHours =
-                    "${shopData!!.WorkHours!!.split('-')[0]}:${joinHourMinute(hourOfDay, minute)}"
-                updateLabel(etWorkHoursStart, shopData!!.WorkHours!!)
+                    "${shopData!!.WorkHours!!.split('-')[0]}-${joinHourMinute(hourOfDay, 0)}"
+                updateLabel(etWorkHoursEnd, joinHourMinute(hourOfDay, 0))
             }
+
         etWorkHoursEnd.setOnClickListener {
-            TimePickerDialog(
-                this,
+            val picker = TPD.newInstance(
                 endTimeListener,
                 getEndHour(shopData!!.WorkHours),
                 getEndMinute(shopData!!.WorkHours),
                 true
-            ).show()
+            )
+            picker.enableMinutes(false)
+            picker.enableSeconds(false)
+            picker.show(supportFragmentManager, "TimePickerEnd")
         }
 
         etWorkHoursEnd.setOnFocusChangeListener { _, inFocus ->
             if (inFocus) {
-                TimePickerDialog(
-                    this,
+                val picker = TPD.newInstance(
                     endTimeListener,
                     getEndHour(shopData!!.WorkHours),
                     getEndMinute(shopData!!.WorkHours),
                     true
-                ).show()
+                )
+                picker.enableMinutes(false)
+                picker.enableSeconds(false)
+                picker.show(supportFragmentManager, "TimePickerEnd")
             }
         }
     }
 
-    private fun reloadWeekdayFabs(){
-        fabMonday = FloatingActionButton(this, null, if(monday) R.style.primary_button else R.style.white_button)
-        fabTuesday = FloatingActionButton(this, null, if(tuesday) R.style.primary_button else R.style.white_button)
-        fabWednesday = FloatingActionButton(this, null, if(wednesday) R.style.primary_button else R.style.white_button)
-        fabThursday = FloatingActionButton(this, null, if(thursday) R.style.primary_button else R.style.white_button)
-        fabFriday = FloatingActionButton(this, null, if(friday) R.style.primary_button else R.style.white_button)
-        fabSaturday = FloatingActionButton(this, null, if(saturday) R.style.primary_button else R.style.white_button)
-        fabSunday = FloatingActionButton(this, null, if(sunday) R.style.primary_button else R.style.white_button)
+    private fun reloadWeekdayFabs() {
+        adjustMondayFab()
+        adjustTuesdayFab()
+        adjustWednesdayFab()
+        adjustThursdayFab()
+        adjustFridayFab()
+        adjustSaturdayFab()
+        adjustSundayFab()
         setFabListeners()
     }
 
-    private fun setFabListeners(){
+
+    private fun handleDayClick(dayOfWeek: Int) {
+        when (dayOfWeek) {
+            0 -> {
+                monday = !monday
+                adjustMondayFab()
+            }
+            1 -> {
+                tuesday = !tuesday
+                adjustTuesdayFab()
+            }
+            2 -> {
+                wednesday = !wednesday
+                adjustWednesdayFab()
+            }
+            3 -> {
+                thursday = !thursday
+                adjustThursdayFab()
+            }
+            4 -> {
+                friday = !friday
+                adjustFridayFab()
+            }
+            5 -> {
+                saturday = !saturday
+                adjustSaturdayFab()
+            }
+            6 -> {
+                sunday = !sunday
+                adjustSundayFab()
+            }
+        }
+        showSave()
+        setFabListeners()
+    }
+
+    private fun showSave() {
+        if (ivShopSettingsSave.visibility != View.VISIBLE) {
+            hideComponent(ivShopSettingsCollapse)
+            showComponent(ivShopSettingsSave)
+        }
+    }
+
+    private fun saveShopSettings() {
+        val shop = getShop()
+
+        shop.WorkDays =
+            "${parseBooleanToInt(sunday)}${parseBooleanToInt(monday)}${parseBooleanToInt(tuesday)}${
+                parseBooleanToInt(wednesday)
+            }${parseBooleanToInt(thursday)}${parseBooleanToInt(friday)}${parseBooleanToInt(saturday)}"
+        if (etWorkHoursStart.isEnabled || etWorkHoursEnd.isEnabled) {
+            shop.WorkHours = "${etWorkHoursStart.text}-${etWorkHoursEnd.text}"
+            etWorkHoursStart.isEnabled = false
+            etWorkHoursEnd.isEnabled = false
+            showComponent(btnEditWorkHours)
+        }
+
+        if (etCapacity.isEnabled) {
+            shop.CarCapacity = etCapacity.text.toString().toInt()
+            etCapacity.isEnabled = false
+            showComponent(btnEditCapacity)
+        }
+
+        if (etHourlyRate.isEnabled) {
+            shop.HourlyRate = etHourlyRate.text.toString().toDouble()
+            etHourlyRate.isEnabled
+            showComponent(btnEditHourlyRate)
+        }
+
+        updateShop(shop)
+    }
+
+    private fun parseBooleanToInt(bool: Boolean): Int {
+        return if (bool) 1 else 0
+    }
+
+    private fun setFabListeners() {
         fabMonday.setOnClickListener {
-            monday = !monday
-            fabMonday = FloatingActionButton(this, null, if(monday) R.style.primary_button else R.style.white_button)
-            setFabListeners()
+            handleDayClick(0)
         }
         fabTuesday.setOnClickListener {
-            tuesday = !tuesday
-            fabTuesday = FloatingActionButton(this, null, if(tuesday) R.style.primary_button else R.style.white_button)
-            setFabListeners()
+            handleDayClick(1)
         }
         fabWednesday.setOnClickListener {
-            wednesday = !wednesday
-            fabWednesday = FloatingActionButton(this, null, if(wednesday) R.style.primary_button else R.style.white_button)
-            setFabListeners()
+            handleDayClick(2)
         }
         fabThursday.setOnClickListener {
-            thursday = !thursday
-            fabThursday = FloatingActionButton(this, null, if(thursday) R.style.primary_button else R.style.white_button)
-            setFabListeners()
+            handleDayClick(3)
         }
         fabFriday.setOnClickListener {
-            friday = !friday
-            fabFriday = FloatingActionButton(this, null, if(friday) R.style.primary_button else R.style.white_button)
-            setFabListeners()
+            handleDayClick(4)
         }
         fabSaturday.setOnClickListener {
-            saturday = !saturday
-            fabSaturday = FloatingActionButton(this, null, if(saturday) R.style.primary_button else R.style.white_button)
-            setFabListeners()
+            handleDayClick(5)
         }
         fabSunday.setOnClickListener {
-            sunday = !sunday
-            fabSunday = FloatingActionButton(this, null, if(sunday) R.style.primary_button else R.style.white_button)
-            setFabListeners()
+            handleDayClick(6)
         }
+    }
+
+    private fun adjustMondayFab() {
+        val textColor: Int
+        val backgroundColor: Int
+        if (monday) {
+            textColor = R.color.text_dark_100
+            backgroundColor = R.color.primary_500
+        } else {
+            textColor = R.color.text_dark_900
+            backgroundColor = R.color.text_dark_100
+        }
+        fabMonday.backgroundTintList = ColorStateList.valueOf(
+            resources.getColor(
+                backgroundColor,
+                null
+            )
+        )
+
+        fabMonday.setImageBitmap(
+            IconHelper.textAsBitmap(
+                getString(R.string.monday_letter),
+                40f,
+                textColor
+            )
+        )
+        fabMonday.imageTintList = ContextCompat.getColorStateList(this, textColor)
+
+        fabMonday.scaleType = ImageView.ScaleType.CENTER
+    }
+
+    private fun adjustTuesdayFab() {
+        val textColor: Int
+        val backgroundColor: Int
+        if (tuesday) {
+            textColor = R.color.text_dark_100
+            backgroundColor = R.color.primary_500
+        } else {
+            textColor = R.color.text_dark_900
+            backgroundColor = R.color.text_dark_100
+        }
+        fabTuesday.backgroundTintList = ColorStateList.valueOf(
+            resources.getColor(
+                backgroundColor,
+                null
+            )
+        )
+
+        fabTuesday.setImageBitmap(
+            IconHelper.textAsBitmap(
+                getString(R.string.tuesday_letter),
+                40f,
+                textColor
+            )
+        )
+        fabTuesday.imageTintList = ContextCompat.getColorStateList(this, textColor)
+        fabTuesday.scaleType = ImageView.ScaleType.CENTER
+    }
+
+    private fun adjustWednesdayFab() {
+        val textColor: Int
+        val backgroundColor: Int
+        if (wednesday) {
+            textColor = R.color.text_dark_100
+            backgroundColor = R.color.primary_500
+        } else {
+            textColor = R.color.text_dark_900
+            backgroundColor = R.color.text_dark_100
+        }
+        fabWednesday.backgroundTintList = ColorStateList.valueOf(
+            resources.getColor(
+                backgroundColor,
+                null
+            )
+        )
+
+        fabWednesday.setImageBitmap(
+            IconHelper.textAsBitmap(
+                getString(R.string.wednesday_letter),
+                40f,
+                textColor
+            )
+        )
+        fabWednesday.imageTintList = ContextCompat.getColorStateList(this, textColor)
+
+        fabWednesday.scaleType = ImageView.ScaleType.CENTER
+    }
+
+    private fun adjustThursdayFab() {
+        val textColor: Int
+        val backgroundColor: Int
+        if (thursday) {
+            textColor = R.color.text_dark_100
+            backgroundColor = R.color.primary_500
+        } else {
+            textColor = R.color.text_dark_900
+            backgroundColor = R.color.text_dark_100
+        }
+        fabThursday.backgroundTintList = ColorStateList.valueOf(
+            resources.getColor(
+                backgroundColor,
+                null
+            )
+        )
+
+        fabThursday.setImageBitmap(
+            IconHelper.textAsBitmap(
+                getString(R.string.thursday_letter),
+                40f,
+                textColor
+            )
+        )
+        fabThursday.imageTintList = ContextCompat.getColorStateList(this, textColor)
+
+        fabThursday.scaleType = ImageView.ScaleType.CENTER
+    }
+
+    private fun adjustFridayFab() {
+        val textColor: Int
+        val backgroundColor: Int
+        if (friday) {
+            textColor = R.color.text_dark_100
+            backgroundColor = R.color.primary_500
+        } else {
+            textColor = R.color.text_dark_900
+            backgroundColor = R.color.text_dark_100
+        }
+        fabFriday.backgroundTintList = ColorStateList.valueOf(
+            resources.getColor(
+                backgroundColor,
+                null
+            )
+        )
+
+        fabFriday.setImageBitmap(
+            IconHelper.textAsBitmap(
+                getString(R.string.friday_letter),
+                40f,
+                textColor
+            )
+        )
+        fabFriday.imageTintList = ContextCompat.getColorStateList(this, textColor)
+
+        fabFriday.scaleType = ImageView.ScaleType.CENTER
+    }
+
+    private fun adjustSaturdayFab() {
+        val textColor: Int
+        val backgroundColor: Int
+
+        if (saturday) {
+            textColor = R.color.text_dark_100
+            backgroundColor = R.color.primary_500
+        } else {
+            textColor = R.color.text_dark_900
+            backgroundColor = R.color.text_dark_100
+        }
+        fabSaturday.backgroundTintList = ColorStateList.valueOf(
+            resources.getColor(
+                backgroundColor,
+                null
+            )
+        )
+
+        fabSaturday.setImageBitmap(
+            IconHelper.textAsBitmap(
+                getString(R.string.saturday_letter),
+                40f,
+                textColor
+            )
+        )
+        fabSaturday.imageTintList = ContextCompat.getColorStateList(this, textColor)
+
+        fabSaturday.scaleType = ImageView.ScaleType.CENTER
+    }
+
+    private fun adjustSundayFab() {
+        val textColor: Int
+        val backgroundColor: Int
+        if (sunday) {
+            textColor = R.color.text_dark_100
+            backgroundColor = R.color.primary_500
+        } else {
+            textColor = R.color.text_dark_900
+            backgroundColor = R.color.text_dark_100
+        }
+        fabSunday.backgroundTintList = ColorStateList.valueOf(
+            resources.getColor(
+                backgroundColor,
+                null
+            )
+        )
+
+        fabSunday.setImageBitmap(
+            IconHelper.textAsBitmap(
+                getString(R.string.sunday_letter),
+                40f,
+                textColor
+            )
+        )
+        fabSunday.imageTintList = ContextCompat.getColorStateList(this, textColor)
+
+        fabSunday.scaleType = ImageView.ScaleType.CENTER
     }
 
     private fun joinHourMinute(hourOfDay: Int, minute: Int): String {
@@ -534,11 +861,11 @@ class SettingsShopActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
     }
 
     private fun populateShopSettingsSection(shop: Shop) {
-        etCapacity.setText(if(shop.CarCapacity != null) shop.CarCapacity!!.toString() else "1" )
-        etHourlyRate.setText(if(shop.HourlyRate != null) shop.HourlyRate!!.toString() else "1" )
-        etWorkHoursStart.setText(if(shop.WorkHours != null) shop.WorkHours!!.split('-')[0] else "" )
-        etWorkHoursEnd.setText(if(shop.WorkHours != null) shop.WorkHours!!.split('-')[1] else "" )
-        if(shop.WorkDays != null){
+        etCapacity.setText(if (shop.CarCapacity != null) shop.CarCapacity!!.toString() else "1")
+        etHourlyRate.setText(if (shop.HourlyRate != null) shop.HourlyRate!!.toString() else "1")
+        etWorkHoursStart.setText(if (shop.WorkHours != null) shop.WorkHours!!.split('-')[0] else "")
+        etWorkHoursEnd.setText(if (shop.WorkHours != null) shop.WorkHours!!.split('-')[1] else "")
+        if (shop.WorkDays != null) {
             sunday = shop.WorkDays!![0] == '1'
             monday = shop.WorkDays!![1] == '1'
             tuesday = shop.WorkDays!![2] == '1'
@@ -546,8 +873,7 @@ class SettingsShopActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
             thursday = shop.WorkDays!![4] == '1'
             friday = shop.WorkDays!![5] == '1'
             saturday = shop.WorkDays!![6] == '1'
-        }
-        else {
+        } else {
             sunday = false
             monday = false
             tuesday = false
@@ -627,7 +953,6 @@ class SettingsShopActivity : ValidatedActivityWithNavigation(ActivityEnum.SETTIN
             shop.ShortName = etShortName.text.toString()
             etShortName.isEnabled = false
             showComponent(btnEditShortName)
-
         }
 
         if (etVat.isEnabled) {

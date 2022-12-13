@@ -1,9 +1,12 @@
 package hr.kcosic.app.model.bases
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import hr.kcosic.app.R
 import hr.kcosic.app.dal.ApiService
 import hr.kcosic.app.model.helpers.Helper
@@ -20,11 +23,18 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appSettings()
         ContextInstance.initialize(this)
         mainHandler = Handler(applicationContext.mainLooper)
         if(!Helper.hasLocationPermissions()){
             Helper.getLocationPermission()
         }
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    private fun appSettings(){
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     abstract fun initializeComponents()

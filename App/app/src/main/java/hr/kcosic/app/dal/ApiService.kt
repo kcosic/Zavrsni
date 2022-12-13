@@ -277,8 +277,8 @@ class ApiService private constructor() {
         return delete("${ApiRoutes.REVIEW}/${reviewId}")
     }
 
-    fun createReview(newReview: Review): Call {
-        return post(ApiRoutes.REVIEW, newReview)
+    fun createReview(newReview: Review, requestId: Int): Call {
+        return post("${ApiRoutes.REVIEW}/Shop/$requestId", newReview)
     }
 
     fun updateReview(updatedReview: Review): Call {
@@ -335,7 +335,9 @@ class ApiService private constructor() {
     fun retrieveUser(userId: Int, expanded: Boolean = false): Call {
         return get("${ApiRoutes.USER}/${userId}${if (expanded) "?expanded=true" else ""}")
     }
-
+    fun retrieveLatestRequest(): Call {
+        return get("${ApiRoutes.USER}/Request/Latest")
+    }
     fun retrieveUsers(): Call {
         return get(ApiRoutes.USER)
     }

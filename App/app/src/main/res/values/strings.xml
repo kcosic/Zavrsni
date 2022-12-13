@@ -136,4 +136,26 @@
     <string name="work_hours">Work Hours</string>
     <string name="car_capacity">Car Capacity</string>
     <string name="login_as">Login as</string>
+    <string name="monday_letter">M</string>
+    <string name="tuesday_letter">T</string>
+    <string name="wednesday_letter">W</string>
+    <string name="thursday_letter">T</string>
+    <string name="friday_letter">F</string>
+    <string name="saturday_letter">S</string>
+    <string name="sunday_letter">S</string>
+    <string name="licensePlate">License Plate</string>
+    <string name="test">Test String</string>
+    <string name="submit">Submit</string>
+    <string name="review_latest_repair">Review Latest Repair</string>
+    <string name="rating">Rating</string>
+    <string name="comment">Comment</string>
+    <string name="review_submitted">Review Submitted</string>
+    <string name="issues">Issues</string>
+    <string name="new_issue">New Issue</string>
+    <string name="price">Price</string>
+    <string name="save_changes">Save changes</string>
+    <string name="issue_save_text">Are you sure? When user approves, you cannot change this. Do you want to continue?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="invalid_issues">Some issues are invalid. Please fix before continuing</string>
 </resources>

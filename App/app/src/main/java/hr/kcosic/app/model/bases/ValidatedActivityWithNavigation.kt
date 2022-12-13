@@ -23,8 +23,8 @@ abstract class ValidatedActivityWithNavigation(val activity: ActivityEnum) : Val
         bottomNavigation.selectedItemId = activity.menuItemId
         bottomNavigation.menu.forEach { item ->
             item.setOnMenuItemClickListener {
-                progressBarHolder.visibility = View.VISIBLE
                 if (activity.menuItemId != item.itemId) {
+                    progressBarHolder.visibility = View.VISIBLE
                     Helper.openActivity(
                         this,
                         ActivityEnum.findByResourceId(it.itemId)

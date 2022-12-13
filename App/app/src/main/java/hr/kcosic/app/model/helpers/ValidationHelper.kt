@@ -2,8 +2,10 @@ package hr.kcosic.app.model.helpers
 
 import android.icu.util.Calendar
 import android.widget.EditText
+import android.widget.RatingBar
 import hr.kcosic.app.R
 import hr.kcosic.app.model.bases.ContextInstance
+import hr.kcosic.app.model.entities.Issue
 import hr.kcosic.app.model.entities.Location
 
 class ValidationHelper {
@@ -30,7 +32,8 @@ class ValidationHelper {
             etManufacturer: EditText,
             etModel: EditText,
             etYear: EditText,
-            etOdometer: EditText
+            etOdometer: EditText,
+            etLicensePlate: EditText,
         ): Boolean {
             var isValid = true
             when {
@@ -87,6 +90,15 @@ class ValidationHelper {
             }
             when {
                 etOdometer.text.toString().isEmpty() -> {
+                    etOdometer.setError(
+                        ContextInstance.getContext()!!.getString(R.string.required_value),
+                        IconHelper.getErrorIcon()
+                    )
+                    isValid = false
+                }
+            }
+            when {
+                etLicensePlate.text.toString().isEmpty() -> {
                     etOdometer.setError(
                         ContextInstance.getContext()!!.getString(R.string.required_value),
                         IconHelper.getErrorIcon()
@@ -269,16 +281,30 @@ class ValidationHelper {
             return valid
         }
 
-        fun validateShop(location: Location?, etVat: EditText, etEmail: EditText, etLegalName: EditText, etShortName: EditText, etPassword: EditText, etRepeatPassword: EditText): Boolean {
+        fun validateShop(
+            location: Location?,
+            etVat: EditText,
+            etEmail: EditText,
+            etLegalName: EditText,
+            etShortName: EditText,
+            etPassword: EditText,
+            etRepeatPassword: EditText
+        ): Boolean {
             var isValid = true
 
             when {
                 etVat.text.toString().isEmpty() -> {
-                    etVat.setError(ContextInstance.getContext()!!.getString(R.string.required_value), IconHelper.getErrorIcon())
+                    etVat.setError(
+                        ContextInstance.getContext()!!.getString(R.string.required_value),
+                        IconHelper.getErrorIcon()
+                    )
                     isValid = false
                 }
                 !isStringInRange(etVat.text.toString(), 1, 50) -> {
-                    etVat.setError(ContextInstance.getContext()!!.getString(R.string.length_between_1_50), IconHelper.getErrorIcon())
+                    etVat.setError(
+                        ContextInstance.getContext()!!.getString(R.string.length_between_1_50),
+                        IconHelper.getErrorIcon()
+                    )
                     isValid = false
                 }
 
@@ -286,11 +312,17 @@ class ValidationHelper {
 
             when {
                 etEmail.text.toString().isEmpty() -> {
-                    etEmail.setError(ContextInstance.getContext()!!.getString(R.string.required_value), IconHelper.getErrorIcon())
+                    etEmail.setError(
+                        ContextInstance.getContext()!!.getString(R.string.required_value),
+                        IconHelper.getErrorIcon()
+                    )
                     isValid = false
                 }
                 !isStringInRange(etEmail.text.toString(), 1, 50) -> {
-                    etEmail.setError(ContextInstance.getContext()!!.getString(R.string.length_between_1_50), IconHelper.getErrorIcon())
+                    etEmail.setError(
+                        ContextInstance.getContext()!!.getString(R.string.length_between_1_50),
+                        IconHelper.getErrorIcon()
+                    )
                     isValid = false
                 }
 
@@ -298,7 +330,10 @@ class ValidationHelper {
 
             when {
                 etLegalName.text.toString().isEmpty() -> {
-                    etLegalName.setError(ContextInstance.getContext()!!.getString(R.string.required_value), IconHelper.getErrorIcon())
+                    etLegalName.setError(
+                        ContextInstance.getContext()!!.getString(R.string.required_value),
+                        IconHelper.getErrorIcon()
+                    )
                     isValid = false
                 }
                 !isStringInRange(etLegalName.text.toString(), 1, 200) -> {
@@ -313,7 +348,10 @@ class ValidationHelper {
 
             when {
                 etShortName.text.toString().isEmpty() -> {
-                    etShortName.setError(ContextInstance.getContext()!!.getString(R.string.required_value), IconHelper.getErrorIcon())
+                    etShortName.setError(
+                        ContextInstance.getContext()!!.getString(R.string.required_value),
+                        IconHelper.getErrorIcon()
+                    )
                     isValid = false
                 }
                 !isStringInRange(etShortName.text.toString(), 1, 50) -> {
@@ -328,7 +366,10 @@ class ValidationHelper {
 
             when (location) {
                 null -> {
-                    Helper.showLongToast(ContextInstance.getContext()!!, ContextInstance.getContext()!!.getString(R.string.location_required))
+                    Helper.showLongToast(
+                        ContextInstance.getContext()!!,
+                        ContextInstance.getContext()!!.getString(R.string.location_required)
+                    )
                     isValid = false
                 }
             }
@@ -336,29 +377,34 @@ class ValidationHelper {
             when {
                 etPassword.text.isNullOrEmpty() -> {
                     isValid = false
-                    etPassword.error = ContextInstance.getContext()!!.getString(R.string.required_value)
+                    etPassword.error =
+                        ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
                 !isStringInRange(etPassword.text.toString(), 1, 50) -> {
                     isValid = false
-                    etPassword.error = ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
+                    etPassword.error =
+                        ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
                 }
             }
 
             when {
                 etRepeatPassword.text.isNullOrEmpty() -> {
                     isValid = false
-                    etRepeatPassword.error = ContextInstance.getContext()!!.getString(R.string.required_value)
+                    etRepeatPassword.error =
+                        ContextInstance.getContext()!!.getString(R.string.required_value)
                 }
                 !isStringInRange(etRepeatPassword.text.toString(), 1, 50) -> {
                     isValid = false
-                    etRepeatPassword.error = ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
+                    etRepeatPassword.error =
+                        ContextInstance.getContext()!!.getString(R.string.length_between_1_50)
                 }
             }
 
             when {
                 etRepeatPassword.text.toString() != etPassword.text.toString() -> {
                     isValid = false
-                    etRepeatPassword.error = ContextInstance.getContext()!!.getString(R.string.passwords_must_match)
+                    etRepeatPassword.error =
+                        ContextInstance.getContext()!!.getString(R.string.passwords_must_match)
                 }
             }
 
@@ -373,15 +419,43 @@ class ValidationHelper {
                 when {
                     !isValueInRange(etWorkHoursEstimate.text.toString().toInt(), 1, 999) -> {
                         isValid = false
-                        etWorkHoursEstimate.error = ContextInstance.getContext()!!.getString(R.string.value_between_1_999)
+                        etWorkHoursEstimate.error =
+                            ContextInstance.getContext()!!.getString(R.string.value_between_1_999)
                     }
                 }
-            }catch (e: java.lang.NumberFormatException){
+            } catch (e: java.lang.NumberFormatException) {
                 isValid = false
-                etWorkHoursEstimate.error = ContextInstance.getContext()!!.getString(R.string.incorrectFormat)
+                etWorkHoursEstimate.error =
+                    ContextInstance.getContext()!!.getString(R.string.incorrectFormat)
             }
 
             return isValid
+        }
+
+        fun validateReview(rbRating: RatingBar, etComment: EditText): Boolean {
+            var isValid = true
+            when {
+                etComment.text.isNullOrEmpty() -> {
+                    isValid = false
+                    etComment.error =
+                        ContextInstance.getContext()!!.getString(R.string.required_value)
+                }
+                rbRating.rating.isNaN()-> {
+                    isValid = false
+                    etComment.error =
+                        ContextInstance.getContext()!!.getString(R.string.required_value)
+                }
+                rbRating.rating < 0.1-> {
+                    isValid = false
+                    etComment.error =
+                        ContextInstance.getContext()!!.getString(R.string.required_value)
+                }
+            }
+            return isValid
+        }
+
+        fun validateIssueObject(issue: Issue): Boolean {
+            return issue.Price != null && issue.RequestId != null && issue.Description != null
         }
     }
 }

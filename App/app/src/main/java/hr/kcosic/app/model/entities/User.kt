@@ -5,6 +5,7 @@ import hr.kcosic.app.model.serializer.DateSerializer
 import kotlinx.serialization.Serializable
 import java.util.*
 
+@Suppress("PropertyName")
 @Serializable
 class User : BaseEntity() {
     var Username: String? = null
@@ -12,11 +13,17 @@ class User : BaseEntity() {
     var Email: String? = null
     var FirstName: String? = null
     var LastName: String? = null
-    @Serializable var Tokens: MutableList<Token>? = null
-    @Serializable var Locations: MutableList<Location>? = null
-    @Serializable var Requests: MutableList<Request>? = null
-    @Serializable var Reviews: MutableList<Review>? = null
-    @Serializable var Cars: MutableList<Car>? = null
-    @Serializable(with = DateSerializer::class) var DateOfBirth: Date? = null
+    @Serializable
+    var Tokens: MutableList<Token>? = null
+    @Serializable
+    var Locations: MutableList<Location>? = null
+    @Serializable
+    var Requests: MutableList<Request>? = null
+    @Serializable
+    var Reviews: MutableList<Review>? = null
+    @Serializable
+    var Cars: MutableList<Car>? = null
+    @Serializable(with = DateSerializer::class)
+    var DateOfBirth: Date? = null
 
 }
