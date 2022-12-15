@@ -21,6 +21,7 @@ import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.helpers.ValidationHelper
 import hr.kcosic.app.model.listeners.ButtonClickListener
 import hr.kcosic.app.model.listeners.OnPositiveButtonClickListener
+import hr.kcosic.app.model.listeners.TextChangedListener
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.Call
@@ -433,11 +434,12 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
 
         if(request.UserAccepted == false || request.Completed == true){
             btnNewIssue.visibility = View.GONE
-            ivIssuesSave.visibility = View.GONE
         }
         else{
             btnNewIssue.visibility = View.VISIBLE
         }
+        ivIssuesSave.visibility = View.GONE
+
         updateRVIssues()
     }
 
@@ -452,6 +454,11 @@ class RepairActivity : ValidatedActivityWithNavigation(ActivityEnum.REPAIR_VIEW)
                         iss?.Deleted = true
                         iss?.DateDeleted = Calendar.getInstance().time
                         updateRVIssues()
+                    }
+                },
+                object: TextChangedListener{
+                    override fun onTextChanged(text: String) {
+                        ivIssuesSave.visibility = View.VISIBLE
                     }
                 })
             rvIssues.adapter = shopIssuesAdapter

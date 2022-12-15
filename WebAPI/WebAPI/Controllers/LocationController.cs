@@ -212,7 +212,7 @@ namespace WebAPI.Controllers
                     locations = locations.Where(x => x.Shops.Count() > 0 && Helper.IsDateInWorkday(x.Shops.First().WorkDays, date.Value)).ToList();
                 }
 
-                return CreateOkResponse(Location.ToListDTO(locations, 2));
+                return CreateOkResponse(Location.ToListDTO(locations, 3));
             }
             catch (ArgumentException e)
             {

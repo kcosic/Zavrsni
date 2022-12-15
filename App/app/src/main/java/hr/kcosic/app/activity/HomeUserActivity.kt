@@ -1,13 +1,16 @@
 package hr.kcosic.app.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.*
-import android.widget.RatingBar.OnRatingBarChangeListener
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,23 +19,26 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import hr.kcosic.app.R
+import hr.kcosic.app.adapter.UserIssuesAdapter
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ValidatedActivityWithNavigation
+import hr.kcosic.app.model.entities.Issue
 import hr.kcosic.app.model.entities.Request
 import hr.kcosic.app.model.entities.Review
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.helpers.ValidationHelper
+import hr.kcosic.app.model.listeners.ButtonClickListener
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.SingleResponse
-import kotlinx.serialization.descriptors.StructureKind
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.util.*
 
-class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER), OnMapReadyCallback {
+class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER),
+    OnMapReadyCallback {
     private lateinit var homeContentView: ScrollView
     private lateinit var homeNoContentView: LinearLayout
     private lateinit var nextServiceDate: CardView
@@ -59,9 +65,14 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
     private lateinit var etComment: EditText
 
     private lateinit var googleMap: GoogleMap
-    private var data: Request? = null
+    private var request: Request? = null
     private var latestRequest: Request? = null
     private var mapServiceLocation: SupportMapFragment? = null
+
+    private lateinit var cvIssues: CardView
+    private lateinit var rvIssues: RecyclerView
+    private lateinit var userIssuesAdapter: UserIssuesAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +105,8 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         cvReview = findViewById(R.id.cvReview)
         rbRating = findViewById(R.id.rbRating)
         etComment = findViewById(R.id.etComment)
+        rvIssues = findViewById(R.id.rvIssues)
+        cvIssues = findViewById(R.id.cvIssues)
 
         hideComponent(cvReview)
 
@@ -105,10 +118,10 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
             declineRequest()
         }
 
-        rbRating.setOnRatingBarChangeListener{ _, _, _->
-            if(ValidationHelper.validateReview(rbRating, etComment)){
+        rbRating.setOnRatingBarChangeListener { _, _, _ ->
+            if (ValidationHelper.validateReview(rbRating, etComment)) {
                 showComponent(btnSubmitReview)
-            }else{
+            } else {
                 hideComponent(btnSubmitReview)
             }
         }
@@ -121,9 +134,9 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if(ValidationHelper.validateReview(rbRating, etComment)){
+                if (ValidationHelper.validateReview(rbRating, etComment)) {
                     showComponent(btnSubmitReview)
-                }else{
+                } else {
                     hideComponent(btnSubmitReview)
                 }
             }
@@ -147,14 +160,14 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
             val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post{
+                mainHandler.post {
                     hideSpinner()
-                    handleApiResponseException(call,e)
+                    handleApiResponseException(call, e)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mainHandler.post{
+                mainHandler.post {
                     handleCreateReviewResponse(response)
                     hideSpinner()
                 }
@@ -162,11 +175,11 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         })
     }
 
-    private fun handleCreateReviewResponse(response: Response){
+    private fun handleCreateReviewResponse(response: Response) {
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<BaseResponse>>(response.body!!.string())
 
-        if (resp.IsSuccess!! ) {
+        if (resp.IsSuccess!!) {
             try {
                 hideComponent(cvReview)
                 Helper.showLongToast(this, getString(R.string.review_submitted))
@@ -185,15 +198,15 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
             val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post{
+                mainHandler.post {
                     hideSpinner()
                     hideComponent(cvReview)
-                    handleApiResponseException(call,e)
+                    handleApiResponseException(call, e)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mainHandler.post{
+                mainHandler.post {
                     handleRetrieveLatestRequestResponse(response)
                     hideSpinner()
                 }
@@ -201,7 +214,7 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         })
     }
 
-    private fun handleRetrieveLatestRequestResponse(response: Response){
+    private fun handleRetrieveLatestRequestResponse(response: Response) {
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<Request>>(response.body!!.string())
 
@@ -221,32 +234,32 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
     }
 
     private fun declineRequest() {
-        data!!.UserAccepted = false
-        data!!.UserAcceptedDate = Calendar.getInstance().time
-        updateRequest(data!!)
+        request!!.UserAccepted = false
+        request!!.UserAcceptedDate = Calendar.getInstance().time
+        updateRequest(request!!)
     }
 
     private fun acceptRequest() {
-        data!!.UserAccepted = true
-        data!!.UserAcceptedDate = Calendar.getInstance().time
-        updateRequest(data!!)
+        request!!.UserAccepted = true
+        request!!.UserAcceptedDate = Calendar.getInstance().time
+        updateRequest(request!!)
     }
     //#region Update Request
 
-    private fun updateRequest(request: Request){
+    private fun updateRequest(request: Request) {
         showSpinner()
         apiService.updateRequest(request).enqueue(object : Callback {
             val mainHandler = Handler(applicationContext.mainLooper)
 
             override fun onFailure(call: Call, e: IOException) {
-                mainHandler.post{
+                mainHandler.post {
                     hideSpinner()
-                    handleApiResponseException(call,e)
+                    handleApiResponseException(call, e)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mainHandler.post{
+                mainHandler.post {
                     handleUpdateRequestResponse(response)
                     hideSpinner()
                 }
@@ -254,13 +267,13 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         })
     }
 
-    private fun handleUpdateRequestResponse(response: Response){
+    private fun handleUpdateRequestResponse(response: Response) {
         val resp: BaseResponse =
             Helper.parseStringResponse<SingleResponse<Request>>(response.body!!.string())
 
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             try {
-                data = resp.Data as Request
+                request = resp.Data as Request
                 populateViewWithData()
             } catch (e: Exception) {
                 Helper.showLongToast(this, e.message.toString())
@@ -269,10 +282,11 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
             handleApiResponseError(resp as ErrorResponse)
         }
     }
+
     //#endregion Update Request
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        val shopLocation = data?.Shop?.Location
+        val shopLocation = request?.Shop?.Location
         val myPosition = LatLng(shopLocation?.Latitude!!, shopLocation.Longitude!!)
 
         googleMap.addMarker(
@@ -308,7 +322,7 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
                     }
                 }
             }
-        ))
+                    ))
     }
 
     fun handleRetrieveActiveUserRequestResponse(response: Response) {
@@ -318,11 +332,10 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
 
         if (resp.IsSuccess!! && resp is SingleResponse<*>) {
             try {
-                val data = resp.Data as Request
+                this.request = resp.Data as Request
                 mapServiceLocation =
                     supportFragmentManager.findFragmentById(R.id.mapServiceLocation) as? SupportMapFragment
                 mapServiceLocation?.getMapAsync(this)
-                this.data = data
                 populateViewWithData()
                 showContent(true)
             } catch (e: Exception) {
@@ -335,21 +348,75 @@ class HomeUserActivity : ValidatedActivityWithNavigation(ActivityEnum.HOME_USER)
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun populateViewWithData() {
-        if(data?.ShopAccepted == true && data?.UserAccepted == null){
+        if (request?.ShopAccepted == true && request?.UserAccepted == null) {
             showComponent(cvConsents)
-            tvShopConsent.text = Helper.formatDate(data!!.ShopAcceptedDate!!)
-        }
-        else{
+            tvShopConsent.text = Helper.formatDate(request!!.ShopAcceptedDate!!)
+        } else {
             hideComponent(cvConsents)
         }
-        tvDateOfRepair.text = Helper.formatDate(data?.RepairDate!!)
-        tvTimeOfRepair.text = Helper.formatTime(data?.RepairDate!!)
-        tvRepairShopName.text = data?.Shop?.ShortName
-        tvRepairShopVat.text = data?.Shop?.Vat
-        tvRequestDescription.text = data?.IssueDescription
-        tvEstimatedTime.text = data?.EstimatedRepairHours.toString()
-        tvEstimatedPrice.text = data?.EstimatedPrice?.toString()
+        tvDateOfRepair.text = Helper.formatDate(request?.RepairDate!!)
+        tvTimeOfRepair.text = Helper.formatTime(request?.RepairDate!!)
+        tvRepairShopName.text = request?.Shop?.ShortName
+        tvRepairShopVat.text = request?.Shop?.Vat
+        tvRequestDescription.text = request?.IssueDescription
+        tvEstimatedTime.text = request?.EstimatedRepairHours.toString()
+        tvEstimatedPrice.text = request?.EstimatedPrice?.toString()
+
+        if (request?.Issues != null && request!!.Issues!!.size > 0) {
+            userIssuesAdapter = UserIssuesAdapter(request!!.Issues!!,
+                object : ButtonClickListener {
+                    override fun onClick(issue: Issue) {
+                        updateIssue(issue)
+                    }
+                }
+            )
+            rvIssues.adapter = userIssuesAdapter
+            rvIssues.layoutManager = LinearLayoutManager(this)
+            cvIssues.visibility = View.VISIBLE
+            userIssuesAdapter.notifyDataSetChanged()
+
+        }
+        else {
+            cvIssues.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun updateIssue(issue:Issue){
+        showSpinner()
+        apiService.updateIssue(issue).enqueue(object:Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                mainHandler.post{
+                    handleApiResponseException(call, e)
+                    hideSpinner()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                mainHandler.post{
+                    handleIssueUpdateResponse(response)
+                    hideSpinner()
+                }
+            }
+
+        })
+    }
+
+    private fun handleIssueUpdateResponse(response: Response) {
+        val resp: BaseResponse =
+            Helper.parseStringResponse<SingleResponse<Issue>>(response.body!!.string())
+
+        if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+            try {
+                Helper.showLongToast(this, resp.Message!!)
+            } catch (e: Exception) {
+                Helper.showLongToast(this, e.message.toString())
+            }
+        } else {
+            handleApiResponseError(resp as ErrorResponse)
+        }
+
     }
 
     private fun showContent(hasContent: Boolean) {

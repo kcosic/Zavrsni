@@ -4,16 +4,16 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.graphics.*
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SwitchCompat
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -21,11 +21,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import hr.kcosic.app.R
+import hr.kcosic.app.adapter.ReviewsAdapter
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ContextInstance
 import hr.kcosic.app.model.bases.ValidatedActivityWithNavigation
 import hr.kcosic.app.model.bases.hideKeyboard
 import hr.kcosic.app.model.entities.Location
+import hr.kcosic.app.model.entities.Shop
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.helpers.Helper
 import hr.kcosic.app.model.responses.ErrorResponse
@@ -71,6 +73,8 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     private var selectedLocation: Location? = null
     private val repairCalendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
     private var textBefore: String? = null
+    private lateinit var rvReviews : RecyclerView
+    private lateinit var reviewsAdapter: ReviewsAdapter
 
     val handleAddressSearch = debounce<Unit>(1000, coroutineScope) {
         mainHandler.post{
@@ -98,6 +102,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         vScroll = findViewById(R.id.vScroll)
         btnSelectLocation = findViewById(R.id.btnSelectLocation)
         btnRefreshShops = findViewById(R.id.btnRefreshShops)
+        rvReviews = findViewById(R.id.rvReviews)
         map = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         map?.getMapAsync(this)
         etDateOfRepair.setText(Helper.formatDate(Calendar.getInstance().time))
@@ -206,22 +211,37 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         swUseCurrentLocation.isChecked = Helper.hasLocationPermissions()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "NotifyDataSetChanged")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         googleMap.setOnMarkerClickListener {
-            val test = locationMarkerMap
-            val location = test[it.id]
+            val locationMarker = locationMarkerMap
+            val location = locationMarker[it.id]
             if (location != null) {
-                tvRepairShopName.text = if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0].ShortName else null
-                tvRepairShopRate.text = if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0].HourlyRate.toString() else null
+                val shop: Shop? =  if(location.Shops != null && location.Shops!!.size > 0) location.Shops!![0] else null;
+                tvRepairShopName.text = shop?.ShortName
+                tvRepairShopRate.text = shop?.HourlyRate?.toString()
 
+                if(shop?.Reviews != null && shop.Reviews!!.size > 0){
+                    showComponent(rvReviews)
+
+                    reviewsAdapter = ReviewsAdapter(shop.Reviews!!)
+                    rvReviews.layoutManager = LinearLayoutManager(this)
+                    rvReviews.adapter = reviewsAdapter
+                    reviewsAdapter.notifyDataSetChanged()
+                }
+                else {
+                    hideComponent(rvReviews)
+                }
                 selectedLocation = location
                 showComponent(llRepairShopName)
                 showComponent(llRepairShopRate)
                 showComponent(btnSelectLocation)
 
+
+
             } else {
+                hideComponent(rvReviews)
                 hideComponent(llRepairShopName)
                 hideComponent(llRepairShopRate)
                 hideComponent(btnSelectLocation)
@@ -232,6 +252,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
         }
         googleMap.setOnMapClickListener {
             hideComponent(llRepairShopRate)
+            hideComponent(rvReviews)
             hideComponent(llRepairShopName)
             hideComponent(btnSelectLocation)
             selectedLocation = null
@@ -416,6 +437,7 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
                             locationMarkerMap[marker.id] = it
                         }
                     }
+
             } catch (e: InvalidObjectException) {
                 Helper.showLongToast(this, e.message.toString())
             }
@@ -480,4 +502,6 @@ class SearchActivity : ValidatedActivityWithNavigation(ActivityEnum.SEARCH), OnM
     private fun updateRepairDateLabel() {
         etDateOfRepair.setText(Helper.formatDate(repairCalendar.time))
     }
+
+
 }

@@ -155,7 +155,10 @@ namespace WebAPI.Controllers
                     LegalName = shop.LegalName,
                     ShortName = shop.ShortName,
                     Vat = shop.Vat,
-                    Location = newShopLocation
+                    Location = newShopLocation,
+                    WorkHours = "08:00-16:00",
+                    WorkDays = "0111110"
+                    
                 };
 
                 Db.Shops.Add(newShop);

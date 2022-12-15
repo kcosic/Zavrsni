@@ -42,7 +42,7 @@ namespace WebAPI.Models.ORM
                 ShopAcceptedDate = item.ShopAcceptedDate,
                 UserAcceptedDate = item.UserAcceptedDate,
                 Reviewed = item.Reviewed,
-                Issues = Issue.ToListDTO(item.Issues, level - 1)
+                Issues = Issue.ToListDTO(item.Issues, 1)
             };
         }
 
@@ -85,7 +85,7 @@ namespace WebAPI.Models.ORM
                 ShopAcceptedDate = ShopAcceptedDate,
                 UserAcceptedDate = UserAcceptedDate,
                 Reviewed = Reviewed,
-                Issues = Issue.ToListDTO(Issues, level - 1)
+                Issues = Issue.ToListDTO(Issues, 1)
 
             } : null;
         }

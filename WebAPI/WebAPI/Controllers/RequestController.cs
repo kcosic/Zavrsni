@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using WebAPI.Models;
 using WebAPI.Models.Exceptions;
+using WebAPI.Models.ORM;
 using WebAPI.Models.Responses;
 
 namespace WebAPI.Controllers
@@ -192,8 +193,7 @@ namespace WebAPI.Controllers
                     IssueDescription = newRequestDTO.IssueDescription,
                     RepairDate = newRequestDTO.RepairDate,
                     RequestDate = newRequestDTO.RequestDate,
-                    Completed = newRequestDTO.Completed,
-                    Issues = newRequestDTO.Issues
+                    Completed = newRequestDTO.Completed
                 };
 
                 Db.Requests.Add(newRequest);
@@ -227,6 +227,7 @@ namespace WebAPI.Controllers
                 {
                     throw new RecordNotFoundException();
                 }
+
                 request.DateModified = DateTime.Now;
                 request.ShopId = requestDTO.ShopId;
                 request.FinishDate = requestDTO.FinishDate;
@@ -244,11 +245,25 @@ namespace WebAPI.Controllers
                 request.RepairDate = requestDTO.RepairDate;
                 request.RequestDate = requestDTO.RequestDate;
                 request.Completed = requestDTO.Completed;
-                request.Issues = requestDTO.Issues;
+
+                Db.Issues.RemoveRange(request.Issues);
+                request.Issues = requestDTO.Issues.Select(x=> {
+                    return new Issue {
+                        Accepted = x.Accepted,
+                        DateCreated = x.DateCreated,
+                        DateDeleted = x.DateDeleted,
+                        Deleted = x.Deleted,
+                        RequestId = x.RequestId,
+                        DateModified = x.DateModified,
+                        Price = x.Price,
+                        Description = x.Description
+                    };
+                }).ToList();
+
 
                 Db.SaveChanges();
 
-                return CreateOkResponse(request.ToDTO(3));
+                return CreateOkResponse(request.ToDTO(2));
             }
             catch (RecordNotFoundException e)
             {
@@ -263,7 +278,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("api/Request/User/{id}/Active")]
-        public BaseResponse RetrieveActiveUserRequest(int id, bool inFuture)
+        public BaseResponse RetrieveActiveUserRequest(int id)
         {
             try
             {
@@ -273,15 +288,20 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                var activeRequest = user.Requests.Where(x => (!inFuture || (inFuture && x.RepairDate.HasValue && x.RepairDate.Value.Date >= DateTime.Now.Date && x.RepairDate.Value.Date <= DateTime.Now.Date.AddDays(30))) && !x.Completed && !x.Deleted)?.OrderBy(x => x.DateCreated)?.FirstOrDefault();
+                var activeRequest = user.Requests.Where(x => 
+
+                x.RepairDate.HasValue && 
+                (x.RepairDate.Value.Date >= DateTime.Now.Date || 
+                x.RepairDate.Value.Date <= DateTime.Now.Date.AddDays(30))
+                     && 
+                !x.Completed && 
+                !x.Deleted)?.OrderBy(x => x.RepairDate)?.FirstOrDefault();
                 if (activeRequest == null || activeRequest.Deleted)
                 {
                     throw new RecordNotFoundException();
                 }
 
                 var activeRequestDTO = activeRequest.ToDTO(3);
-                //activeRequestDTO.Shop.Location = activeRequest.Shop.Location.ToDTO();
-                //activeRequestDTO.User = user.ToDTO(false);
 
                 return CreateOkResponse(activeRequestDTO);
             }

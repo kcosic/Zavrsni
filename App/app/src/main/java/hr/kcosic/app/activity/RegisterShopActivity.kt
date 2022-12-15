@@ -59,7 +59,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
     private var mapMarker: Marker? = null
     private var location: Location? = null
     private var isSearching = false
-
+    private var textBefore: String = ""
     val handleAddressSearch = debounce<Unit>(1000, coroutineScope) {
         searchAddress(actvAddress.text?.toString())
     }
@@ -89,17 +89,16 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
             dialogProgressbar.visibility = View.VISIBLE
 
             actvAddress.addTextChangedListener(object : TextWatcher {
-                var textBefore: String? = null
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     textBefore = p0.toString()
                 }
 
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                override fun afterTextChanged(p0: Editable?) {
                     if (p0.toString() != textBefore) handleAddressSearch(Unit)
                 }
-
-                override fun afterTextChanged(p0: Editable?) {}
 
             })
 
@@ -166,9 +165,9 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
 
     fun handleRegisterSuccess(response: Response) {
         val resp: BaseResponse =
-            Helper.parseStringResponse<SingleResponse<String>>(response.body!!.string())
+            Helper.parseStringResponse<BaseResponse>(response.body!!.string())
 
-        if (resp.IsSuccess!! && resp is SingleResponse<*>) {
+        if (resp.IsSuccess!!) {
             Helper.openActivity(this, ActivityEnum.LOGIN)
         } else {
             handleApiResponseError(resp as ErrorResponse)
@@ -184,41 +183,39 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
             val mainHandler = Handler(applicationContext.mainLooper)
 
             val myPosition = Helper.retrievePhoneLocation()
-            if (myPosition != null) {
-                mainHandler.post {
-                    mapMarker = googleMap.addMarker(
-                        MarkerOptions()
-                            .position(myPosition)
-                            .title("Your location")
-                    )
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(myPosition))
-                    dialogProgressbar.visibility = View.GONE
+            mainHandler.post {
+                mapMarker = googleMap.addMarker(
+                    MarkerOptions()
+                        .position(myPosition)
+                        .title("Your location")
+                )
+                googleMap.animateCamera(CameraUpdateFactory.newLatLng(myPosition))
+                dialogProgressbar.visibility = View.GONE
 
-                    googleMap.setOnMapLongClickListener {
-                        dialogProgressbar.visibility = View.VISIBLE
+                googleMap.setOnMapLongClickListener {
+                    dialogProgressbar.visibility = View.VISIBLE
 
-                        apiService.retrieveLocationByCoordinates("${it.latitude}!${it.longitude}")
-                            .enqueue(object :
-                                Callback {
-                                val mainHandler2 = Handler(applicationContext.mainLooper)
+                    apiService.retrieveLocationByCoordinates("${it.latitude}!${it.longitude}")
+                        .enqueue(object :
+                            Callback {
+                            val mainHandler2 = Handler(applicationContext.mainLooper)
 
-                                override fun onFailure(call: Call, e: IOException) {
-                                    mainHandler2.post {
-                                        handleApiResponseException(call, e)
-                                        dialogProgressbar.visibility = View.GONE
+                            override fun onFailure(call: Call, e: IOException) {
+                                mainHandler2.post {
+                                    handleApiResponseException(call, e)
+                                    dialogProgressbar.visibility = View.GONE
 
-                                    }
-                                }
-
-                                override fun onResponse(call: Call, response: Response) {
-                                    mainHandler2.post {
-                                        handleRetrieveLocationResponse(response, it)
-                                        dialogProgressbar.visibility = View.GONE
-                                    }
                                 }
                             }
-                            )
-                    }
+
+                            override fun onResponse(call: Call, response: Response) {
+                                mainHandler2.post {
+                                    handleRetrieveLocationResponse(response, it)
+                                    dialogProgressbar.visibility = View.GONE
+                                }
+                            }
+                        }
+                        )
                 }
             }
         }
@@ -267,7 +264,7 @@ class RegisterShopActivity : BaseActivity(), OnMapReadyCallback {
 
     private fun searchAddress(address: String?) {
         if (address != null && address.isNotEmpty() && !isSearching) {
-            apiService.discoverLocationByAddress(address).enqueue(object : Callback {
+            apiService.discoverLocationByAddress(address, false).enqueue(object : Callback {
                 val mainHandler = Handler(applicationContext.mainLooper)
 
                 override fun onFailure(call: Call, e: IOException) {

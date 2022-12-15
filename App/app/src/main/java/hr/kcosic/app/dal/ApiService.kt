@@ -29,12 +29,9 @@ class ApiService private constructor() {
     /**
      * Instance of Http Client
      */
-    private val client: OkHttpClient = OkHttpClient.Builder()
-        .writeTimeout(Duration.ZERO)
-        .callTimeout(Duration.ZERO)
-        .connectTimeout(Duration.ZERO)
-        .readTimeout(Duration.ZERO)
-        .build()
+    private val client: OkHttpClient =
+        OkHttpClient.Builder().writeTimeout(Duration.ZERO).callTimeout(Duration.ZERO)
+            .connectTimeout(Duration.ZERO).readTimeout(Duration.ZERO).build()
 
     /**
      * Media type for regular
@@ -59,37 +56,37 @@ class ApiService private constructor() {
      * @param usernamePassword OPTIONAL username and password for header
      */
     private fun get(url: String, usernamePassword: String? = null): Call {
-        val request: Request = Request.Builder()
-            .url(url)
-            .addHeader(
-                "Authorization",
-                if (usernamePassword.isNullOrEmpty()) getTokenHeader()
-                else "Basic ${
-                    Base64.encodeToString(
-                        usernamePassword.encodeToByteArray(),
-                        Base64.NO_WRAP
-                    )
-                }"
-            ).addHeader(
-                "Authorization-For",
-                Helper.AUTH_FOR_KEY!!
-            )
-            .build()
+        val request: Request = Request.Builder().url(url).addHeader(
+            "Authorization", if (usernamePassword.isNullOrEmpty()) getTokenHeader()
+            else "Basic ${
+                Base64.encodeToString(
+                    usernamePassword.encodeToByteArray(), Base64.NO_WRAP
+                )
+            }"
+        ).addHeader(
+            "Authorization-For", Helper.AUTH_FOR_KEY!!
+        ).build()
         return client.newCall(request)
+    }
+
+    private fun get(url: String, addAuth: Boolean): Call {
+        val request = Request.Builder().url(url)
+        if (addAuth) request.addHeader("Authorization", getTokenHeader())
+        return client.newCall(request.build())
     }
 
 
     private inline fun <reified T> post(url: String, value: T, addAuth: Boolean = true): Call {
         val json = Helper.serializeData(value)
         val body: RequestBody = json.toRequestBody(headers)
-        val request = Request.Builder()
-            .url(url)
-            .post(body)
-            .addHeader(
-                "Authorization-For",
-                Helper.AUTH_FOR_KEY!!
+        val request = Request.Builder().url(url).post(body)
+
+        if (addAuth) {
+
+            request.addHeader("Authorization", getTokenHeader()).addHeader(
+                "Authorization-For", Helper.AUTH_FOR_KEY!!
             )
-        if (addAuth) request.addHeader("Authorization", getTokenHeader())
+        }
 
         return client.newCall(request.build())
     }
@@ -97,28 +94,22 @@ class ApiService private constructor() {
     private inline fun <reified T> put(url: String, value: T, addAuth: Boolean = true): Call {
         val json = Helper.serializeData(value)
         val body: RequestBody = json.toRequestBody(headers)
-        val request = Request.Builder()
-            .url(url)
-            .put(body)
-            .addHeader(
-                "Authorization-For",
-                Helper.AUTH_FOR_KEY!!
+        val request = Request.Builder().url(url).put(body)
+        if (addAuth) {
+
+            request.addHeader("Authorization", getTokenHeader()).addHeader(
+                "Authorization-For", Helper.AUTH_FOR_KEY!!
             )
-        if (addAuth) request.addHeader("Authorization", getTokenHeader())
+        }
 
         return client.newCall(request.build())
     }
 
     private fun delete(url: String): Call {
-        val request: Request = Request.Builder()
-            .url(url)
-            .addHeader("Authorization", getTokenHeader())
-            .addHeader(
-                "Authorization-For",
-                Helper.AUTH_FOR_KEY!!
-            )
-            .delete()
-            .build()
+        val request: Request =
+            Request.Builder().url(url).addHeader("Authorization", getTokenHeader()).addHeader(
+                "Authorization-For", Helper.AUTH_FOR_KEY!!
+            ).delete().build()
         return client.newCall(request)
     }
     //endregion
@@ -141,9 +132,7 @@ class ApiService private constructor() {
     //#region Location
 
     fun retrieveLocationByCoordinatesAndRadius(
-        latLng: String,
-        radius: Int,
-        date: Date? = null
+        latLng: String, radius: Int, date: Date? = null
     ): Call {
         return get(
             "${ApiRoutes.LOCATION}/Coordinates/${Helper.toBase64(latLng)}/Radius/$radius${
@@ -162,6 +151,10 @@ class ApiService private constructor() {
 
     fun discoverLocationByAddress(address: String): Call {
         return get("${ApiRoutes.LOCATION}/Discover/${Helper.toBase64(address)}")
+    }
+
+    fun discoverLocationByAddress(address: String, addAuth: Boolean = true): Call {
+        return get("${ApiRoutes.LOCATION}/Discover/${Helper.toBase64(address)}", addAuth)
     }
 
     fun retrieveLocation(locationId: Int, expanded: Boolean = false): Call {
@@ -310,6 +303,7 @@ class ApiService private constructor() {
     fun retrieveShopAvailability(shopId: Int, dateOfRepair: String): Call {
         return get("${ApiRoutes.SHOP}/$shopId/Availability/${Helper.toBase64(dateOfRepair)}")
     }
+
     fun retrieveShopNotificationData(): Call {
         return get("${ApiRoutes.SHOP}/NotificationData")
     }
@@ -335,9 +329,11 @@ class ApiService private constructor() {
     fun retrieveUser(userId: Int, expanded: Boolean = false): Call {
         return get("${ApiRoutes.USER}/${userId}${if (expanded) "?expanded=true" else ""}")
     }
+
     fun retrieveLatestRequest(): Call {
         return get("${ApiRoutes.USER}/Request/Latest")
     }
+
     fun retrieveUsers(): Call {
         return get(ApiRoutes.USER)
     }
@@ -360,12 +356,33 @@ class ApiService private constructor() {
 
     fun resetPassword(userId: Int, oldPassword: String, newPassword: String): Call {
         val data = ResetPassword(
-            Helper.toBase64(oldPassword),
-            Helper.toBase64(newPassword)
+            Helper.toBase64(oldPassword), Helper.toBase64(newPassword)
         )
         return post("${ApiRoutes.USER}/${userId}/ResetPassword", data)
     }
 
+
+    //#endregion
+    // #region Issue
+    fun retrieveIssue(issueId: Int, expanded: Boolean = false): Call {
+        return get("${ApiRoutes.ISSUE}/${issueId}${if (expanded) "?expanded=true" else ""}")
+    }
+
+    fun retrieveIssues(): Call {
+        return get(ApiRoutes.ISSUE)
+    }
+
+    fun deleteIssue(issueId: Int): Call {
+        return delete("${ApiRoutes.ISSUE}/${issueId}")
+    }
+
+    fun createIssue(newIssue: Issue): Call {
+        return post(ApiRoutes.ISSUE, newIssue)
+    }
+
+    fun updateIssue(updatedIssue: Issue): Call {
+        return put("${ApiRoutes.ISSUE}/${updatedIssue.Id}", updatedIssue)
+    }
     //#endregion
 }
 

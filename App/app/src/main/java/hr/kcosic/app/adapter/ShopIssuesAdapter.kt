@@ -9,14 +9,18 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import hr.kcosic.app.R
+import hr.kcosic.app.model.bases.ContextInstance
 import hr.kcosic.app.model.entities.Issue
 import hr.kcosic.app.model.listeners.ButtonClickListener
+import hr.kcosic.app.model.listeners.TextChangedListener
 
 
 class ShopIssuesAdapter(
     private var issues: MutableList<Issue>,
-    private var deleteButtonClickListener: ButtonClickListener
-) : RecyclerView.Adapter<ShopIssuesAdapter.ViewHolder>() {
+    private var deleteButtonClickListener: ButtonClickListener,
+    private var textChangedListener: TextChangedListener,
+
+    ) : RecyclerView.Adapter<ShopIssuesAdapter.ViewHolder>() {
 
     private var selectedPosition = -1
 
@@ -35,7 +39,7 @@ class ShopIssuesAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = issues[position]
-        if (item.Accepted == true || item.Deleted == true) {
+        if (item.Accepted == true || item.Accepted == false || item.Deleted == true) {
             holder.etPrice.isEnabled = false
             holder.etDescription.isEnabled = false
             holder.btnDeleteIssue.visibility = View.INVISIBLE
@@ -44,16 +48,22 @@ class ShopIssuesAdapter(
             holder.etDescription.isEnabled = true
             holder.btnDeleteIssue.visibility = View.VISIBLE
         }
-        holder.etPrice.text = if(item.Price == null) "0" else item.Price.toString()
+        holder.etPrice.text = if (item.Price == null) "0" else item.Price.toString()
         holder.etDescription.text = item.Description
+        holder.tvUserAccepted.text = when (item.Accepted) {
+            true -> ContextInstance.getContext()!!
+                .getString(R.string.accepted)
+            false -> ContextInstance.getContext()!!
+                .getString(R.string.declined)
+            else -> ContextInstance.getContext()!!
+                .getString(R.string.waiting_response)
+        }
         holder.tvUserAccepted.setCompoundDrawablesWithIntrinsicBounds(
             if (item.Accepted != null) {
                 if (item.Accepted == true) R.drawable.check_green
                 else R.drawable.xmark_red
             } else R.drawable.minus_gray, 0, 0, 0
         )
-
-
 
         holder.btnDeleteIssue.setOnClickListener {
             deleteButtonClickListener.onClick(
@@ -65,12 +75,12 @@ class ShopIssuesAdapter(
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(p0: Editable?) {
-                if(p0.isNullOrEmpty()){
+                if (p0.isNullOrEmpty()) {
                     item.Price = 0.0
-                }else {
+                } else {
                     item.Price = p0.toString().toDouble()
-
                 }
+                textChangedListener.onTextChanged(p0.toString())
             }
         })
         holder.etDescription.addTextChangedListener(object : TextWatcher {
@@ -78,6 +88,7 @@ class ShopIssuesAdapter(
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(p0: Editable?) {
                 item.Description = p0.toString()
+                textChangedListener.onTextChanged(p0.toString())
             }
         })
     }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,6 @@
 
         <ScrollView
             android:id="@+id/homeContentView"
-            tools:visibility="gone"
             style="@style/app_background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -37,11 +36,11 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cvConsents"
-                    android:visibility="gone"
-                    tools:visibility="visible"
                     style="@style/card_style"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -60,8 +59,6 @@
                             android:layout_height="wrap_content" />
 
 
-
-
                         <LinearLayout
                             android:id="@+id/llUserConsent"
                             android:layout_width="match_parent"
@@ -71,24 +68,23 @@
                             android:weightSum="10">
 
                             <TextView
-                                android:layout_margin="10sp"
                                 style="@style/textView"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_margin="10sp"
                                 android:layout_weight="5"
-                                android:text="@string/shop_accepted"
-                                />
+                                android:text="@string/shop_accepted" />
 
                             <TextView
-                                android:layout_weight="5"
-                                android:layout_margin="10sp"
                                 android:id="@+id/tvShopConsent"
                                 android:layout_width="0sp"
-                                tools:text="12.12.2022 16:31"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_margin="10sp"
+                                android:layout_weight="5"
                                 app:drawableStartCompat="@drawable/check_green"
-                                android:layout_height="wrap_content"/>
+                                tools:text="12.12.2022 16:31" />
                         </LinearLayout>
 
 
@@ -98,34 +94,33 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="horizontal"
-                            android:weightSum="10"
-                            >
+                            android:weightSum="10">
 
                             <Button
-                                android:layout_width="0sp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
                                 android:id="@+id/btnAcceptRequest"
                                 style="@style/confirm_button"
-                                android:layout_margin="10sp"
-                                android:layout_weight="5"
-                                android:text="@string/accept"
-                                />
-                            <Button
-                                style="@style/danger_button"
-                                android:id="@+id/btnDeclineRequest"
                                 android:layout_width="0sp"
-                                android:layout_margin="10sp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_margin="10sp"
                                 android:layout_weight="5"
-                                android:text="@string/decline"
-                                />
+                                android:text="@string/accept" />
+
+                            <Button
+                                android:id="@+id/btnDeclineRequest"
+                                style="@style/danger_button"
+                                android:layout_width="0sp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="10sp"
+                                android:layout_weight="5"
+                                android:text="@string/decline" />
                         </LinearLayout>
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
-     <androidx.cardview.widget.CardView
+
+                <androidx.cardview.widget.CardView
                     android:id="@+id/nextServiceDate"
                     style="@style/card_style"
                     android:layout_width="match_parent"
@@ -385,6 +380,57 @@
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvIssues"
+                    style="@style/card_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/llIssues"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            tools:ignore="UseCompoundDrawables">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="10dp"
+                                android:text="@string/issues"
+                                android:textAlignment="center" />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal">
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvIssues"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:listitem="@layout/issue_list_user_layout" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
         </ScrollView>
 
@@ -394,11 +440,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="100"
-            android:visibility="gone"
             android:gravity="center"
             android:orientation="vertical"
-            tools:visibility="visible"
-            >
+            android:visibility="gone">
 
             <androidx.cardview.widget.CardView
                 style="@style/card_style"
@@ -432,8 +476,8 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                style="@style/card_style"
                 android:id="@+id/cvReview"
+                style="@style/card_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
@@ -462,24 +506,25 @@
                         android:weightSum="10">
 
                         <TextView
+                            style="@style/textView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="10"
-                            style="@style/textView"
                             android:text="@string/rating" />
 
                         <RatingBar
                             android:id="@+id/rbRating"
-                            android:layout_width="wrap_content"
                             style="@style/rating"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:numStars="5"
                             android:stepSize="0.5"
                             tools:rating="3.5"
-                            android:layout_gravity="center"
                             tools:text="@string/lorem" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -488,32 +533,33 @@
                         android:weightSum="10">
 
                         <TextView
+                            style="@style/textView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="3"
-                            style="@style/textView"
                             android:text="@string/comment" />
 
                         <EditText
                             android:id="@+id/etComment"
-                            android:layout_width="0dp"
                             style="@style/bigTextField"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="7"
                             android:numStars="5"
                             android:stepSize="0.5"
                             tools:rating="3.5"
-                            android:layout_gravity="center"
-                            android:layout_weight="7"
                             tools:text="@string/lorem" />
                     </LinearLayout>
+
                     <Button
+                        android:id="@+id/btnSubmitReview"
+                        style="@style/primary_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/submit"
-                        android:id="@+id/btnSubmitReview"
                         android:layout_margin="10sp"
-                        style="@style/primary_button"/>
+                        android:text="@string/submit" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>

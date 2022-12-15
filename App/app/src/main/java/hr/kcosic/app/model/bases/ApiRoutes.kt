@@ -14,5 +14,6 @@ object ApiRoutes {
     const val REVIEW: String= "${BASE_URL}/api/Review"
     const val SHOP: String= "${BASE_URL}/api/Shop"
     const val USER: String= "${BASE_URL}/api/User"
+    const val ISSUE: String= "${BASE_URL}/api/Issue"
 
 }

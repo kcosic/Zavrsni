@@ -62,8 +62,7 @@ class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
     @SuppressLint("NotifyDataSetChanged")
     fun handleRetrieveRequestsResponse(response: Response) {
 
-        val resp: BaseResponse =
-            Helper.parseStringResponse<ListResponse<Request>>(response.body!!.string())
+        val resp: BaseResponse = Helper.parseStringResponse<ListResponse<Request>>(response.body!!.string())
 
         if (resp.IsSuccess!! && resp is ListResponse<*>) {
             try {
@@ -71,10 +70,9 @@ class RequestListActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
 
                 val menuClickListener = object : ButtonClickListener {
                     @SuppressLint("NotifyDataSetChanged")
-                    override fun onClick(data: Request) {
-                        // Notify adapter
+                    override fun onClick(o: Request) {
                         rvRequests.post {
-                            handleMenuButtonClick(data)
+                            handleMenuButtonClick(o)
                         }
                     }
                 }

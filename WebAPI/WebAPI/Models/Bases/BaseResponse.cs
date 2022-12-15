@@ -6,7 +6,7 @@ using System.Web;
 
 namespace WebAPI.Models.Responses
 {
-    public abstract class BaseResponse
+    public class BaseResponse
     {
         public string Message { get; set; }
         public HttpStatusCode Status { get; set; }

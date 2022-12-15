@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App</string>
+    <string name="app_name" translatable="false">Car Medic</string>
     <string name="token_error">Invalid login</string>
     <string name="unknown_error">Unknown error</string>
     <string name="invalid_pref_type_error">Invalid type for preferences</string>
@@ -119,8 +119,8 @@
     <string name="search">Search</string>
     <string name="decline">Decline</string>
     <string name="accept">Accept</string>
-    <string name="image_representation_of_user_consent">Image representation of user consent</string>
-    <string name="image_representation_of_shop_consent">Image Representation Of Shop Consent</string>
+    <string name="image_representation_of_user_consent" translatable="false">Image representation of user consent</string>
+    <string name="image_representation_of_shop_consent" translatable="false">Image Representation Of Shop Consent</string>
     <string name="work_hours_estimate">Work Hours Estimate</string>
     <string name="issue_description">Issue Description</string>
     <string name="incorrectFormat">Incorrect Format</string>
@@ -144,7 +144,7 @@
     <string name="saturday_letter">S</string>
     <string name="sunday_letter">S</string>
     <string name="licensePlate">License Plate</string>
-    <string name="test">Test String</string>
+    <string name="test" translatable="false">Test String</string>
     <string name="submit">Submit</string>
     <string name="review_latest_repair">Review Latest Repair</string>
     <string name="rating">Rating</string>
@@ -158,4 +158,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="invalid_issues">Some issues are invalid. Please fix before continuing</string>
+    <string name="accepted">Accepted</string>
+    <string name="declined">Declined</string>
+    <string name="deleted">Deleted</string>
+    <string name="waiting_response">Waiting Response</string>
 </resources>

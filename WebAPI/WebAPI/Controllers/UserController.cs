@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
                     throw new RecordNotFoundException();
                 }
 
-                return CreateOkResponse(Models.ORM.Request.ToListDTO(requests, 3));
+                return CreateOkResponse(Models.ORM.Request.ToListDTO(requests, 2));
             }
             catch (RecordNotFoundException e)
             {

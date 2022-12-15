@@ -1,9 +1,14 @@
 package hr.kcosic.app.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -12,11 +17,14 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import hr.kcosic.app.R
+import hr.kcosic.app.adapter.UserIssuesAdapter
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ValidatedActivityWithNavigation
+import hr.kcosic.app.model.entities.Issue
 import hr.kcosic.app.model.entities.Request
 import hr.kcosic.app.model.enums.ActivityEnum
 import hr.kcosic.app.model.helpers.Helper
+import hr.kcosic.app.model.listeners.ButtonClickListener
 import hr.kcosic.app.model.responses.ErrorResponse
 import hr.kcosic.app.model.responses.SingleResponse
 import okhttp3.Call
@@ -38,14 +46,17 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
     private lateinit var tvVehicle: TextView
     private lateinit var tvDateOfFinish: TextView
     private lateinit var tvActualPrice: TextView
-    private lateinit var tvUserConsent: CheckBox
-    private lateinit var tvShopConsent: CheckBox
-    private lateinit var tvCompleted: CheckBox
+    private lateinit var tvUserConsent: TextView
+    private lateinit var tvShopConsent: TextView
+    private lateinit var tvCompleted: TextView
     private lateinit var googleMap: GoogleMap
     private var request: Request? = null
     private var requestId: Int? = null
     private var mapServiceLocation: SupportMapFragment? = null
 
+    private lateinit var cvIssues: CardView
+    private lateinit var rvIssues: RecyclerView
+    private lateinit var userIssuesAdapter: UserIssuesAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeComponents()
@@ -138,6 +149,7 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun populateViewWithData() {
         tvDateOfRepair.text = Helper.formatDate(request?.RequestDate!!)
         tvTimeOfRepair.text = Helper.formatTime(request?.RequestDate!!)
@@ -174,5 +186,21 @@ class RequestViewActivity : ValidatedActivityWithNavigation(ActivityEnum.REQUEST
                 else -> R.drawable.minus_gray
         }, 0,0,0)
 
+        if (request?.Issues != null && request!!.Issues!!.size > 0) {
+            userIssuesAdapter = UserIssuesAdapter(request!!.Issues!!,
+                object : ButtonClickListener{}
+            )
+            rvIssues.adapter = userIssuesAdapter
+            rvIssues.layoutManager = LinearLayoutManager(this)
+            cvIssues.visibility = View.VISIBLE
+            userIssuesAdapter.notifyDataSetChanged()
+
+        }
+        else {
+            cvIssues.visibility = View.INVISIBLE
+        }
     }
+
+
+
 }

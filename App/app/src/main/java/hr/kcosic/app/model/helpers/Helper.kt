@@ -18,6 +18,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks.await
 import hr.kcosic.app.R
+import hr.kcosic.app.dal.ApiService
 import hr.kcosic.app.model.bases.BaseResponse
 import hr.kcosic.app.model.bases.ContextInstance
 import hr.kcosic.app.model.enums.ActivityEnum

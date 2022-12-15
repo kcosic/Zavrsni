@@ -98,11 +98,10 @@ namespace WebAPI.Models
         }
 
         [NonAction]
-        public SingleResponse<object> CreateOkResponse()
+        public BaseResponse CreateOkResponse()
         {
-            return new SingleResponse<object>
+            return new BaseResponse
             {
-                Data = null,
                 Message = "Success!",
                 Status = HttpStatusCode.OK,
                 IsSuccess = true
